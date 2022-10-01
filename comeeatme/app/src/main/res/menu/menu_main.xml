@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/fm_Home"
+        android:title="홈"
+        android:icon="@drawable/ic_home"/>
+    <item
+        android:id="@+id/fm_Map"
+        android:title="지도"
+        android:icon="@drawable/ic_map"/>
+    <item
+        android:id="@+id/fm_Bookmark"
+        android:title="북마크"
+        android:icon="@drawable/ic_bookmark2"/>
+    <item
+        android:id="@+id/fm_User"
+        android:title="유저"
+        android:icon="@drawable/ic_user"/>
+
+</menu>
