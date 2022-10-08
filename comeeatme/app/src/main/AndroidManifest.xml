@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Comeeatme">
         <activity
-            android:name="com.hand.comeeatme.view.main.MainActivity"
+            android:name=".view.main.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,6 +20,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.main.home.NewPostActivity"/>
+        <activity android:name=".view.main.home.AlbumActivity" />
     </application>
 
 </manifest>

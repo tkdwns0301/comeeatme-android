@@ -5,15 +5,14 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hand.comeeatme.adapter.NewPostImagesAdapter
 import com.hand.comeeatme.databinding.ActivityNewpostBinding
+import java.io.File
 
 class NewPostActivity : AppCompatActivity() {
     private var _binding: ActivityNewpostBinding? = null
@@ -23,9 +22,10 @@ class NewPostActivity : AppCompatActivity() {
     private lateinit var adapter: NewPostImagesAdapter
     private lateinit var cancel: TextView
 
-    private lateinit var images: ArrayList<Uri>
+    private var images = ArrayList<Uri>()
+    private var checkedImageList = ArrayList<String>()
+    private var imagePositionList = ArrayList<Int>()
 
-    private val OPEN_GALLERY = 200
     private val REQ_STORAGE_PERMISSION = 201
 
 
@@ -34,7 +34,7 @@ class NewPostActivity : AppCompatActivity() {
 
         _binding = ActivityNewpostBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        images = ArrayList<Uri>()
+
 
         initView()
         initListener()
@@ -68,11 +68,10 @@ class NewPostActivity : AppCompatActivity() {
                     REQ_STORAGE_PERMISSION
                 )
             } else {
-                val intent = Intent(Intent.ACTION_PICK)
-                intent.data = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-                intent.action = Intent.ACTION_GET_CONTENT
-                startActivityForResult(intent, OPEN_GALLERY)
+                val intent = Intent(this, AlbumActivity::class.java)
+                intent.putExtra("checkedImages", checkedImageList)
+                intent.putExtra("imagePosition", imagePositionList)
+                startActivityForResult(intent, 100)
             }
         }
 
@@ -85,27 +84,14 @@ class NewPostActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (resultCode == RESULT_OK && requestCode == OPEN_GALLERY) {
-            if (data?.clipData != null) {
-                val count = data?.clipData!!.itemCount
+        if (resultCode == RESULT_OK && requestCode == 100) {
+            checkedImageList = data!!.getStringArrayListExtra("checkedImages") as ArrayList<String>
+            imagePositionList = data!!.getIntegerArrayListExtra("imagePosition") as ArrayList<Int>
 
-                if (count > 10) {
-                    Toast.makeText(applicationContext, "사진은 최대 10장까지 선택 가능합니다.", Toast.LENGTH_LONG)
-                        .show()
-                    return
-                }
+            images = ArrayList()
 
-                for (i in 0 until count) {
-                    val imageUri = data.clipData!!.getItemAt(i).uri
-                    images.add(imageUri)
-                }
-            } else {
-                data?.data?.let { uri ->
-                    val imageUri: Uri? = data?.data
-                    if (imageUri != null) {
-                        images.add(imageUri)
-                    }
-                }
+            checkedImageList!!.forEach {
+                images.add(Uri.fromFile(File(it)))
             }
 
             setAdapter()
@@ -116,7 +102,7 @@ class NewPostActivity : AppCompatActivity() {
         if (images != null) {
             val recyclerViewState = recyclerView.layoutManager?.onSaveInstanceState()
             adapter = NewPostImagesAdapter(images, onClickDeleteIcon = {
-                deleteTask(images, it)
+                deleteTask(it)
             })
             recyclerView.adapter = adapter
             recyclerView.layoutManager?.onRestoreInstanceState(recyclerViewState)
@@ -124,8 +110,9 @@ class NewPostActivity : AppCompatActivity() {
         }
     }
 
-    private fun deleteTask(images: ArrayList<Uri>, image: Uri) {
-        images.remove(image)
+    private fun deleteTask(position: Int) {
+        images.removeAt(position)
+        checkedImageList.removeAt(position)
         adapter.notifyDataSetChanged()
     }
 
