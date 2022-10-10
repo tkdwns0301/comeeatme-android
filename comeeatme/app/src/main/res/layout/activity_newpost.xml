@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:paddingStart="16dp"
     android:paddingEnd="16dp">
 
@@ -60,7 +60,7 @@
 
     <ScrollView
         android:id="@+id/sv_NewPost"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -70,17 +70,17 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_Menu"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:id="@+id/ll_Location"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@id/ic_Location"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/divider1">
+                app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
                     android:id="@+id/tv_Location"
@@ -90,6 +90,15 @@
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_SelectedLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    tools:text="장미불닭" />
 
                 <View
                     android:layout_width="0dp"
@@ -105,21 +114,34 @@
                     android:src="@drawable/ic_arrow_down" />
             </LinearLayout>
 
+            <include
+                android:id="@+id/ic_Location"
+                layout="@layout/layout_newpost_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:layout_constraintBottom_toTopOf="@id/divider1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ll_Location" />
+
+
             <View
                 android:id="@+id/divider1"
                 style="@style/Divider.Horizontal"
                 android:layout_marginTop="10dp"
+                app:layout_constraintBottom_toTopOf="@id/ll_HashTag"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ll_Location"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/ll_HashTag"/>
+                app:layout_constraintTop_toBottomOf="@id/ic_Location" />
 
             <LinearLayout
-                android:layout_marginTop="10dp"
                 android:id="@+id/ll_HashTag"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@id/ic_HashTag"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/divider1">
@@ -147,36 +169,47 @@
                     android:src="@drawable/ic_arrow_down" />
             </LinearLayout>
 
+            <include
+                android:id="@+id/ic_HashTag"
+                layout="@layout/layout_newpost_hashtag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:layout_constraintBottom_toTopOf="@id/divider2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ll_HashTag" />
+
             <View
                 android:id="@+id/divider2"
                 style="@style/Divider.Horizontal"
                 android:layout_marginTop="10dp"
+                app:layout_constraintBottom_toTopOf="@id/rv_SelectedImages"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ll_HashTag"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ic_HashTag" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_SelectedImages"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/divider2"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/layout_newpost_image"
-                />
+                app:layout_constraintBottom_toTopOf="@id/btn_Image"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider2"
+                tools:listitem="@layout/layout_newpost_image" />
 
             <Button
                 android:id="@+id/btn_Image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/rv_SelectedImages"
-                app:layout_constraintStart_toStartOf="parent"
+                android:text="임시버튼"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:text="임시버튼"/>
-
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rv_SelectedImages" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
