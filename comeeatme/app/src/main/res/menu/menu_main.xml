@@ -9,6 +9,10 @@
         android:title="지도"
         android:icon="@drawable/ic_map"/>
     <item
+        android:id="@+id/fm_NewPost"
+        android:title="글쓰기"
+        android:icon="@drawable/ic_newpost"/>
+    <item
         android:id="@+id/fm_Bookmark"
         android:title="북마크"
         android:icon="@drawable/ic_bookmark2"/>

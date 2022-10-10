@@ -18,39 +18,102 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <include
-            android:id="@+id/ic_Search"
-            layout="@layout/layout_searchview"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
+        <ImageButton
+            android:id="@+id/ib_Icon"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/ib_Shop"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toStartOf="@id/cl_Search_HashTag_Noti"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"/>
 
-        <ImageButton
-            android:id="@+id/ib_Shop"
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_Search_HashTag_Noti"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:background="@null"
-            android:src="@drawable/ic_shop"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/ib_Notification"
-            app:layout_constraintStart_toEndOf="@id/ic_Search"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageButton
-            android:id="@+id/ib_Notification"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:src="@drawable/ic_notification"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/ib_Shop"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toEndOf="@id/ib_Icon">
+
+            <ImageButton
+                android:id="@+id/ib_Search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:background="@null"
+                android:src="@drawable/ic_search"
+                app:layout_constraintEnd_toStartOf="@id/cl_HashTag"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_HashTag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/ib_Search"
+                app:layout_constraintEnd_toStartOf="@id/ib_Notification">
+
+                <ImageButton
+                    android:id="@+id/ib_HashTag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:src="@drawable/ic_hashtag"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_HashTagNum"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintDimensionRatio="1:1"
+                    android:background="@drawable/background_oval"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" >
+
+                    <TextView
+                        android:id="@+id/tv_HashTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:text="1"
+                        android:textColor="@color/white"
+                        android:textSize="10dp"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+            <ImageButton
+                android:id="@+id/ib_Notification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:src="@drawable/ic_noti"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/cl_HashTag"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -75,7 +138,7 @@
             android:button="@null"
             android:checked="true"
             android:text="커뮤니티"
-            android:textColor="@drawable/selector_bottomenavi_color"
+            android:textColor="@drawable/selector_radio_color"
             android:textSize="20dp"
             android:textStyle="bold" />
 
@@ -87,7 +150,7 @@
             android:button="@null"
             android:checked="false"
             android:text="맛집 랭킹"
-            android:textColor="@drawable/selector_bottomenavi_color"
+            android:textColor="@drawable/selector_radio_color"
             android:textSize="20dp"
             android:textStyle="bold" />
     </RadioGroup>
@@ -116,7 +179,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_newpost"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="80dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
