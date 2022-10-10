@@ -8,9 +8,12 @@
         <entry key="app/src/main/res/drawable/background_button_click.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/background_button_nonclick.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/background_newpost.xml" value="0.2942708333333333" />
+        <entry key="app/src/main/res/drawable/background_newpost_edittext.xml" value="0.41302083333333334" />
         <entry key="app/src/main/res/drawable/background_oval.xml" value="0.2942708333333333" />
+        <entry key="app/src/main/res/drawable/background_radius.xml" value="0.41302083333333334" />
         <entry key="app/src/main/res/drawable/background_searchview.xml" value="0.35833333333333334" />
         <entry key="app/src/main/res/drawable/ic_cancel2.xml" value="0.3921875" />
+        <entry key="app/src/main/res/drawable/ic_imageselect.xml" value="0.3078125" />
         <entry key="app/src/main/res/drawable/ic_newpost.xml" value="0.2942708333333333" />
         <entry key="app/src/main/res/drawable/mene_select_color.xml" value="0.2942708333333333" />
         <entry key="app/src/main/res/drawable/selector_bottomenavi_color.xml" value="0.3078125" />

@@ -11,10 +11,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.util.TypedValue
-import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import android.widget.RadioGroup
@@ -74,14 +71,23 @@ class NewPostActivity : AppCompatActivity() {
 
         locationSearch = binding.llLocation
 
-        binding.icHashTag.flMood.addItems(moodList)
-        binding.icHashTag.flPrice.addItems(priceList)
-        binding.icHashTag.flEtc.addItems(etcList)
+        for (mood in moodList) {
+            binding.icHashTag.flMood.addItem(mood, false)
+        }
+
+        for (price in priceList) {
+            binding.icHashTag.flPrice.addItem(price, false)
+        }
+
+        for (etc in etcList) {
+            binding.icHashTag.flEtc.addItem(etc, false)
+        }
+
 
     }
 
     private fun initListener() {
-        binding.btnImage.setOnClickListener {
+        binding.clImageSelect.setOnClickListener {
             val readPermission = ActivityCompat.checkSelfPermission(
                 this,
                 android.Manifest.permission.READ_EXTERNAL_STORAGE
@@ -106,34 +112,34 @@ class NewPostActivity : AppCompatActivity() {
         }
 
         locationSearch.setOnClickListener {
-            if(binding.icLocation.clLocation.visibility == View.GONE) {
+            if (binding.icLocation.clLocation.visibility == View.GONE) {
                 binding.icLocation.clLocation.visibility = View.VISIBLE
                 binding.ibLocation.setImageResource(R.drawable.ic_arrow_up)
-            } else if(binding.icLocation.clLocation.visibility == View.VISIBLE) {
+            } else if (binding.icLocation.clLocation.visibility == View.VISIBLE) {
                 binding.ibLocation.setImageResource(R.drawable.ic_arrow_down)
                 binding.icLocation.clLocation.visibility = View.GONE
             }
         }
 
         binding.llHashTag.setOnClickListener {
-            if(binding.icHashTag.clHashTag.visibility == View.GONE) {
+            if (binding.icHashTag.clHashTag.visibility == View.GONE) {
                 binding.icHashTag.clHashTag.visibility = View.VISIBLE
                 binding.ibHashTag.setImageResource(R.drawable.ic_arrow_up)
-            } else if(binding.icHashTag.clHashTag.visibility == View.VISIBLE) {
+            } else if (binding.icHashTag.clHashTag.visibility == View.VISIBLE) {
                 binding.ibHashTag.setImageResource(R.drawable.ic_arrow_down)
                 binding.icHashTag.clHashTag.visibility = View.GONE
             }
         }
 
-        binding.icLocation.etSearch.addTextChangedListener(object: TextWatcher {
+        binding.icLocation.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if(binding.icLocation.etSearch.text.isEmpty()) {
+                if (binding.icLocation.etSearch.text.isEmpty()) {
                     binding.icLocation.ibSearchDelete.visibility = View.GONE
                 } else {
-                    if(binding.icLocation.ibSearchDelete.visibility != View.VISIBLE) {
+                    if (binding.icLocation.ibSearchDelete.visibility != View.VISIBLE) {
                         binding.icLocation.ibSearchDelete.visibility = View.VISIBLE
                     }
                 }
@@ -153,6 +159,15 @@ class NewPostActivity : AppCompatActivity() {
             // TODO 검색처리
             val search: String = binding.icLocation.etSearch.text.toString()
             Log.e("Search", "$search")
+        }
+
+        binding.icLocation.etSearch.setOnKeyListener { p0, p1, p2 ->
+            when (p1) {
+                //TODO 검색처리
+                KeyEvent.KEYCODE_ENTER -> Log.e("Enter click", "true")
+            }
+
+            true
         }
 
         binding.icHashTag.clInit.setOnClickListener {
@@ -185,15 +200,19 @@ class NewPostActivity : AppCompatActivity() {
         }
     }
 
-    private fun FlexboxLayout.addItems(tags: Array<String>) {
-        for(tag in tags) {
-            val chip = LayoutInflater.from(context).inflate(R.layout.layout_chip_custom, null) as Chip
+    private fun FlexboxLayout.addItem(tag: String, isSelected: Boolean) {
 
-            chip.apply {
-                text = "$tag"
-                textSize = 14f
-                textAlignment = View.TEXT_ALIGNMENT_CENTER
+        val chip = LayoutInflater.from(context).inflate(R.layout.layout_chip_custom, null) as Chip
 
+        chip.apply {
+            text = "$tag"
+            textSize = 14f
+            textAlignment = View.TEXT_ALIGNMENT_CENTER
+            isChecked = false
+            checkedIcon = null
+
+
+            if (!isSelected) {
                 val nonClickBackground = ContextCompat.getColor(context, R.color.gray0)
                 val clickBackground = ContextCompat.getColor(context, R.color.basic)
 
@@ -218,28 +237,59 @@ class NewPostActivity : AppCompatActivity() {
                     )
 
                 )
-                checkedIcon = null
+
                 isCheckable = true
 
-                setOnCheckedChangeListener { buttonView, isChecked ->
-                    if(isChecked) {
-                        // TODO 체크 했을 때 처리
-                        checkedChipList.add(chip)
-                    } else {
-                        // TODO 체크 풀었을 때 처리
-                        checkedChipList.remove(chip)
-                    }
-                }
+            } else {
+                val nonClickBackground = ContextCompat.getColor(context, R.color.white)
+                val clickBackground = ContextCompat.getColor(context, R.color.basic)
+
+                chipBackgroundColor = ColorStateList(
+                    arrayOf(
+                        intArrayOf(-android.R.attr.state_checked),
+                        intArrayOf(android.R.attr.state_checked)
+                    ),
+                    intArrayOf(nonClickBackground, clickBackground)
+                )
+
+                val nonCLickTextColor = ContextCompat.getColor(context, R.color.gray2)
+                val clickTextColor = ContextCompat.getColor(context, R.color.white)
+                //텍스트
+                setTextColor(
+                    ColorStateList(
+                        arrayOf(
+                            intArrayOf(-android.R.attr.state_checked),
+                            intArrayOf(android.R.attr.state_checked)
+                        ),
+                        intArrayOf(nonCLickTextColor, clickTextColor)
+                    )
+
+                )
+                isCheckable = false
             }
 
-            val layoutParams = ViewGroup.MarginLayoutParams(
-                ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT
-            )
 
-            layoutParams.rightMargin = dpToPx(10)
-            addView(chip, childCount-1, layoutParams)
+            setOnCheckedChangeListener { buttonView, isChecked ->
+                if (isChecked) {
+                    // TODO 체크 했을 때 처리
+                    checkedChipList.add(chip)
+                    binding.flSelectHashTag.addItem("#$text", true)
+                } else {
+                    // TODO 체크 풀었을 때 처리
+                    val chipIndex = checkedChipList.indexOf(chip)
+                    binding.flSelectHashTag.removeViewAt(chipIndex)
+                    checkedChipList.remove(chip)
 
+                }
+            }
         }
+
+        val layoutParams = ViewGroup.MarginLayoutParams(
+            ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT
+        )
+
+        layoutParams.rightMargin = dpToPx(10)
+        addView(chip, childCount, layoutParams)
 
 
     }
@@ -247,6 +297,9 @@ class NewPostActivity : AppCompatActivity() {
     private fun softKeyboardHide() {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.icLocation.etSearch.windowToken, 0)
+        imm.hideSoftInputFromWindow(binding.etContent.windowToken, 0)
+        binding.etContent.clearFocus()
+        binding.icLocation.etSearch.clearFocus()
     }
 
     private fun setAdapter() {

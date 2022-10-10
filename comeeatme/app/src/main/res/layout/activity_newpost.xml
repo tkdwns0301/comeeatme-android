@@ -184,32 +184,86 @@
                 android:id="@+id/divider2"
                 style="@style/Divider.Horizontal"
                 android:layout_marginTop="10dp"
-                app:layout_constraintBottom_toTopOf="@id/rv_SelectedImages"
+                app:layout_constraintBottom_toTopOf="@id/cl_SelectImages"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/ic_HashTag" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_SelectedImages"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_SelectImages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider2"
+                app:layout_constraintBottom_toTopOf="@id/et_Content">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_ImageSelect"
+                    android:layout_width="98dp"
+                    android:layout_height="0dp"
+                    android:background="@drawable/background_radius"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toStartOf="@id/rv_SelectedImages"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_addimage"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_SelectedImages"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/cl_ImageSelect"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:listitem="@layout/layout_newpost_image" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <EditText
+                android:id="@+id/et_Content"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/background_newpost_edittext"
+                android:gravity="start|top"
+                android:hint="글을 작성해보세요"
+                android:padding="10dp"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                app:layout_constraintDimensionRatio="1:0.5"
+                app:layout_constraintBottom_toTopOf="@id/fl_SelectHashTag"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cl_SelectImages" />
+
+            <com.google.android.flexbox.FlexboxLayout
+                android:id="@+id/fl_SelectHashTag"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toTopOf="@id/btn_Image"
+                app:alignContent="stretch"
+                app:alignItems="stretch"
+                app:flexWrap="wrap"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/divider2"
-                tools:listitem="@layout/layout_newpost_image" />
-
-            <Button
-                android:id="@+id/btn_Image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="임시버튼"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/rv_SelectedImages" />
+                app:layout_constraintTop_toBottomOf="@id/et_Content" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
