@@ -10,12 +10,15 @@ data class SampleImage (
     val position: Int,
     val thumbnail: Bitmap,
     val image: Uri,
-    var path: String?
+    var path: String,
+    var isChecked: Boolean
 ) : Parcelable
 
 @Parcelize
-class Position (
-    var position : Int,
-    var path : String,
+class CropImage (
+    var image : Uri,
+    var isCrop : Boolean
 ) : Parcelable
+
+
 

@@ -1,4 +1,5 @@
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,21 +21,24 @@ class AlbumAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val image = images[position]
 
-        holder.image.setImageBitmap(image.thumbnail)
-
-        holder.image.setOnClickListener {
-            onClickImage.invoke(image)
-        }
-
-        if(image.path != null) {
+        if(image.isChecked) {
             holder.checked.visibility = View.VISIBLE
         } else {
             holder.checked.visibility = View.GONE
         }
 
+        holder.image.setImageBitmap(image.thumbnail)
+        holder.image.setOnLongClickListener {
+            Log.e("Image LongClick", "$position")
+            return@setOnLongClickListener true
+        }
+
+        holder.image.setOnClickListener {
+            onClickImage.invoke(image)
+        }
+
         holder.checked.setOnClickListener {
             onCheckedImage.invoke(position)
-            holder.checked.visibility = View.GONE
         }
 
 

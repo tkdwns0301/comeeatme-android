@@ -11,25 +11,31 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.util.TypedValue
-import android.view.*
+import android.view.KeyEvent
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.chip.Chip
 import com.hand.comeeatme.R
 import com.hand.comeeatme.adapter.NewPostImagesAdapter
-import com.hand.comeeatme.databinding.ActivityNewpostBinding
+import com.hand.comeeatme.databinding.FragmentNewpostBinding
 import java.io.File
 import kotlin.math.roundToInt
 
-class NewPostActivity : AppCompatActivity() {
-    private var _binding: ActivityNewpostBinding? = null
+class NewPostFragment : Fragment(R.layout.fragment_newpost) {
+    private var _binding: FragmentNewpostBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var recyclerView: RecyclerView
@@ -40,6 +46,8 @@ class NewPostActivity : AppCompatActivity() {
     private var images = ArrayList<Uri>()
     private var checkedImageList = ArrayList<String>()
     private var imagePositionList = ArrayList<Int>()
+    private var cropImageList = ArrayList<String>()
+
 
     private val REQ_STORAGE_PERMISSION = 201
     private val checkedChipList = ArrayList<Chip>()
@@ -47,28 +55,23 @@ class NewPostActivity : AppCompatActivity() {
     private val priceList: Array<String> = arrayOf("가성비", "자극적인", "고급스러운", "신선한 재료", "시그니쳐 메뉴")
     private val etcList: Array<String> = arrayOf("친절", "청결", "반려동물 동반", "아이 동반", "24시간", "주차장")
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        _binding = ActivityNewpostBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentNewpostBinding.inflate(inflater, container, false)
 
         initView()
         initListener()
-
-    }
-
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-        softKeyboardHide()
-        return true
+        return binding.root
     }
 
     private fun initView() {
         recyclerView = binding.rvSelectedImages
 
         val layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         recyclerView.layoutManager = layoutManager
 
         cancel = binding.tvCancel
@@ -93,20 +96,20 @@ class NewPostActivity : AppCompatActivity() {
     private fun initListener() {
         binding.clImageSelect.setOnClickListener {
             val readPermission = ActivityCompat.checkSelfPermission(
-                this,
+                requireContext(),
                 android.Manifest.permission.READ_EXTERNAL_STORAGE
             )
 
             if (readPermission == PackageManager.PERMISSION_DENIED) {
-                ActivityCompat.requestPermissions(
-                    this,
+                requestPermissions(
                     arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
                     REQ_STORAGE_PERMISSION
                 )
             } else {
-                val intent = Intent(this, AlbumActivity::class.java)
+                val intent = Intent(activity, Album2Activity::class.java)
                 intent.putExtra("checkedImages", checkedImageList)
                 intent.putExtra("imagePosition", imagePositionList)
+                intent.putExtra("cropImages", cropImageList)
                 startActivityForResult(intent, 100)
             }
         }
@@ -185,13 +188,16 @@ class NewPostActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (resultCode == RESULT_OK && requestCode == 100) {
+        if (resultCode == AppCompatActivity.RESULT_OK && requestCode == 100) {
             checkedImageList = data!!.getStringArrayListExtra("checkedImages") as ArrayList<String>
             imagePositionList = data!!.getIntegerArrayListExtra("imagePosition") as ArrayList<Int>
+            cropImageList = data!!.getStringArrayListExtra("cropImages") as ArrayList<String>
+
+            Log.e("cropImageList", "$cropImageList")
 
             images = ArrayList()
 
-            checkedImageList!!.forEach {
+            cropImageList!!.forEach {
                 images.add(Uri.fromFile(File(it)))
             }
 
@@ -294,9 +300,8 @@ class NewPostActivity : AppCompatActivity() {
     }
 
     private fun softKeyboardHide() {
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(binding.icLocation.etSearch.windowToken, 0)
-        imm.hideSoftInputFromWindow(binding.etContent.windowToken, 0)
+        val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(requireActivity().currentFocus!!.windowToken, 0)
         binding.etContent.clearFocus()
         binding.icLocation.etSearch.clearFocus()
     }
@@ -319,6 +324,19 @@ class NewPostActivity : AppCompatActivity() {
         adapter.notifyDataSetChanged()
     }
 
+    private fun finish() {
+        val manager: FragmentManager? = activity?.supportFragmentManager
+        val ft: FragmentTransaction = manager!!.beginTransaction()
+
+        val newPost = manager.findFragmentByTag("fm_NewPost")
+
+        if (newPost != null) {
+            ft.remove(newPost)
+        }
+
+        ft.commitAllowingStateLoss()
+    }
+
     private fun dpToPx(dp: Int): Int =
         TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
@@ -332,3 +350,4 @@ class NewPostActivity : AppCompatActivity() {
         _binding = null
     }
 }
+
