@@ -88,7 +88,7 @@ class AlbumActivity : AppCompatActivity(), Serializable {
 
                 Log.e("checkedImageList add", "$checkedImageList")
 
-                images[position].path = compressPath
+                //images[position].path = compressPath
 
                 adapter.notifyDataSetChanged()
             }
@@ -168,11 +168,11 @@ class AlbumActivity : AppCompatActivity(), Serializable {
                 Uri.fromFile(File(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA))))
 
             if (imagePositionList!!.contains(i)) {
-                val sampleImage = SampleImage(i, thumbnail, uri, "/data/user/0/com.hand.comeeatme/cache/$i.webp")
-                images.add(sampleImage)
+                //val sampleImage = SampleImage(i, thumbnail, uri, "/data/user/0/com.hand.comeeatme/cache/$i.webp")
+                //images.add(sampleImage)
             } else {
-                val sampleImage = SampleImage(i, thumbnail, uri,  null)
-                images.add(sampleImage)
+                //val sampleImage = SampleImage(i, thumbnail, uri,  null)
+                //images.add(sampleImage)
             }
 
 
@@ -209,8 +209,8 @@ class AlbumActivity : AppCompatActivity(), Serializable {
         checkedImageList!!.remove(images[position].path)
         Log.e("checkedImageList remove", "$checkedImageList")
         imagePositionList!!.remove(position)
-        cropLayout.background = null
-        images[position].path = null
+        //cropLayout.background = null
+        //images[position].path = null
         adapter.notifyDataSetChanged()
     }
 

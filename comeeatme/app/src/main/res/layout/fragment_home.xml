@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".view.main.home.HomeFragment"
+    android:background="@color/white"
     android:paddingTop="10dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
