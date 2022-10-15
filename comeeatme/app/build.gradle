@@ -5,6 +5,9 @@ plugins {
     id 'kotlin-parcelize'
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+def kakao_api_key = properties.getProperty("kakao_api_key")
 android {
     compileSdkVersion 31
 
@@ -15,6 +18,8 @@ android {
         versionCode 1
         versionName "1.0"
 
+        buildConfigField "String", "KAKAO_API_KEY", properties['kakao_api_key']
+        manifestPlaceholders = [KAKAO_API_KEY: kakao_api_key]
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -31,6 +36,15 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'x86', 'x86_64', 'armeabi-v7a', 'armeabi'
+            universalApk false
+        }
     }
 
 
@@ -72,5 +86,8 @@ dependencies {
     // Chip
     implementation 'com.google.android.material:material:1.6.1'
 
+    // kakao map
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation files('libs/libDaumMapAndroid.jar')
 
 }

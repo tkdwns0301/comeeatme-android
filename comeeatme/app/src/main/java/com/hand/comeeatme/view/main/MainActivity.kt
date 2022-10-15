@@ -14,6 +14,7 @@ import com.hand.comeeatme.R
 import com.hand.comeeatme.databinding.ActivityMainBinding
 import com.hand.comeeatme.view.main.home.HomeFragment
 import com.hand.comeeatme.view.main.home.NewPostFragment
+import com.hand.comeeatme.view.main.map.MapFragment
 
 
 private const val TAG_HOME = "fm_Home"
@@ -37,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         binding.bnMain.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.fm_Home -> setFragment(TAG_HOME, HomeFragment())
-                R.id.fm_NewPost -> onNewPost()
+                R.id.fm_Map -> setFragment(TAG_MAP, MapFragment())
 
             }
             true
@@ -84,26 +85,25 @@ class MainActivity : AppCompatActivity() {
         }
 
         val home = manager.findFragmentByTag(TAG_HOME)
-        val newPost = manager.findFragmentByTag(TAG_NEWPOST)
+        val map = manager.findFragmentByTag(TAG_MAP)
 
         if (home != null) {
             ft.hide(home)
         }
 
-        if (newPost != null) {
-            ft.remove(newPost)
+        if(map != null) {
+            ft.hide(map)
         }
 
         if (tag == TAG_HOME) {
             if (home != null) {
                 ft.show(home)
             }
-        } else if (tag == TAG_NEWPOST) {
-            if (newPost != null) {
-                ft.add(R.id.fg_MainContainer, fragment, tag)
+        } else if (tag == TAG_MAP) {
+            if (map != null) {
+                ft.show(map)
             }
         }
-
         ft.commitAllowingStateLoss()
     }
 }
