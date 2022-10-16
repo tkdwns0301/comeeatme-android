@@ -106,7 +106,7 @@ class NewPostFragment : Fragment(R.layout.fragment_newpost) {
                     REQ_STORAGE_PERMISSION
                 )
             } else {
-                val intent = Intent(activity, Album2Activity::class.java)
+                val intent = Intent(activity, AlbumActivity::class.java)
                 intent.putExtra("checkedImages", checkedImageList)
                 intent.putExtra("imagePosition", imagePositionList)
                 intent.putExtra("cropImages", cropImageList)

@@ -5,34 +5,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-    <com.takusemba.cropme.CropLayout
-        android:id="@+id/cl_CropImage"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_NewProject"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:cropme_background_alpha="100%"
-        app:cropme_frame_height_percent="100%"
-        app:cropme_frame_width_percent="100%"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintBottom_toTopOf="@id/rv_SelectedImages"
+        android:layout_height="?attr/actionBarSize"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginBottom="5dp"
-        app:layout_constraintTop_toTopOf="parent"/>
-
-    <Button
-        android:id="@+id/btn_Add"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:menu="@menu/menu_album_toolbar"
+        app:navigationIcon="?homeAsUpIndicator">
 
-    <Button
-        android:id="@+id/btn_End"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="사진선택"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+    </androidx.appcompat.widget.Toolbar>
+
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_SelectedImages"
@@ -45,7 +38,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cl_CropImage"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_NewProject"
         app:spanCount="3"
         tools:listitem="@layout/layout_album_image" />
 

@@ -29,8 +29,8 @@
         </activity>
         <activity android:name=".view.main.home.NewPostActivity"/>
         <activity android:name=".view.main.home.AlbumActivity" />
-        <activity android:name=".view.main.home.Album2Activity"/>
+        <activity android:name=".view.main.home.AlbumActivity"/>
         <activity android:name=".view.main.home.CropActivity"/>
-        <activity android:name=".view.main.home.Crop2Activity"/>
+        <activity android:name=".view.main.home.CropActivity"/>
     </application>
 </manifest>
