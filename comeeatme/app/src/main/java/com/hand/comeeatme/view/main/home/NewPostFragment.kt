@@ -17,8 +17,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -40,8 +40,8 @@ class NewPostFragment : Fragment(R.layout.fragment_newpost) {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: NewPostImagesAdapter
-    private lateinit var cancel: TextView
     private lateinit var locationSearch: LinearLayout
+    private lateinit var toolbar: Toolbar
 
     private var images = ArrayList<Uri>()
     private var checkedImageList = ArrayList<String>()
@@ -74,7 +74,7 @@ class NewPostFragment : Fragment(R.layout.fragment_newpost) {
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         recyclerView.layoutManager = layoutManager
 
-        cancel = binding.tvCancel
+        toolbar = binding.toolbarNewPost
 
         locationSearch = binding.llLocation
 
@@ -114,7 +114,21 @@ class NewPostFragment : Fragment(R.layout.fragment_newpost) {
             }
         }
 
-        cancel.setOnClickListener {
+
+        toolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.toolbar_Finish -> {
+                    // TODO 완료 버튼 눌렀을 때, 서버에 전송
+                    true
+                }
+                else -> {
+                    super.onOptionsItemSelected(it)
+
+                }
+            }
+        }
+
+        toolbar.setNavigationOnClickListener {
             finish()
         }
 
@@ -300,7 +314,8 @@ class NewPostFragment : Fragment(R.layout.fragment_newpost) {
     }
 
     private fun softKeyboardHide() {
-        val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm =
+            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(requireActivity().currentFocus!!.windowToken, 0)
         binding.etContent.clearFocus()
         binding.icLocation.etSearch.clearFocus()

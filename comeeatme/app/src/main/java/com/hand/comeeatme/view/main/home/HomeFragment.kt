@@ -1,6 +1,5 @@
 package com.hand.comeeatme.view.main.home
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +11,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.hand.comeeatme.R
 import com.hand.comeeatme.adapter.CommunityAdapter
 import com.hand.comeeatme.databinding.FragmentHomeBinding
-import de.hdodenhof.circleimageview.CircleImageView
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
     private var _binding: FragmentHomeBinding? = null
@@ -21,7 +19,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var swipe: SwipeRefreshLayout
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CommunityAdapter
-    private lateinit var newPost: CircleImageView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,7 +34,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private fun initView() {
         swipe = binding.srlHomeList
         recyclerView = binding.rvHomeList
-        newPost = binding.ibNewPost
 
         initListener()
         initRecyclerView()
@@ -48,18 +44,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             refresh()
         }
 
-        newPost.setOnClickListener {
-            val intent = Intent(activity, NewPostActivity::class.java)
-            startActivity(intent)
-
-        }
     }
 
 
 
     private fun initRecyclerView() {
-        recyclerView = binding.rvHomeList
-
         val layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 

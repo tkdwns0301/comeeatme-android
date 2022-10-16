@@ -49,7 +49,7 @@ class AlbumAdapter(
 
     class ViewHolder(binding: LayoutAlbumImageBinding) : RecyclerView.ViewHolder(binding.root) {
         val image = binding.ivImage
-        val checked = binding.btnChecked
+        val checked = binding.viewChecked
 
     }
 

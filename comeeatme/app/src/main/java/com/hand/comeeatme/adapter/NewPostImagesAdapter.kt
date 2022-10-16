@@ -19,6 +19,8 @@ class NewPostImagesAdapter(
         val image = images[position]
 
         holder.image.setImageURI(image)
+
+
     }
 
     override fun getItemCount(): Int = images.size

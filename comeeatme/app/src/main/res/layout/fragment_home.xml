@@ -171,29 +171,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:listitem="@layout/layout_home_item"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:paddingBottom="80dp"
+            android:clipToPadding="false"/>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/ib_NewPost"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_newpost"
-        android:layout_marginBottom="80dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:elevation="5dp"/>
-
-
-
-<!--    <include-->
-<!--        android:id="@+id/ic_HomeItem"-->
-<!--        layout="@layout/layout_home_item1"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/rg_HomeMenu" />-->
 </androidx.constraintlayout.widget.ConstraintLayout>

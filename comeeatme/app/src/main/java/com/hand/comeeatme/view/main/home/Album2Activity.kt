@@ -72,7 +72,7 @@ class Album2Activity : AppCompatActivity() {
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.toolbar_Next -> {
-                    val intent = Intent(this, CropActivity::class.java)
+                    val intent = Intent(this, Crop2Activity::class.java)
                     intent.putExtra("checkedImages", checkedImageList)
                     intent.putExtra("imagePosition", imagePositionList)
                     intent.putExtra("cropImages", cropImageList)
@@ -86,11 +86,11 @@ class Album2Activity : AppCompatActivity() {
         }
 
         toolbar.setNavigationOnClickListener {
-            val intent = Intent(this, NewPostFragment::class.java)
-            intent.putExtra("checkedImages", checkedImageList)
-            intent.putExtra("imagePosition", imagePositionList)
-            intent.putExtra("cropImages", cropImageList)
-            setResult(RESULT_OK, intent)
+//            val intent = Intent(this, NewPostFragment::class.java)
+//            intent.putExtra("checkedImages", checkedImageList)
+//            intent.putExtra("imagePosition", imagePositionList)
+//            intent.putExtra("cropImages", cropImageList)
+//            setResult(RESULT_OK, intent)
             finish()
         }
 
