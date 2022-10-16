@@ -86,6 +86,8 @@ class MainActivity : AppCompatActivity() {
 
         val home = manager.findFragmentByTag(TAG_HOME)
         val map = manager.findFragmentByTag(TAG_MAP)
+        val newPost = manager.findFragmentByTag("fm_NewPost")
+
 
         if (home != null) {
             ft.hide(home)
@@ -93,6 +95,10 @@ class MainActivity : AppCompatActivity() {
 
         if(map != null) {
             ft.hide(map)
+        }
+
+        if (newPost != null) {
+            ft.remove(newPost)
         }
 
         if (tag == TAG_HOME) {

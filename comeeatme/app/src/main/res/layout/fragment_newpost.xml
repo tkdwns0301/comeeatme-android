@@ -4,37 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingStart="16dp"
-    android:background="@color/white"
-    android:paddingEnd="16dp">
+    android:background="@color/white">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_NewPost"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_NewPost"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:layout_constraintBottom_toTopOf="@id/sv_NewPost"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/tv_Cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="취소"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/tv_Title"
-            app:layout_constraintHorizontal_chainStyle="spread_inside"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:menu="@menu/menu_newpost_toolbar"
+        app:navigationIcon="?homeAsUpIndicator">
 
         <TextView
             android:id="@+id/tv_Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:text="글쓰기"
             android:textColor="@color/black"
             android:textSize="20sp"
@@ -44,29 +31,22 @@
             app:layout_constraintStart_toEndOf="@id/tv_Cancel"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tv_Next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="다음"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_Title"
-            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.appcompat.widget.Toolbar>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ScrollView
+        android:paddingTop="10dp"
         android:id="@+id/sv_NewPost"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:clipToPadding="true"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="80dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cl_NewPost">
+        app:layout_constraintTop_toBottomOf="@id/toolbar_NewPost">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_Menu"
@@ -195,10 +175,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                app:layout_constraintBottom_toTopOf="@id/et_Content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/divider2"
-                app:layout_constraintBottom_toTopOf="@id/et_Content">
+                app:layout_constraintTop_toBottomOf="@id/divider2">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cl_ImageSelect"
@@ -240,15 +220,15 @@
                 android:layout_height="0dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/background_newpost_edittext"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:gravity="start|top"
                 android:hint="글을 작성해보세요"
                 android:padding="10dp"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                app:layout_constraintDimensionRatio="1:0.5"
                 app:layout_constraintBottom_toTopOf="@id/fl_SelectHashTag"
+                app:layout_constraintDimensionRatio="1:0.5"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cl_SelectImages" />
