@@ -151,6 +151,7 @@
             android:button="@null"
             android:checked="false"
             android:text="맛집 랭킹"
+            android:visibility="gone"
             android:textColor="@drawable/selector_radio_color"
             android:textSize="20dp"
             android:textStyle="bold" />
