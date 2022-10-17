@@ -30,5 +30,6 @@
         <activity android:name=".view.main.home.AlbumActivity" />
         <activity android:name=".view.main.home.CropActivity"/>
         <activity android:name=".view.main.home.HashTagActivity"/>
+        <activity android:name=".view.main.home.SearchActivity"/>
     </application>
 </manifest>

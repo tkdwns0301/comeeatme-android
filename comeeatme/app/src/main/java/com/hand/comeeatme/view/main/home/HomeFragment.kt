@@ -56,6 +56,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             startActivityForResult(intent, 100)
         }
 
+        binding.ibSearch.setOnClickListener {
+            val intent = Intent(requireContext(), SearchActivity::class.java)
+            startActivity(intent)
+        }
 
     }
 

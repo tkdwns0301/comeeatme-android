@@ -114,7 +114,7 @@ class HashTagActivity : AppCompatActivity() {
             isCheckable = true
             checkedIcon = null
 
-            val nonClickBackground = ContextCompat.getColor(context, R.color.gray0)
+            val nonClickBackground = ContextCompat.getColor(context, R.color.white)
             val clickBackground = ContextCompat.getColor(context, R.color.basic)
 
             chipBackgroundColor = ColorStateList(
