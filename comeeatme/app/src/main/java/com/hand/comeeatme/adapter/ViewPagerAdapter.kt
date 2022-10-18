@@ -1,16 +1,21 @@
 package com.hand.comeeatme.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.hand.comeeatme.R
 import com.hand.comeeatme.databinding.LayoutHomeImageBinding
+import com.hand.comeeatme.view.main.home.PostFragment
 
-class ViewPagerAdapter(list: ArrayList<Int>) :
+class ViewPagerAdapter(
+    private val items: ArrayList<Int>,
+    private val context: Context,
+) :
     RecyclerView.Adapter<ViewPagerAdapter.PagerViewHolder>() {
-    var item = list
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PagerViewHolder {
         val binding =
@@ -18,10 +23,18 @@ class ViewPagerAdapter(list: ArrayList<Int>) :
         return PagerViewHolder(binding)
     }
 
-    override fun getItemCount(): Int = item.size
+    override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: PagerViewHolder, position: Int) {
-        holder.images.setImageResource(item[position])
+        holder.images.setImageResource(items[position])
+
+        holder.images.setOnClickListener {
+            val manager = (context as AppCompatActivity).supportFragmentManager
+            val ft = manager.beginTransaction()
+
+            ft.add(R.id.fg_MainContainer, PostFragment(), "fm_Post")
+            ft.commitAllowingStateLoss()
+        }
 
         when (itemCount) {
             1 -> {

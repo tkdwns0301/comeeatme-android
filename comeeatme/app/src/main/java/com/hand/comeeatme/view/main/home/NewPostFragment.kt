@@ -31,10 +31,11 @@ import com.google.android.material.chip.Chip
 import com.hand.comeeatme.R
 import com.hand.comeeatme.adapter.NewPostImagesAdapter
 import com.hand.comeeatme.databinding.FragmentNewpostBinding
+import com.hand.comeeatme.view.main.MainActivity
 import java.io.File
 import kotlin.math.roundToInt
 
-class NewPostFragment : Fragment(R.layout.fragment_newpost) {
+class NewPostFragment : Fragment(R.layout.fragment_newpost), MainActivity.onBackPressedListener {
     private var _binding: FragmentNewpostBinding? = null
     private val binding get() = _binding!!
 
@@ -363,6 +364,10 @@ class NewPostFragment : Fragment(R.layout.fragment_newpost) {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    override fun onBackPressed() {
+        requireActivity().supportFragmentManager.beginTransaction().remove(this).commit()
     }
 }
 

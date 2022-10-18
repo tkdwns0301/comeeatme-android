@@ -94,7 +94,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private fun setAdapter() {
         if (getList() != null) {
             val recyclerViewState = recyclerView.layoutManager?.onSaveInstanceState()
-            adapter = CommunityAdapter(getList())
+            adapter = CommunityAdapter(getList(), requireContext())
             recyclerView.adapter = adapter
             recyclerView.layoutManager?.onRestoreInstanceState(recyclerViewState)
             adapter.notifyDataSetChanged()

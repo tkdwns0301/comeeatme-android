@@ -19,6 +19,7 @@ import com.hand.comeeatme.view.main.map.MapFragment
 
 private const val TAG_HOME = "fm_Home"
 private const val TAG_MAP = "fm_Map"
+private const val TAG_POST = "fm_Post"
 private const val TAG_NEWPOST = "fm_NewPost"
 private const val TAG_BOOKMARK = "fm_Bookmark"
 private const val TAG_USER = "fm_User"
@@ -49,6 +50,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+
     private fun initListener() {
         binding.ibNewPost.setOnClickListener {
             Log.e("NewPost", "clicked")
@@ -66,10 +68,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
-        val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm: InputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
 
-        if(currentFocus is EditText) {
+        if (currentFocus is EditText) {
             currentFocus!!.clearFocus()
         }
 
@@ -86,19 +89,23 @@ class MainActivity : AppCompatActivity() {
 
         val home = manager.findFragmentByTag(TAG_HOME)
         val map = manager.findFragmentByTag(TAG_MAP)
-        val newPost = manager.findFragmentByTag("fm_NewPost")
-
+        val newPost = manager.findFragmentByTag(TAG_NEWPOST)
+        val post = manager.findFragmentByTag(TAG_POST)
 
         if (home != null) {
             ft.hide(home)
         }
 
-        if(map != null) {
+        if (map != null) {
             ft.hide(map)
         }
 
         if (newPost != null) {
             ft.remove(newPost)
+        }
+
+        if (post != null) {
+            ft.remove(post)
         }
 
         if (tag == TAG_HOME) {
@@ -111,5 +118,25 @@ class MainActivity : AppCompatActivity() {
             }
         }
         ft.commitAllowingStateLoss()
+    }
+
+    interface onBackPressedListener {
+        fun onBackPressed()
+    }
+
+    override fun onBackPressed() {
+        val fragmentList = supportFragmentManager.fragments
+
+        if(fragmentList.size != 1) {
+            for (fragment in fragmentList) {
+                if (fragment is onBackPressedListener) {
+                    (fragment as onBackPressedListener).onBackPressed()
+                    return
+                }
+            }
+        } else {
+            super.onBackPressed()
+        }
+
     }
 }
