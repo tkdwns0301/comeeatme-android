@@ -42,6 +42,7 @@
         <entry key="app/src/main/res/layout/fragment_map.xml" value="0.13055555555555556" />
         <entry key="app/src/main/res/layout/fragment_newpost.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_newpost2.xml" value="0.37604166666666666" />
+        <entry key="app/src/main/res/layout/fragment_post.xml" value="0.21666666666666667" />
         <entry key="app/src/main/res/layout/home_list_item.xml" value="0.20277777777777778" />
         <entry key="app/src/main/res/layout/layout_album_image.xml" value="0.2125" />
         <entry key="app/src/main/res/layout/layout_button_chip.xml" value="0.21979166666666666" />
