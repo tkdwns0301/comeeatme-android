@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.hand.comeeatme.R
 import com.hand.comeeatme.databinding.FragmentPostBinding
+import com.hand.comeeatme.view.dialog.PostDialog
 import com.hand.comeeatme.view.main.MainActivity
 
 class PostFragment: Fragment(R.layout.fragment_post), MainActivity.onBackPressedListener {
@@ -33,6 +34,7 @@ class PostFragment: Fragment(R.layout.fragment_post), MainActivity.onBackPressed
             when(it.itemId) {
                 R.id.toolbar_Menu -> {
                     // TODO Dialog 띄워서 신고하기 등등 보여주기
+                    PostDialog(requireContext()).showDialog()
                     true
                 }
                 else -> {
