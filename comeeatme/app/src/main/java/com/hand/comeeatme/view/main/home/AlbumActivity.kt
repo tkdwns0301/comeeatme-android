@@ -1,7 +1,6 @@
 package com.hand.comeeatme.view.main.home
 
 import AlbumAdapter
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -9,33 +8,28 @@ import android.media.ThumbnailUtils
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.hand.comeeatme.R
 import com.hand.comeeatme.data.SampleImage
 import com.hand.comeeatme.databinding.ActivityAlbumBinding
-import com.takusemba.cropme.CropLayout
-import com.takusemba.cropme.OnCropListener
 import java.io.File
-import java.io.FileOutputStream
-import java.io.Serializable
 
 
-class AlbumActivity : AppCompatActivity(), Serializable {
+class AlbumActivity : AppCompatActivity() {
     private var _binding: ActivityAlbumBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var recyclerView: RecyclerView
+    private lateinit var toolbar: androidx.appcompat.widget.Toolbar
     private lateinit var adapter: AlbumAdapter
-    private lateinit var cropLayout: CropLayout
-    private lateinit var add: Button
-    private lateinit var end: Button
+
 
     private var position: Int = 0
     private val images = ArrayList<SampleImage>()
     private var checkedImageList: ArrayList<String>? = null
     private var imagePositionList: ArrayList<Int>? = null
+    private var cropImageList: ArrayList<String>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,104 +39,63 @@ class AlbumActivity : AppCompatActivity(), Serializable {
 
         checkedImageList = intent.getStringArrayListExtra("checkedImages") as ArrayList<String>
         imagePositionList = intent.getIntegerArrayListExtra("imagePosition") as ArrayList<Int>
+        cropImageList = intent.getStringArrayListExtra("cropImages") as ArrayList<String>
 
-        Log.e("checkedImageList", "$checkedImageList")
-        Log.e("imagePosition", "$imagePositionList")
-
-        add = binding.btnAdd
-        end = binding.btnEnd
-        recyclerView = binding.rvSelectedImages
-        cropLayout = binding.clCropImage
-
-        getImage()
+        initView()
         initLiListener()
+        getImage()
 
     }
 
-    private fun initLiListener() {
-        add.setOnClickListener {
-            if(!imagePositionList!!.contains(position)) {
-                imagePositionList!!.add(position)
-            }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
-            cropLayout.crop()
-        }
+        if(resultCode == AppCompatActivity.RESULT_OK && requestCode == 100) {
+            cropImageList = data!!.getStringArrayListExtra("cropImages") as ArrayList<String>
 
-        end.setOnClickListener {
-            val intent = Intent(this, NewPostActivity::class.java)
+            // TODO cache 파일 리스트 받아서 NewPostFragment 로 넘겨주기
+            val intent = Intent(this, NewPostFragment::class.java)
             intent.putExtra("checkedImages", checkedImageList)
             intent.putExtra("imagePosition", imagePositionList)
+            intent.putExtra("cropImages", cropImageList)
             setResult(RESULT_OK, intent)
             finish()
         }
+    }
 
-        cropLayout.addOnCropListener(object : OnCropListener {
-            override fun onSuccess(bitmap: Bitmap) {
-                val resizeBitmap = bitmapResize(bitmap)
-                val compressPath =
-                    optimizeBitmap(applicationContext, resizeBitmap, position)
+    private fun initView() {
+        recyclerView = binding.rvSelectedImages
+        toolbar = binding.toolbarNewProject
+    }
 
-                if(!checkedImageList!!.contains(compressPath)) {
-                    checkedImageList!!.add(compressPath!!)
+    private fun initLiListener() {
+        toolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.toolbar_Next -> {
+                    val intent = Intent(this, CropActivity::class.java)
+                    intent.putExtra("checkedImages", checkedImageList)
+                    intent.putExtra("imagePosition", imagePositionList)
+                    intent.putExtra("cropImages", cropImageList)
+                    startActivityForResult(intent, 100)
+                    true
                 }
-
-                Log.e("checkedImageList add", "$checkedImageList")
-
-                //images[position].path = compressPath
-
-                adapter.notifyDataSetChanged()
+                else -> {
+                    super.onOptionsItemSelected(it)
+                }
             }
-
-            override fun onFailure(e: Exception) {
-                Log.e("Failure", "$e")
-            }
-        })
-
-    }
-
-
-    private fun optimizeBitmap(context: Context, bitmap: Bitmap, size: Int): String? {
-        try {
-            val storage = context.cacheDir
-            val fileName = String.format("%d.%s", size, "webp")
-
-            val tempFile = File(storage, fileName)
-            tempFile.createNewFile()
-
-            val fos = FileOutputStream(tempFile)
-
-            bitmap.apply {
-                compress(Bitmap.CompressFormat.WEBP, 20, fos)
-                recycle()
-            }
-
-            fos.flush()
-            fos.close()
-
-            return tempFile.absolutePath
-        } catch (e: Exception) {
-            Log.e("optimizeBitmap : ", "${e.message}")
         }
 
-        return null
-    }
-
-
-    private fun bitmapResize(bitmap: Bitmap): Bitmap {
-        val resizeWidth = 1080
-
-        val aspectRatio = bitmap.height / bitmap.width
-        val targetHeight = resizeWidth * aspectRatio
-
-        val result = Bitmap.createScaledBitmap(bitmap, resizeWidth, targetHeight, false)
-
-        if (result != bitmap) {
-            bitmap.recycle()
+        toolbar.setNavigationOnClickListener {
+//            val intent = Intent(this, NewPostFragment::class.java)
+//            intent.putExtra("checkedImages", checkedImageList)
+//            intent.putExtra("imagePosition", imagePositionList)
+//            intent.putExtra("cropImages", cropImageList)
+//            setResult(RESULT_OK, intent)
+            finish()
         }
 
-        return result
-
     }
+
 
 
     private fun getImage() {
@@ -164,18 +117,19 @@ class AlbumActivity : AppCompatActivity(), Serializable {
             val id = cursor!!.getLong(0)
 
             val thumbnail = getThumbnail(id)
+            val path =
+                File(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA))).toString()
             val uri =
                 Uri.fromFile(File(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA))))
 
-            if (imagePositionList!!.contains(i)) {
-                //val sampleImage = SampleImage(i, thumbnail, uri, "/data/user/0/com.hand.comeeatme/cache/$i.webp")
-                //images.add(sampleImage)
-            } else {
-                //val sampleImage = SampleImage(i, thumbnail, uri,  null)
-                //images.add(sampleImage)
+
+            val sampleImage = SampleImage(i, thumbnail, uri, path, false)
+
+            if(imagePositionList!!.contains(i)) {
+                sampleImage.isChecked = true
             }
 
-
+            images.add(sampleImage)
         }
 
         cursor!!.close()
@@ -188,7 +142,7 @@ class AlbumActivity : AppCompatActivity(), Serializable {
             adapter = AlbumAdapter(
                 images,
                 onClickImage = {
-                    setCropMeLayout(it)
+                    addCheckedImage(it)
                 },
                 onCheckedImage = {
                     removeCheckedImage(it)
@@ -200,17 +154,17 @@ class AlbumActivity : AppCompatActivity(), Serializable {
         }
     }
 
-    private fun setCropMeLayout(image: SampleImage) {
-        position = image.position
-        cropLayout.setUri(image.image)
+    private fun addCheckedImage(image: SampleImage) {
+        images[image.position].isChecked = true
+        checkedImageList!!.add(image.path!!)
+        imagePositionList!!.add(image.position)
+        adapter.notifyDataSetChanged()
     }
 
     private fun removeCheckedImage(position: Int) {
+        images[position].isChecked = false
         checkedImageList!!.remove(images[position].path)
-        Log.e("checkedImageList remove", "$checkedImageList")
         imagePositionList!!.remove(position)
-        //cropLayout.background = null
-        //images[position].path = null
         adapter.notifyDataSetChanged()
     }
 

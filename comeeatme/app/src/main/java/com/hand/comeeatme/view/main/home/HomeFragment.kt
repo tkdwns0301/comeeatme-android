@@ -1,9 +1,12 @@
 package com.hand.comeeatme.view.main.home
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +22,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var swipe: SwipeRefreshLayout
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CommunityAdapter
+    private var checkedChipList = ArrayList<String>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,6 +38,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private fun initView() {
         swipe = binding.srlHomeList
         recyclerView = binding.rvHomeList
+        binding.clHashTagNum.visibility = View.INVISIBLE
 
         initListener()
         initRecyclerView()
@@ -44,8 +49,37 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             refresh()
         }
 
+        binding.ibHashTag.setOnClickListener {
+            Log.e("HashTag", "clicked")
+            val intent = Intent(requireContext(), HashTagActivity::class.java)
+            intent.putExtra("checkedChip", checkedChipList)
+            startActivityForResult(intent, 100)
+        }
+
+        binding.ibSearch.setOnClickListener {
+            val intent = Intent(requireContext(), SearchActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == AppCompatActivity.RESULT_OK && requestCode == 100) {
+            checkedChipList = data!!.getStringArrayListExtra("checkedChip") as ArrayList<String>
+            Log.e("checkedChipList", "$checkedChipList")
+
+            if (checkedChipList.size == 0) {
+                binding.clHashTagNum.visibility = View.INVISIBLE
+            } else {
+                binding.clHashTagNum.visibility = View.VISIBLE
+                binding.tvHashTag.text = "${checkedChipList.size}"
+            }
+
+        }
+
+    }
 
 
     private fun initRecyclerView() {
@@ -60,7 +94,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private fun setAdapter() {
         if (getList() != null) {
             val recyclerViewState = recyclerView.layoutManager?.onSaveInstanceState()
-            adapter = CommunityAdapter(getList())
+            adapter = CommunityAdapter(getList(), requireContext())
             recyclerView.adapter = adapter
             recyclerView.layoutManager?.onRestoreInstanceState(recyclerViewState)
             adapter.notifyDataSetChanged()

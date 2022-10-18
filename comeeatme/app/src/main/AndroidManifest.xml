@@ -27,10 +27,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.main.home.NewPostActivity"/>
         <activity android:name=".view.main.home.AlbumActivity" />
-        <activity android:name=".view.main.home.Album2Activity"/>
         <activity android:name=".view.main.home.CropActivity"/>
-        <activity android:name=".view.main.home.Crop2Activity"/>
+        <activity android:name=".view.main.home.HashTagActivity"/>
+        <activity android:name=".view.main.home.SearchActivity"/>
     </application>
 </manifest>
