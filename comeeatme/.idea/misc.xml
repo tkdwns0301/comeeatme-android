@@ -21,6 +21,7 @@
         <entry key="app/src/main/res/drawable/ic_image0.xml" value="0.41302083333333334" />
         <entry key="app/src/main/res/drawable/ic_imageselect.xml" value="0.3078125" />
         <entry key="app/src/main/res/drawable/ic_newpost.xml" value="0.2942708333333333" />
+        <entry key="app/src/main/res/drawable/ic_search.xml" value="0.23854166666666668" />
         <entry key="app/src/main/res/drawable/mene_select_color.xml" value="0.2942708333333333" />
         <entry key="app/src/main/res/drawable/selector_bookmark.xml" value="0.41302083333333334" />
         <entry key="app/src/main/res/drawable/selector_bottomenavi_color.xml" value="0.3078125" />
@@ -40,7 +41,7 @@
         <entry key="app/src/main/res/layout/activity_temp.xml" value="0.25" />
         <entry key="app/src/main/res/layout/dialog_post.xml" value="0.3244364445133083" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.46136626961673277" />
-        <entry key="app/src/main/res/layout/fragment_map.xml" value="0.13055555555555556" />
+        <entry key="app/src/main/res/layout/fragment_map.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_newpost.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_newpost2.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/fragment_post.xml" value="0.21666666666666667" />
