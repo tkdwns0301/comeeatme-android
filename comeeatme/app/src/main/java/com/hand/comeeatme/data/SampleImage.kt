@@ -6,19 +6,24 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class SampleImage (
+data class SampleImage(
     val position: Int,
     val thumbnail: Bitmap,
     val image: Uri,
     var path: String,
-    var isChecked: Boolean
+    var isChecked: Boolean,
 ) : Parcelable
 
 @Parcelize
-class CropImage (
-    var image : Uri,
-    var isCrop : Boolean
+class CropImage(
+    var image: Uri,
+    var isCrop: Boolean,
 ) : Parcelable
 
+@Parcelize
+class Token(
+    var accessToken: String,
+    var refreshToken: String,
+) : Parcelable
 
 

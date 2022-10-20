@@ -7,7 +7,7 @@ plugins {
 
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
-def kakao_api_key = properties.getProperty("kakao_api_key")
+def kakao_api_key= properties.get('kakao_api_key')
 android {
     compileSdkVersion 31
 
@@ -18,8 +18,9 @@ android {
         versionCode 1
         versionName "1.0"
 
-        buildConfigField "String", "KAKAO_API_KEY", properties['kakao_api_key']
-        manifestPlaceholders = [KAKAO_API_KEY: kakao_api_key]
+
+        manifestPlaceholders = [kakao_api_key: kakao_api_key]
+        buildConfigField "String", "kakao_api_key", "\"${kakao_api_key}\""
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -90,4 +91,6 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation files('libs/libDaumMapAndroid.jar')
 
+    // kakao aouth
+    implementation "com.kakao.sdk:v2-user:2.11.2"
 }
