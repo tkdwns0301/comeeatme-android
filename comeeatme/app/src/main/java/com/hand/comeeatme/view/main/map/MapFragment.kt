@@ -17,10 +17,10 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.hand.comeeatme.R
+import com.hand.comeeatme.adapter.CustomBalloonAdapter
 import com.hand.comeeatme.databinding.FragmentMapBinding
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
-import net.daum.mf.map.api.MapView
 
 class MapFragment: Fragment(R.layout.fragment_map) {
     private var _binding : FragmentMapBinding? = null
@@ -93,24 +93,24 @@ class MapFragment: Fragment(R.layout.fragment_map) {
                 }
             }
         } else {
-            if(isTracking) {
-                isTracking = false
-                binding.mvMap.setCustomCurrentLocationMarkerImage(R.drawable.tracking3, MapPOIItem.ImageOffset(16,16))
-                binding.mvMap.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
-            } else {
-                isTracking = true
-                val lm: LocationManager = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-                val userNowLocation: Location? = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-
-                val uLat = userNowLocation?.latitude
-                val uLong = userNowLocation?.longitude
-
-                binding.mvMap.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(uLat!!, uLong!!), true)
-                binding.mvMap.setZoomLevel(1, true)
-                binding.mvMap.setCustomCurrentLocationMarkerTrackingImage(R.drawable.tracking3, MapPOIItem.ImageOffset(16, 16))
-                binding.mvMap.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving
-            }
-            //findCurrentLocation()
+//            if(isTracking) {
+//                isTracking = false
+//                binding.mvMap.setCustomCurrentLocationMarkerImage(R.drawable.tracking3, MapPOIItem.ImageOffset(16,16))
+//                binding.mvMap.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
+//            } else {
+//                isTracking = true
+//                val lm: LocationManager = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+//                val userNowLocation: Location? = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+//
+//                val uLat = userNowLocation?.latitude
+//                val uLong = userNowLocation?.longitude
+//
+//                binding.mvMap.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(uLat!!, uLong!!), true)
+//                binding.mvMap.setZoomLevel(1, true)
+//                binding.mvMap.setCustomCurrentLocationMarkerTrackingImage(R.drawable.traking2, MapPOIItem.ImageOffset(16, 16))
+//                binding.mvMap.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving
+//            }
+            findCurrentLocation()
         }
     }
 
@@ -129,10 +129,20 @@ class MapFragment: Fragment(R.layout.fragment_map) {
         val uNowPosition = MapPoint.mapPointWithGeoCoord(uLat!!, uLong!!)
 
         val marker = MapPOIItem()
-        marker.mapPoint = uNowPosition
-        marker.markerType = MapPOIItem.MarkerType.RedPin
-        marker.selectedMarkerType = MapPOIItem.MarkerType.YellowPin
-        marker.itemName = "현재위치!!"
+
+        binding.mvMap.setCalloutBalloonAdapter(CustomBalloonAdapter(layoutInflater))
+
+        marker.apply {
+            itemName="현재위치"
+            mapPoint = uNowPosition
+            markerType = MapPOIItem.MarkerType.CustomImage
+            customImageResourceId = R.drawable.marker
+            selectedMarkerType = MapPOIItem.MarkerType.CustomImage
+            customSelectedImageResourceId = R.drawable.marker
+            isCustomImageAutoscale = true
+            setCustomImageAnchor(0.5f, 1f)
+            isShowDisclosureButtonOnCalloutBalloon = true
+        }
 
 
         binding.mvMap.addPOIItem(marker)
