@@ -5,4 +5,7 @@
         <attr name="textStrokeWidth" format="float" />
         <attr name="textStrokeColor" format="color" />
     </declare-styleable>
+    <dimen name="pageMargin">20dp</dimen>
+    <dimen name="pagerOffset">30dp</dimen>
+    <dimen name="pageMarginAndoffset">50dp</dimen>
 </resources>
