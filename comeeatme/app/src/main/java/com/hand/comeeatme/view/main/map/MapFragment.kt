@@ -18,13 +18,17 @@ import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import com.hand.comeeatme.R
+import com.hand.comeeatme.adapter.CustomBalloonAdapter
 import com.hand.comeeatme.adapter.MapAdapter
 import com.hand.comeeatme.databinding.FragmentMapBinding
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
+import kotlin.math.abs
 
 
 class MapFragment : Fragment(R.layout.fragment_map) {
@@ -52,8 +56,8 @@ class MapFragment : Fragment(R.layout.fragment_map) {
         val uLat = userNowLocation?.latitude
         val uLong = userNowLocation?.longitude
 
-        //binding.mvMap.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(uLat!!, uLong!!), true)
-        //binding.mvMap.setZoomLevel(1, true)
+        binding.mvMap.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(uLat!!, uLong!!), true)
+        binding.mvMap.setZoomLevel(1, true)
 
         binding.ibCurrentLocation.setOnClickListener {
             val locationManager =
@@ -65,11 +69,11 @@ class MapFragment : Fragment(R.layout.fragment_map) {
         }
 
         val items = ArrayList<ArrayList<Int>>()
-        items.add(arrayListOf<Int>(R.drawable.food1, R.drawable.food2))
-        items.add(arrayListOf<Int>(R.drawable.food1, R.drawable.food2))
-        items.add(arrayListOf<Int>(R.drawable.food1, R.drawable.food2))
-        items.add(arrayListOf<Int>(R.drawable.food1, R.drawable.food2))
-        items.add(arrayListOf<Int>(R.drawable.food1, R.drawable.food2))
+        items.add(arrayListOf(R.drawable.food1, R.drawable.food2))
+        items.add(arrayListOf(R.drawable.food1, R.drawable.food2))
+        items.add(arrayListOf(R.drawable.food1, R.drawable.food2))
+        items.add(arrayListOf(R.drawable.food1, R.drawable.food2))
+        items.add(arrayListOf(R.drawable.food1, R.drawable.food2))
 
         val dpValue = 25
         val d = resources.displayMetrics.density
@@ -81,13 +85,19 @@ class MapFragment : Fragment(R.layout.fragment_map) {
         }
         binding.vpList.setShowSideItems(0, margin)
 
-//        val compositePageTransformer = CompositePageTransformer()
-//        compositePageTransformer.addTransformer { page, position ->
-//            val r = 1 - Math.abs(position)
-//            page.scaleY = 0.85f + r * 0.15f
-//        }
-//
-//        binding.vpList.setPageTransformer(compositePageTransformer)
+        val compositePageTransformer = CompositePageTransformer()
+        compositePageTransformer.addTransformer { page, position ->
+            val r = 1 - abs(position)
+            page.scaleY = 0.85f + r * 0.15f
+        }
+
+        binding.vpList.setPageTransformer(compositePageTransformer)
+
+        initBottomSheetLayout()
+    }
+
+    private fun initBottomSheetLayout() {
+
     }
 
     private fun initListener() {
@@ -113,6 +123,21 @@ class MapFragment : Fragment(R.layout.fragment_map) {
                 binding.clList.visibility = View.VISIBLE
                 binding.vpList.visibility = View.VISIBLE
             }
+        }
+
+        binding.clList.setOnClickListener {
+//            val dialog = BottomSheetDialog(requireContext())
+//            dialog.setContentView(R.layout.layout_map_bottomsheet)
+//            dialog.setCanceledOnTouchOutside(false)
+//
+//             dialog.create()
+//            dialog.show()
+            val bottomSheet = BottomSheetFragment()
+            bottomSheet.setStyle(DialogFragment.STYLE_NORMAL, R.style.AppBottomSheetDialogTheme)
+            bottomSheet.show(requireActivity().supportFragmentManager, tag)
+
+
+            //binding.icBottomSheet.clBottomSheet.showContextMenu()
         }
     }
 
@@ -196,7 +221,7 @@ class MapFragment : Fragment(R.layout.fragment_map) {
 
         val marker = MapPOIItem()
 
-        //binding.mvMap.setCalloutBalloonAdapter(CustomBalloonAdapter(layoutInflater))
+        binding.mvMap.setCalloutBalloonAdapter(CustomBalloonAdapter(layoutInflater))
 
         marker.apply {
             itemName = "현재위치"
@@ -211,12 +236,12 @@ class MapFragment : Fragment(R.layout.fragment_map) {
         }
 
 
-        //binding.mvMap.addPOIItem(marker)
-        //binding.mvMap.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(uLat!!, uLong!!), true)
-        //binding.mvMap.setZoomLevel(1, true)
+        binding.mvMap.addPOIItem(marker)
+        binding.mvMap.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(uLat!!, uLong!!), true)
+        binding.mvMap.setZoomLevel(1, true)
     }
 
-    fun ViewPager2.setShowSideItems(pageMarginPx: Int, offsetPx: Int) {
+    private fun ViewPager2.setShowSideItems(pageMarginPx: Int, offsetPx: Int) {
 
         clipToPadding = false
         clipChildren = false

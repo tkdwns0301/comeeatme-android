@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/cl_HomeItem"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_HomeItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -37,11 +37,11 @@
             android:id="@+id/cl_Profile_Name_Follow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toStartOf="@id/cl_Like_Bookmark"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/cl_Like_Bookmark"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintHorizontal_chainStyle="spread_inside">
+            app:layout_constraintTop_toTopOf="parent">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/cv_Profile"
@@ -84,10 +84,10 @@
             android:id="@+id/cl_Like_Bookmark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@id/cl_Profile_Name_Follow"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" >
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/cl_Profile_Name_Follow"
+            app:layout_constraintTop_toTopOf="parent">
 
             <ToggleButton
                 android:id="@+id/tb_Like"
@@ -96,9 +96,9 @@
                 android:background="@drawable/selector_like"
                 android:textOff=""
                 android:textOn=""
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/tb_Bookmark"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -107,8 +107,8 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:background="@drawable/selector_bookmark"
-                android:textOn=""
                 android:textOff=""
+                android:textOn=""
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tb_Like"

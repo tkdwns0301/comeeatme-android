@@ -27,6 +27,7 @@ android {
     buildTypes {
         buildFeatures {
             viewBinding true
+            dataBinding = true
         }
 
         release {
@@ -93,5 +94,8 @@ dependencies {
 
     // kakao aouth
     implementation "com.kakao.sdk:v2-user:2.11.2"
+
+    // PresistBottomSheetFragment
+    implementation 'kr.co.prnd:persistBottomSheetFragment:1.0.0'
 
 }

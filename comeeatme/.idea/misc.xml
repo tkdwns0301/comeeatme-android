@@ -5,11 +5,14 @@
       <map>
         <entry key="../../../../../../layout/custom_preview.xml" value="0.22708333333333333" />
         <entry key="app/src/main/res/drawable/background_bottom_navi.xml" value="0.3078125" />
+        <entry key="app/src/main/res/drawable/background_bottomsheet.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/background_button.xml" value="0.2359375" />
         <entry key="app/src/main/res/drawable/background_button1.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/background_button_click.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/background_button_nonclick.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/background_cardview.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/background_dialog.xml" value="0.41302083333333334" />
+        <entry key="app/src/main/res/drawable/background_map_bottomsheet_item.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/background_mapitem.xml" value="0.29635416666666664" />
         <entry key="app/src/main/res/drawable/background_newpost.xml" value="0.2942708333333333" />
         <entry key="app/src/main/res/drawable/background_newpost_edittext.xml" value="0.41302083333333334" />
@@ -17,23 +20,32 @@
         <entry key="app/src/main/res/drawable/background_post.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/background_radius.xml" value="0.41302083333333334" />
         <entry key="app/src/main/res/drawable/background_searchview.xml" value="0.35833333333333334" />
+        <entry key="app/src/main/res/drawable/background_sort.xml" value="0.3921875" />
+        <entry key="app/src/main/res/drawable/ic_arrow_down.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/ic_bookmark.xml" value="0.41302083333333334" />
         <entry key="app/src/main/res/drawable/ic_bookmark2.xml" value="0.41302083333333334" />
         <entry key="app/src/main/res/drawable/ic_bookmark3.xml" value="0.29635416666666664" />
         <entry key="app/src/main/res/drawable/ic_bookmark_checked.xml" value="0.29635416666666664" />
         <entry key="app/src/main/res/drawable/ic_bookmark_unchecked.xml" value="0.29635416666666664" />
+        <entry key="app/src/main/res/drawable/ic_cancel.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/ic_cancel2.xml" value="0.3921875" />
+        <entry key="app/src/main/res/drawable/ic_cancel_x.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/ic_comment.xml" value="0.29635416666666664" />
         <entry key="app/src/main/res/drawable/ic_current.xml" value="0.29635416666666664" />
         <entry key="app/src/main/res/drawable/ic_follow.xml" value="0.29635416666666664" />
         <entry key="app/src/main/res/drawable/ic_hashtag.xml" value="0.29635416666666664" />
+        <entry key="app/src/main/res/drawable/ic_home.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/ic_image0.xml" value="0.41302083333333334" />
+        <entry key="app/src/main/res/drawable/ic_image10.xml" value="0.3921875" />
+        <entry key="app/src/main/res/drawable/ic_image9.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/ic_imageselect.xml" value="0.3078125" />
         <entry key="app/src/main/res/drawable/ic_init.xml" value="0.29635416666666664" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.29635416666666664" />
         <entry key="app/src/main/res/drawable/ic_like_checked.xml" value="0.29635416666666664" />
         <entry key="app/src/main/res/drawable/ic_like_unchecked.xml" value="0.29635416666666664" />
         <entry key="app/src/main/res/drawable/ic_list.xml" value="0.29635416666666664" />
+        <entry key="app/src/main/res/drawable/ic_location.xml" value="0.3921875" />
+        <entry key="app/src/main/res/drawable/ic_location2.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/ic_newpost.xml" value="0.2942708333333333" />
         <entry key="app/src/main/res/drawable/ic_search.xml" value="0.23854166666666668" />
         <entry key="app/src/main/res/drawable/ic_share.xml" value="0.29635416666666664" />
@@ -75,6 +87,9 @@
         <entry key="app/src/main/res/layout/layout_home_item.xml" value="0.4403370144256331" />
         <entry key="app/src/main/res/layout/layout_home_item1.xml" value="0.31064023397906365" />
         <entry key="app/src/main/res/layout/layout_main_item1.xml" value="0.22552083333333334" />
+        <entry key="app/src/main/res/layout/layout_map_bottomsheet.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/layout_map_bottomsheet_collapse.xml" value="0.396875" />
+        <entry key="app/src/main/res/layout/layout_map_bottomsheet_item.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/layout_map_image.xml" value="0.28020833333333334" />
         <entry key="app/src/main/res/layout/layout_map_item.xml" value="0.33" />
         <entry key="app/src/main/res/layout/layout_map_slideup.xml" value="0.28020833333333334" />
