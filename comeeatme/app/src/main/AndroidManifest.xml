@@ -3,23 +3,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.hand.comeeatme">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:name=".GlobalApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:usesCleartextTraffic="true"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Comeeatme">
-        <meta-data android:name="com.kakao.sdk.AppKey" android:value="${kakao_api_key}"/>
-        <activity android:name=".view.main.MainActivity"
-            android:exported="true">
+        android:theme="@style/Theme.Comeeatme"
+        android:usesCleartextTraffic="true">
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="${kakao_api_key}" />
+
+        <activity
+            android:name=".view.main.MainActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -31,21 +36,22 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:host="oauth"
+                <data
+                    android:host="oauth"
                     android:scheme="kakao${kakao_api_key}" />
             </intent-filter>
         </activity>
         <activity
             android:name=".view.login.LogInActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustPan">
-        </activity>
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity android:name=".view.main.home.AlbumActivity" />
-        <activity android:name=".view.main.home.CropActivity"/>
-        <activity android:name=".view.main.home.HashTagActivity"/>
-        <activity android:name=".view.main.home.SearchActivity"/>
+        <activity android:name=".view.main.home.CropActivity" />
+        <activity android:name=".view.main.home.HashTagActivity" />
+        <activity android:name=".view.main.home.SearchActivity" />
     </application>
 </manifest>
