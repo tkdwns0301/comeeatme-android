@@ -20,7 +20,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import com.hand.comeeatme.R
 import com.hand.comeeatme.adapter.CustomBalloonAdapter
@@ -28,7 +27,6 @@ import com.hand.comeeatme.adapter.MapAdapter
 import com.hand.comeeatme.databinding.FragmentMapBinding
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
-import kotlin.math.abs
 
 
 class MapFragment : Fragment(R.layout.fragment_map) {
@@ -59,15 +57,12 @@ class MapFragment : Fragment(R.layout.fragment_map) {
         binding.mvMap.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(uLat!!, uLong!!), true)
         binding.mvMap.setZoomLevel(1, true)
 
-        binding.ibCurrentLocation.setOnClickListener {
-            val locationManager =
-                requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        setViewPager()
+    }
 
-            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                locationPermissionCheck()
-            }
-        }
 
+
+    private fun setViewPager() {
         val items = ArrayList<ArrayList<Int>>()
         items.add(arrayListOf(R.drawable.food1, R.drawable.food2))
         items.add(arrayListOf(R.drawable.food1, R.drawable.food2))
@@ -85,19 +80,13 @@ class MapFragment : Fragment(R.layout.fragment_map) {
         }
         binding.vpList.setShowSideItems(0, margin)
 
-        val compositePageTransformer = CompositePageTransformer()
-        compositePageTransformer.addTransformer { page, position ->
-            val r = 1 - abs(position)
-            page.scaleY = 0.85f + r * 0.15f
-        }
-
-        binding.vpList.setPageTransformer(compositePageTransformer)
-
-        initBottomSheetLayout()
-    }
-
-    private fun initBottomSheetLayout() {
-
+//        val compositePageTransformer = CompositePageTransformer()
+//        compositePageTransformer.addTransformer { page, position ->
+//            val r = 1 - abs(position)
+//            page.scaleY = 0.85f + r * 0.15f
+//        }
+//
+//        binding.vpList.setPageTransformer(compositePageTransformer)
     }
 
     private fun initListener() {
@@ -138,6 +127,15 @@ class MapFragment : Fragment(R.layout.fragment_map) {
 
 
             //binding.icBottomSheet.clBottomSheet.showContextMenu()
+        }
+
+        binding.ibCurrentLocation.setOnClickListener {
+            val locationManager =
+                requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                locationPermissionCheck()
+            }
         }
     }
 
