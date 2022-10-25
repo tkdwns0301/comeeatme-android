@@ -13,6 +13,7 @@
         <entry key="app/src/main/res/drawable/background_cardview.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/background_dialog.xml" value="0.41302083333333334" />
         <entry key="app/src/main/res/drawable/background_map_bottomsheet_item.xml" value="0.3921875" />
+        <entry key="app/src/main/res/drawable/background_map_detail_item.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/background_mapitem.xml" value="0.29635416666666664" />
         <entry key="app/src/main/res/drawable/background_newpost.xml" value="0.2942708333333333" />
         <entry key="app/src/main/res/drawable/background_newpost_edittext.xml" value="0.41302083333333334" />
@@ -20,6 +21,7 @@
         <entry key="app/src/main/res/drawable/background_post.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/background_radius.xml" value="0.41302083333333334" />
         <entry key="app/src/main/res/drawable/background_searchview.xml" value="0.35833333333333334" />
+        <entry key="app/src/main/res/drawable/background_searchview2.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/background_sort.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/ic_arrow_down.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/ic_bookmark.xml" value="0.41302083333333334" />
@@ -66,11 +68,14 @@
         <entry key="app/src/main/res/layout/activity_hashtag.xml" value="0.3657219973009447" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_map_detail.xml" value="0.32275368797496645" />
         <entry key="app/src/main/res/layout/activity_newpost.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_search.xml" value="0.396875" />
         <entry key="app/src/main/res/layout/activity_temp.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/dialog_map_sort.xml" value="0.33" />
         <entry key="app/src/main/res/layout/dialog_post.xml" value="0.3244364445133083" />
         <entry key="app/src/main/res/layout/drawer_map.xml" value="0.37604166666666666" />
+        <entry key="app/src/main/res/layout/fragment_bookmark.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.46136626961673277" />
         <entry key="app/src/main/res/layout/fragment_map.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_newpost.xml" value="0.33" />
@@ -90,6 +95,7 @@
         <entry key="app/src/main/res/layout/layout_map_bottomsheet.xml" value="0.22" />
         <entry key="app/src/main/res/layout/layout_map_bottomsheet_collapse.xml" value="0.396875" />
         <entry key="app/src/main/res/layout/layout_map_bottomsheet_item.xml" value="0.37604166666666666" />
+        <entry key="app/src/main/res/layout/layout_map_detail_item.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/layout_map_image.xml" value="0.28020833333333334" />
         <entry key="app/src/main/res/layout/layout_map_item.xml" value="0.33" />
         <entry key="app/src/main/res/layout/layout_map_slideup.xml" value="0.28020833333333334" />

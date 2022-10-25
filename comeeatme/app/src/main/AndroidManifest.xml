@@ -44,10 +44,13 @@
                     android:scheme="kakao${kakao_api_key}" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.main.MainActivity" />
+        <activity android:name=".view.main.MainActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".view.main.home.AlbumActivity" />
         <activity android:name=".view.main.home.CropActivity" />
         <activity android:name=".view.main.home.HashTagActivity" />
         <activity android:name=".view.main.home.SearchActivity" />
+        <activity android:name=".view.main.map.MapDetailActivity"/>
     </application>
 </manifest>
