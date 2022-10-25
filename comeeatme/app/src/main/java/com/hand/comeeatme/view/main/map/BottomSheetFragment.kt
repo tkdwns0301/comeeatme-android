@@ -13,8 +13,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.hand.comeeatme.adapter.BottomSheetAdapter
 import com.hand.comeeatme.databinding.LayoutMapBottomsheetBinding
-
-
+import com.hand.comeeatme.view.dialog.MapSortDialog
 
 
 class BottomSheetFragment: BottomSheetDialogFragment() {
@@ -31,7 +30,7 @@ class BottomSheetFragment: BottomSheetDialogFragment() {
         _binding = LayoutMapBottomsheetBinding.inflate(inflater, container, false)
 
         initView()
-
+        initListener()
         return binding.root
     }
 
@@ -85,6 +84,12 @@ class BottomSheetFragment: BottomSheetDialogFragment() {
         }
 
 
+    }
+
+    private fun initListener() {
+        binding.clSort.setOnClickListener {
+            MapSortDialog(requireContext()).showDialog()
+        }
     }
 
     override fun onDestroy() {

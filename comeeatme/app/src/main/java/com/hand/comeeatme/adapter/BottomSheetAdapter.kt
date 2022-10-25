@@ -1,10 +1,12 @@
 package com.hand.comeeatme.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hand.comeeatme.databinding.LayoutMapBottomsheetItemBinding
+import com.hand.comeeatme.view.main.map.MapDetailActivity
 
 class BottomSheetAdapter(
     private val items: ArrayList<String>,
@@ -20,6 +22,10 @@ class BottomSheetAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.name.text = "${items[position]}"
 
+        holder.container.setOnClickListener {
+            val intent = Intent(context, MapDetailActivity::class.java)
+            context.startActivity(intent)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -27,6 +33,7 @@ class BottomSheetAdapter(
     }
 
     class ViewHolder(binding: LayoutMapBottomsheetItemBinding) : RecyclerView.ViewHolder(binding.root) {
+        val container = binding.clContainer
         val name = binding.tvName
     }
 }
