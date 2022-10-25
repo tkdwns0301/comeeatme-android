@@ -20,9 +20,8 @@
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="${kakao_api_key}" />
-
         <activity
-            android:name=".view.main.MainActivity"
+            android:name=".view.login.LogInActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
@@ -45,10 +44,7 @@
                     android:scheme="kakao${kakao_api_key}" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".view.login.LogInActivity"
-            android:exported="true"
-            android:windowSoftInputMode="adjustPan"></activity>
+        <activity android:name=".view.main.MainActivity" />
         <activity android:name=".view.main.home.AlbumActivity" />
         <activity android:name=".view.main.home.CropActivity" />
         <activity android:name=".view.main.home.HashTagActivity" />
