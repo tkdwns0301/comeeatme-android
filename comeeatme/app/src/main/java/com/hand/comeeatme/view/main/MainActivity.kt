@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.hand.comeeatme.R
 import com.hand.comeeatme.databinding.ActivityMainBinding
+import com.hand.comeeatme.view.main.bookmark.BookmarkFragment
 import com.hand.comeeatme.view.main.home.HomeFragment
 import com.hand.comeeatme.view.main.home.NewPostFragment
 import com.hand.comeeatme.view.main.map.MapFragment
@@ -40,7 +41,7 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.fm_Home -> setFragment(TAG_HOME, HomeFragment())
                 R.id.fm_Map -> setFragment(TAG_MAP, MapFragment())
-
+                R.id.fm_Bookmark -> setFragment(TAG_BOOKMARK, BookmarkFragment())
             }
             true
         }
@@ -91,6 +92,7 @@ class MainActivity : AppCompatActivity() {
         val map = manager.findFragmentByTag(TAG_MAP)
         val newPost = manager.findFragmentByTag(TAG_NEWPOST)
         val post = manager.findFragmentByTag(TAG_POST)
+        val bookmark = manager.findFragmentByTag(TAG_BOOKMARK)
 
         if (home != null) {
             ft.hide(home)
@@ -108,6 +110,10 @@ class MainActivity : AppCompatActivity() {
             ft.remove(post)
         }
 
+        if(bookmark != null) {
+            ft.hide(bookmark)
+        }
+
         if (tag == TAG_HOME) {
             if (home != null) {
                 ft.show(home)
@@ -115,6 +121,10 @@ class MainActivity : AppCompatActivity() {
         } else if (tag == TAG_MAP) {
             if (map != null) {
                 ft.show(map)
+            }
+        } else if(tag == TAG_BOOKMARK) {
+            if(bookmark != null) {
+                ft.show(bookmark)
             }
         }
         ft.commitAllowingStateLoss()
