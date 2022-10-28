@@ -26,7 +26,6 @@ private const val TAG_NEWPOST = "fm_NewPost"
 private const val TAG_BOOKMARK = "fm_Bookmark"
 private const val TAG_USER = "fm_User"
 
-
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 

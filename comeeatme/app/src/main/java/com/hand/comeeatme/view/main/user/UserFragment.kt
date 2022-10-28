@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.hand.comeeatme.R
 import com.hand.comeeatme.adapter.UserListAdapter
 import com.hand.comeeatme.databinding.FragmentUserBinding
@@ -78,6 +80,13 @@ class UserFragment: Fragment(R.layout.fragment_user) {
 
         }
 
+        binding.ivName.setOnClickListener {
+            val manager: FragmentManager = requireActivity().supportFragmentManager
+            val ft: FragmentTransaction = manager.beginTransaction()
+
+            ft.add(R.id.fg_MainContainer, UserEditFragment(), "fm_UserEdit")
+            ft.commitAllowingStateLoss()
+        }
 
     }
 
