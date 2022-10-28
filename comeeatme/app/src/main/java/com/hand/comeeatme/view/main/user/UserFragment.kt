@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentTransaction
 import com.hand.comeeatme.R
 import com.hand.comeeatme.adapter.UserListAdapter
 import com.hand.comeeatme.databinding.FragmentUserBinding
+import com.hand.comeeatme.view.dialog.UserSortDialog
 
 class UserFragment: Fragment(R.layout.fragment_user) {
     private var _binding: FragmentUserBinding? = null
@@ -86,6 +87,10 @@ class UserFragment: Fragment(R.layout.fragment_user) {
 
             ft.add(R.id.fg_MainContainer, UserEditFragment(), "fm_UserEdit")
             ft.commitAllowingStateLoss()
+        }
+
+        binding.clSort.setOnClickListener {
+            UserSortDialog(requireContext()).showDialog()
         }
 
     }
