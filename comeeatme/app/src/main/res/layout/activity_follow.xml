@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_Follower"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="?homeAsUpIndicator" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="커비의입속"
+            android:textColor="@color/basic"
+            android:textSize="20sp"
+            android:layout_gravity="center"
+            android:textStyle="bold"/>
+    </androidx.appcompat.widget.Toolbar>
+
+    <RadioGroup
+        android:id="@+id/rg_FollowerAndFollowing"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_Follower"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/rb_Follower"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:button="@null"
+            android:text="팔로워"
+            android:checked="true"
+            android:textSize="15sp"
+            android:textColor="@drawable/selector_radio_color"
+            android:textStyle="bold"/>
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/rb_Following"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:button="@null"
+            android:text="팔로잉"
+            android:textSize="15sp"
+            android:textColor="@drawable/selector_radio_color"
+            android:textStyle="bold"
+            android:layout_marginStart="20dp"/>
+    </RadioGroup>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_BlankAndFollowList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/rg_FollowerAndFollowing"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintVertical_bias="0.3">
+
+                <ImageView
+                    android:id="@+id/iv_Follow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:src="@drawable/ic_user_30"
+                    android:background="@null"/>
+                
+                <TextView
+                    android:id="@+id/tv_Follow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/iv_Follow"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:text="회원님을 팔로잉하는\n사용자를 아직 찾지 못했어요"
+                    android:gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:textSize="13sp"
+                    android:textColor="@color/gray2"/>
+                    
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:orientation="vertical"
+            tools:listitem="@layout/layout_user_follow"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
