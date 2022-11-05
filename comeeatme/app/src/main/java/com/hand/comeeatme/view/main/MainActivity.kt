@@ -16,6 +16,7 @@ import com.hand.comeeatme.view.main.bookmark.BookmarkFragment
 import com.hand.comeeatme.view.main.home.HomeFragment
 import com.hand.comeeatme.view.main.home.NewPostFragment
 import com.hand.comeeatme.view.main.map.MapFragment
+import com.hand.comeeatme.view.main.user.UserFragment
 
 
 private const val TAG_HOME = "fm_Home"
@@ -24,7 +25,6 @@ private const val TAG_POST = "fm_Post"
 private const val TAG_NEWPOST = "fm_NewPost"
 private const val TAG_BOOKMARK = "fm_Bookmark"
 private const val TAG_USER = "fm_User"
-
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.fm_Home -> setFragment(TAG_HOME, HomeFragment())
                 R.id.fm_Map -> setFragment(TAG_MAP, MapFragment())
                 R.id.fm_Bookmark -> setFragment(TAG_BOOKMARK, BookmarkFragment())
+                R.id.fm_User -> setFragment(TAG_USER, UserFragment())
             }
             true
         }
@@ -93,6 +94,7 @@ class MainActivity : AppCompatActivity() {
         val newPost = manager.findFragmentByTag(TAG_NEWPOST)
         val post = manager.findFragmentByTag(TAG_POST)
         val bookmark = manager.findFragmentByTag(TAG_BOOKMARK)
+        val user = manager.findFragmentByTag(TAG_USER)
 
         if (home != null) {
             ft.hide(home)
@@ -114,6 +116,10 @@ class MainActivity : AppCompatActivity() {
             ft.hide(bookmark)
         }
 
+        if(user != null) {
+            ft.hide(user)
+        }
+
         if (tag == TAG_HOME) {
             if (home != null) {
                 ft.show(home)
@@ -125,6 +131,10 @@ class MainActivity : AppCompatActivity() {
         } else if(tag == TAG_BOOKMARK) {
             if(bookmark != null) {
                 ft.show(bookmark)
+            }
+        } else if(tag == TAG_USER) {
+            if(user != null) {
+                ft.show(user)
             }
         }
         ft.commitAllowingStateLoss()
