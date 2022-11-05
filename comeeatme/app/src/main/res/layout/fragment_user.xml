@@ -103,7 +103,7 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cl_Follower"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/divider"
@@ -144,13 +144,13 @@
                     android:layout_height="0dp"
                     android:background="@color/gray1"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/cl_Follow"
+                    app:layout_constraintEnd_toStartOf="@id/cl_Following"
                     app:layout_constraintStart_toEndOf="@id/cl_Follower"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_Follow"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/cl_Following"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -158,20 +158,20 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
-                        android:id="@+id/tv_Follow"
+                        android:id="@+id/tv_Following"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="팔로잉"
                         android:textColor="@color/basic"
                         android:textSize="13sp"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toTopOf="@id/tv_FollowCnt"
+                        app:layout_constraintBottom_toTopOf="@id/tv_FollowingCnt"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/tv_FollowCnt"
+                        android:id="@+id/tv_FollowingCnt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
@@ -182,7 +182,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tv_Follow" />
+                        app:layout_constraintTop_toBottomOf="@id/tv_Following" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -207,8 +207,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <ImageButton
-                        android:id="@+id/ib_MyReview"
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -216,7 +215,6 @@
                         android:src="@drawable/ic_myreview" />
 
                     <TextView
-                        android:id="@+id/tv_MyReview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
@@ -235,8 +233,7 @@
                     app:layout_constraintStart_toEndOf="@id/ll_MyReview"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <ImageButton
-                        android:id="@+id/ib_RecentReview"
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -244,7 +241,6 @@
                         android:src="@drawable/ic_recentreview" />
 
                     <TextView
-                        android:id="@+id/tv_RecentReview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
@@ -263,8 +259,7 @@
                     app:layout_constraintStart_toEndOf="@id/ll_RecentReview"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <ImageButton
-                        android:id="@+id/ib_MyComment"
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -272,7 +267,6 @@
                         android:src="@drawable/ic_mycomment" />
 
                     <TextView
-                        android:id="@+id/tv_MyComment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
@@ -291,8 +285,7 @@
                     app:layout_constraintStart_toEndOf="@id/ll_MyComment"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <ImageButton
-                        android:id="@+id/ib_HeartReview"
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -300,7 +293,6 @@
                         android:src="@drawable/ic_heartreview" />
 
                     <TextView
-                        android:id="@+id/tv_HeartReview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"

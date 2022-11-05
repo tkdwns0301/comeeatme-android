@@ -1,6 +1,7 @@
 package com.hand.comeeatme.view.main.user
 
 import UserGridAdapter
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -92,6 +93,39 @@ class UserFragment: Fragment(R.layout.fragment_user) {
         binding.clSort.setOnClickListener {
             UserSortDialog(requireContext()).showDialog()
         }
+
+        binding.clFollower.setOnClickListener {
+            val intent = Intent(requireContext(), FollowActivity::class.java)
+            intent.putExtra("isFollowerView", true)
+            startActivity(intent)
+        }
+
+        binding.clFollowing.setOnClickListener {
+            val intent = Intent(requireContext(), FollowActivity::class.java)
+            intent.putExtra("isFollowerView", false)
+            startActivity(intent)
+        }
+
+        binding.llMyReview.setOnClickListener {
+            val intent = Intent(requireContext(), MyReviewActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.llRecentReview.setOnClickListener{
+            val intent = Intent(requireContext(), RecentReviewActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.llMyComment.setOnClickListener {
+            val intent = Intent(requireContext(), MyCommentActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.llHeartReview.setOnClickListener {
+            val intent = Intent(requireContext(), HeartReviewActivity::class.java)
+            startActivity(intent)
+        }
+
 
     }
 

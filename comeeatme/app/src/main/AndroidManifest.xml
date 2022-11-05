@@ -52,5 +52,10 @@
         <activity android:name=".view.main.home.HashTagActivity" />
         <activity android:name=".view.main.home.SearchActivity" />
         <activity android:name=".view.main.map.MapDetailActivity"/>
+        <activity android:name=".view.main.user.FollowActivity"/>
+        <activity android:name=".view.main.user.HeartReviewActivity"/>
+        <activity android:name=".view.main.user.MyCommentActivity"/>
+        <activity android:name=".view.main.user.MyReviewActivity"/>
+        <activity android:name=".view.main.user.RecentReviewActivity"/>
     </application>
 </manifest>
