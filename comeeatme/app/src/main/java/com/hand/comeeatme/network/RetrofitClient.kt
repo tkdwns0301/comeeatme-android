@@ -1,6 +1,7 @@
 package com.hand.comeeatme.network
 
 import com.google.gson.GsonBuilder
+import com.hand.comeeatme.BuildConfig
 import okhttp3.JavaNetCookieJar
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -14,7 +15,7 @@ object RetrofitClient {
     private var instance: Retrofit? = null
     private val gson = GsonBuilder().setLenient().create()
 
-    private const val BASE_URL = "https://api.cem.zooneon.dev"
+    private const val BASE_URL = BuildConfig.BASE_URL
     private const val CONNECT_TIMEOUT_SEC = 20000L
 
     fun getInstance(): Retrofit {

@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.hand.comeeatme.R
-import com.hand.comeeatme.adapter.UserListAdapter
+import com.hand.comeeatme.util.widget.adapter.UserListAdapter
 import com.hand.comeeatme.databinding.FragmentUserBinding
 import com.hand.comeeatme.view.dialog.UserSortDialog
 

@@ -13,7 +13,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/rv_HeartReview"
-        app:navigationIcon="?homeAsUpIndicator" >
+        app:navigationIcon="@drawable/ic_prev_basic_24" >
 
         <TextView
             android:layout_width="wrap_content"

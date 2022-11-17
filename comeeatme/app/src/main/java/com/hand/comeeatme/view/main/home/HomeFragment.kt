@@ -1,65 +1,107 @@
 package com.hand.comeeatme.view.main.home
 
 import android.content.Intent
-import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.hand.comeeatme.R
-import com.hand.comeeatme.adapter.CommunityAdapter
+import com.hand.comeeatme.data.response.home.Content
 import com.hand.comeeatme.databinding.FragmentHomeBinding
+import com.hand.comeeatme.util.widget.adapter.home.CommunityAdapter
+import com.hand.comeeatme.view.base.BaseFragment
+import com.hand.comeeatme.view.main.home.hashtag.HashTagActivity
+import com.hand.comeeatme.view.main.home.search.SearchActivity
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class HomeFragment : Fragment(R.layout.fragment_home) {
-    private var _binding: FragmentHomeBinding? = null
-    private val binding get() = _binding!!
 
-    private lateinit var swipe: SwipeRefreshLayout
-    private lateinit var recyclerView: RecyclerView
+class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
+
+    companion object {
+        fun newInstance() = HomeFragment()
+
+        const val TAG = "HomeFragment"
+    }
+
+    override val viewModel by viewModel<HomeViewModel>()
+    override fun getViewBinding(): FragmentHomeBinding = FragmentHomeBinding.inflate(layoutInflater)
+
     private lateinit var adapter: CommunityAdapter
     private var checkedChipList = ArrayList<String>()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+    override fun observeData() {
+        viewModel.homeStateLiveData.observe(viewLifecycleOwner) {
+            when (it) {
+                is HomeState.Uninitialized -> {
 
-        initView()
-        return binding.root
+                }
+
+                is HomeState.Loading -> {
+                    binding.clLoading.isVisible = true
+                }
+
+                is HomeState.Success -> {
+                    binding.clLoading.isGone = true
+                    setAdapter(it.posts.data.content)
+                }
+
+                is HomeState.Error -> {
+                    binding.clLoading.isGone = true
+                }
+            }
+        }
     }
 
-    private fun initView() {
-        swipe = binding.srlHomeList
-        recyclerView = binding.rvHomeList
-        binding.clHashTagNum.visibility = View.INVISIBLE
+    override fun initView() = with(binding) {
+        rvHomeList.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+//        rvHomeList.addOnScrollListener(VisiblePositionChangeListener(rvHomeList.layoutManager as LinearLayoutManager,
+//        object: VisiblePositionChangeListener.OnChangeListener{
+//            override fun onFirstVisiblePositionChanged(position: Int) {
+//                visited[position] = true
+//                adapter.notifyDataSetChanged()
+//            }
+//
+//            override fun onLastVisiblePositionChanged(position: Int) {
+//                visited[position] = true
+//                adapter.notifyDataSetChanged()
+//            }
+//
+//            override fun onFirstInvisiblePositionChanged(position: Int) {
+//                visited[position] = true
+//                adapter.notifyDataSetChanged()
+//            }
+//
+//            override fun onLastInvisiblePositionChanged(position: Int) {
+//                visited[position] = true
+//                adapter.notifyDataSetChanged()
+//            }
+//
+//        }))
 
-        initListener()
-        initRecyclerView()
-    }
 
-    private fun initListener() {
-        swipe.setOnRefreshListener {
+        viewModel.loadPost(0, 10, false, null)
+
+        srlHomeList.setOnRefreshListener {
             refresh()
         }
 
-        binding.ibHashTag.setOnClickListener {
-            Log.e("HashTag", "clicked")
+        ibHashTag.setOnClickListener {
             val intent = Intent(requireContext(), HashTagActivity::class.java)
             intent.putExtra("checkedChip", checkedChipList)
             startActivityForResult(intent, 100)
         }
 
-        binding.ibSearch.setOnClickListener {
+        ibSearch.setOnClickListener {
             val intent = Intent(requireContext(), SearchActivity::class.java)
             startActivity(intent)
         }
+
+        srlHomeList.setOnRefreshListener {
+            refresh()
+        }
+
 
     }
 
@@ -81,48 +123,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     }
 
-
-    private fun initRecyclerView() {
-        val layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-
-        recyclerView.layoutManager = layoutManager
-
-        setAdapter()
-    }
-
-    private fun setAdapter() {
-        if (getList() != null) {
-            val recyclerViewState = recyclerView.layoutManager?.onSaveInstanceState()
-            adapter = CommunityAdapter(getList(), requireContext())
-            recyclerView.adapter = adapter
-            recyclerView.layoutManager?.onRestoreInstanceState(recyclerViewState)
-            adapter.notifyDataSetChanged()
-        }
-    }
-
-    private fun refresh() {
-        initRecyclerView()
-        swipe.isRefreshing = false
-    }
-
-    private fun getList(): ArrayList<ArrayList<Int>> {
-        val items = ArrayList<ArrayList<Int>>()
-
-        items.add(arrayListOf<Int>(R.drawable.food1, R.drawable.food2))
-        items.add(arrayListOf<Int>(R.drawable.food1, R.drawable.food2))
-        items.add(arrayListOf<Int>(R.drawable.food1, R.drawable.food2))
-        items.add(arrayListOf<Int>(R.drawable.food1, R.drawable.food2))
-        items.add(arrayListOf<Int>(R.drawable.food1, R.drawable.food2))
-
-        return items
+    private fun setAdapter(contents: List<Content>) {
+        adapter = CommunityAdapter(contents, requireContext())
+        binding.rvHomeList.adapter = adapter
+        adapter.notifyDataSetChanged()
     }
 
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private fun refresh() = with(binding) {
+        viewModel.loadPost(0, 10, false, null)
+        srlHomeList.isRefreshing = false
     }
-
 
 }

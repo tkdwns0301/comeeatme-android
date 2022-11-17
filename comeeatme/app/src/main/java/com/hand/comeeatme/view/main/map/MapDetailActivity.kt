@@ -3,8 +3,8 @@ package com.hand.comeeatme.view.main.map
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.hand.comeeatme.adapter.MapDetailAdapter
 import com.hand.comeeatme.databinding.ActivityMapDetailBinding
+import com.hand.comeeatme.util.widget.adapter.MapDetailAdapter
 
 class MapDetailActivity : AppCompatActivity() {
     private var _binding : ActivityMapDetailBinding? = null
@@ -21,6 +21,7 @@ class MapDetailActivity : AppCompatActivity() {
     }
 
     private fun initView() {
+
         val items = ArrayList<Int>()
 
         items.add(0)

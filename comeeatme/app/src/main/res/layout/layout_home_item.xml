@@ -7,17 +7,67 @@
     android:layout_height="wrap_content">
 
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/vp_Images"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_Photos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@id/cl_Profile_Name_Follow_Bookmark"
-        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vp_Photos"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_Location"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_home_location"
+            android:padding="5dp"
+            app:layout_constraintCircleRadius="4dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:id="@+id/tv_Location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:drawableStartCompat="@drawable/ic_location"
+                android:text="올드타운베어"
+                android:textSize="13sp"
+                android:textColor="@color/white"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageView
+            android:id="@+id/iv_Number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="15dp"
+            android:background="@null"
+            android:textSize="18sp"
+            android:src="@drawable/ic_image1_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:translationZ="10dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,7 +80,7 @@
         app:layout_constraintBottom_toTopOf="@id/tv_Content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/vp_Images">
+        app:layout_constraintTop_toBottomOf="@id/cl_Photos">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -60,23 +110,27 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:text="NiCKNAME"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
+                android:textColor="@color/basic"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/ib_Follow"
                 app:layout_constraintStart_toEndOf="@id/cv_Profile"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageButton
+            <ToggleButton
                 android:id="@+id/ib_Follow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="27dp"
+                android:layout_height="19dp"
                 android:layout_marginStart="10dp"
-                android:background="@null"
+                android:background="@drawable/selector_follow"
+                android:textOff=""
+                android:textOn=""
                 android:src="@drawable/ic_follow"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tv_NickName"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -126,6 +180,9 @@
         android:paddingTop="10dp"
         android:text="Lorem ipsum dolor sit amet. Quo quis sint qui autem sunt aut nulla autem. Et optio..."
         android:textSize="14sp"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:textColor="@color/basic"
         app:layout_constraintBottom_toTopOf="@id/cl_Comment_Like"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -143,36 +200,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_Content">
 
-        <ImageButton
-            android:id='@+id/ib_Comment'
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:src="@drawable/ic_comment"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/tv_Comment"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <TextView
             android:id="@+id/tv_Comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:drawableStartCompat="@drawable/ic_comment_32"
             android:text='(13)'
-            android:textSize="14sp"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="@color/basic68"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/ib_Like"
-            app:layout_constraintStart_toEndOf="@id/ib_Comment"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageButton
-            android:id="@+id/ib_Like"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:src="@drawable/ic_like_unchecked"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_Comment"
+            app:layout_constraintEnd_toStartOf="@id/tv_Like"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -180,10 +220,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text='(13)'
-            android:textSize="14sp"
+            android:textSize="13sp"
+            android:textColor="@color/basic68"
+            android:textStyle="bold"
+            android:layout_marginStart="5dp"
+            app:drawableStartCompat="@drawable/ic_like_unchecked_32"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/ib_Like"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:gravity="center"
+            app:layout_constraintStart_toEndOf="@id/tv_Comment"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tv_Date"/>
+
+        <TextView
+            android:id="@+id/tv_Date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_Like"
+            android:text="15시간 전"
+            android:textColor="@color/nonCheck"
+            android:textSize="12sp"
+            android:layout_marginStart="10dp"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

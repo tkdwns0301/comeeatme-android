@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.hand.comeeatme.adapter.BottomSheetAdapter
 import com.hand.comeeatme.databinding.LayoutMapBottomsheetBinding
+import com.hand.comeeatme.util.widget.adapter.BottomSheetAdapter
 import com.hand.comeeatme.view.dialog.MapSortDialog
 
 

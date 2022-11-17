@@ -5,6 +5,6 @@
         android:id="@+id/toolbar_Setting"
         app:showAsAction="always"
         android:title="설정"
-        android:icon="@drawable/ic_setting"/>
+        android:icon="@drawable/ic_setting_32"/>
 
 </menu>

@@ -19,6 +19,6 @@
     <item
         android:id="@+id/fm_User"
         android:title="유저"
-        android:icon="@drawable/ic_user"/>
+        android:icon="@drawable/ic_user_24"/>
 
 </menu>

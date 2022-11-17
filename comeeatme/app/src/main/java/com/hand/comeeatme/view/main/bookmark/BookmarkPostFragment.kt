@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hand.comeeatme.R
-import com.hand.comeeatme.adapter.BookmarkPostAdapter
+import com.hand.comeeatme.util.widget.adapter.BookmarkPostAdapter
 import com.hand.comeeatme.databinding.LayoutBookmarkPostBinding
 
 class BookmarkPostFragment: Fragment(R.layout.layout_bookmark_post) {
