@@ -4,44 +4,24 @@
     android:id="@+id/cl_HashTag"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/gray0"
+    android:background="@drawable/background_includingbox"
     android:paddingStart="16dp"
     android:visibility="gone"
     android:paddingTop="10dp"
     android:paddingEnd="16dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_Init"
+    <TextView
+        android:id="@+id/tv_Init"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="전체 초기화"
+        android:textColor="#696969"
+        android:textSize="11sp"
+        app:drawableStartCompat="@drawable/ic_init_16"
+        android:layout_marginStart="5dp"
         app:layout_constraintBottom_toTopOf="@id/tv_Mood"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/iv_Init"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:src="@drawable/ic_init"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/tv_Init"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tv_Init"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="전체 초기화"
-            android:textColor="@color/gray2"
-            android:textSize="11sp"
-            android:layout_marginStart="5dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/iv_Init"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <TextView
@@ -54,7 +34,7 @@
         app:layout_constraintBottom_toTopOf="@id/fl_Mood"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cl_Init" />
+        app:layout_constraintTop_toBottomOf="@id/tv_Init" />
 
 
     <com.google.android.flexbox.FlexboxLayout

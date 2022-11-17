@@ -5,31 +5,60 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_NewProject"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/toolbar_Album"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:layout_width="match_parent"
-        app:layout_constraintBottom_toTopOf="@id/rv_SelectedImages"
         android:layout_height="?attr/actionBarSize"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:menu="@menu/menu_album_toolbar"
-        app:navigationIcon="?homeAsUpIndicator">
+        app:layout_constraintBottom_toTopOf="@id/rv_SelectedImages"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <TextView
+        <ImageButton
+            android:id="@+id/ib_Prev"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            app:layout_constraintEnd_toStartOf="@id/tv_Title"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:background="@null"
+            android:src="@drawable/ic_prev_basic_24"/>
+
+        <TextView
+            android:id="@+id/tv_Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/ib_Prev"
+            app:layout_constraintEnd_toStartOf="@id/tv_Next"
             android:text="사진선택"
+            android:textSize="20sp"
+            android:textColor="@color/basic"
+            android:textStyle="bold"/>
+        
+        <TextView
+            android:id="@+id/tv_Next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_Title"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="다음"
+            android:textColor="@color/nonCheck"
             android:textStyle="bold"
-            android:textColor="@color/black"
-            android:textSize="18sp" />
-    </androidx.appcompat.widget.Toolbar>
+            android:textSize="20sp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_SelectedImages"
+        android:id="@+id/rv_Photo"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
@@ -40,7 +69,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_NewProject"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_Album"
         app:spanCount="3"
         tools:listitem="@layout/layout_album_image" />
 

@@ -1,40 +1,52 @@
 package com.hand.comeeatme.view.login
 
-import android.content.Intent
-import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import com.hand.comeeatme.data.LogInRequest
-import com.hand.comeeatme.data.LogInResponse
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import com.hand.comeeatme.databinding.ActivityLoginBinding
-import com.hand.comeeatme.network.RetrofitClient
-import com.hand.comeeatme.service.OAuthService
+import com.hand.comeeatme.view.base.BaseActivity
 import com.hand.comeeatme.view.main.MainActivity
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.AuthErrorCause
 import com.kakao.sdk.user.UserApiClient
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class LogInActivity : AppCompatActivity() {
-    private var _binding : ActivityLoginBinding? = null
-    private val binding get() = _binding!!
+class LogInActivity : BaseActivity<LogInViewModel, ActivityLoginBinding>() {
 
-    private lateinit var retrofit: Retrofit
-    private lateinit var oauthService: OAuthService
+    override val viewModel by viewModel<LogInViewModel>()
+    override fun getViewBinding(): ActivityLoginBinding =
+        ActivityLoginBinding.inflate(layoutInflater)
 
     private lateinit var callback :(OAuthToken?, Throwable?) -> Unit
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun observeData() = viewModel.loginStateLiveData.observe(this) {
+        when (it) {
+            is LogInState.Uninitialized -> {
+                binding.pbLoading.isGone = true
+            }
 
-        _binding = ActivityLoginBinding.inflate(layoutInflater)
+            is LogInState.Loading -> {
+                binding.pbLoading.isVisible = true
+            }
 
-        setContentView(binding.root)
+            is LogInState.Success -> {
+                binding.pbLoading.isGone = true
+                startActivity(
+                    MainActivity.newIntent(applicationContext)
+                )
+                finish()
+            }
 
+            is LogInState.Error -> {
+                Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+
+
+    override fun initView() = with(binding) {
         callback = { token, error ->
             if (error != null) {
                 when {
@@ -67,57 +79,18 @@ class LogInActivity : AppCompatActivity() {
                     }
                 }
             } else if (token != null) {
-                tokenToServer(token.accessToken)
+                viewModel.getToken(token.accessToken)
             }
         }
 
-        initListener()
-        initRetrofit()
-    }
-
-    private fun initRetrofit() {
-        retrofit = RetrofitClient.getInstance()
-        oauthService = retrofit.create(OAuthService::class.java)
-    }
-
-    private fun tokenToServer(accessToken: String) {
-        val kakaoToken = LogInRequest(accessToken)
-        val logInService = oauthService.sendTokenToServer("kakao", kakaoToken)
-
-        logInService.enqueue(object: Callback<LogInResponse> {
-            override fun onResponse(call: Call<LogInResponse>, response: Response<LogInResponse>) {
-                if(response.isSuccessful) {
-                    val accessToken = response.body()!!.accessToken
-                    val refreshToken = response.body()!!.refreshToken
-                    val memberId = response.body()!!.memberId
-
-                    Log.e("Success LogIn: ", "accessToken: $accessToken, refreshToken: $refreshToken, memberId: $memberId")
-
-                    val intent = Intent(applicationContext, MainActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                }
-            }
-
-            override fun onFailure(call: Call<LogInResponse>, t: Throwable) {
-                Toast.makeText(applicationContext, "로그인 도중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
-            }
-
-        })
-    }
-
-    private fun initListener() {
-        binding.btnLogIn.setOnClickListener{
+        btnLogIn.setOnClickListener {
             if (UserApiClient.instance.isKakaoTalkLoginAvailable(applicationContext)) {
                 UserApiClient.instance.loginWithKakaoTalk(applicationContext, callback = callback)
             } else {
-                UserApiClient.instance.loginWithKakaoAccount(applicationContext, callback = callback)
+                UserApiClient.instance.loginWithKakaoAccount(applicationContext,
+                    callback = callback)
             }
         }
-    }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
     }
 }

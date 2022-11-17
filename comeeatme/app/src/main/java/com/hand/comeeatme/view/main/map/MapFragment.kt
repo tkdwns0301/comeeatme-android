@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.text.Editable
@@ -15,16 +16,18 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.hand.comeeatme.R
-import com.hand.comeeatme.adapter.CustomBalloonAdapter
-import com.hand.comeeatme.adapter.MapAdapter
 import com.hand.comeeatme.databinding.FragmentMapBinding
+import com.hand.comeeatme.util.widget.adapter.CustomBalloonAdapter
+import com.hand.comeeatme.util.widget.adapter.MapAdapter
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 
@@ -46,7 +49,18 @@ class MapFragment : Fragment(R.layout.fragment_map) {
     }
 
     @SuppressWarnings("MissingPermission")
-    private fun initView() {
+    private fun initView() = with(binding) {
+        requireActivity().window.apply {
+            setFlags(
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+            )
+        }
+
+        if(Build.VERSION.SDK_INT >= 30) {
+            WindowCompat.setDecorFitsSystemWindows(requireActivity().window, false)
+        }
+
         val lm: LocationManager =
             requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
         val userNowLocation: Location? = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
@@ -59,7 +73,6 @@ class MapFragment : Fragment(R.layout.fragment_map) {
 
         setViewPager()
     }
-
 
 
     private fun setViewPager() {
@@ -90,13 +103,13 @@ class MapFragment : Fragment(R.layout.fragment_map) {
     }
 
     private fun initListener() {
-        binding.icSearch.etSearch.addTextChangedListener(object: TextWatcher {
+        binding.icSearch.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if(binding.icSearch.etSearch.text.isEmpty()) {
+                if (binding.icSearch.etSearch.text.isEmpty()) {
                     binding.clList.visibility = View.GONE
                     binding.vpList.visibility = View.GONE
                 }
@@ -108,7 +121,7 @@ class MapFragment : Fragment(R.layout.fragment_map) {
         })
 
         binding.icSearch.ibSearch.setOnClickListener {
-            if(binding.icSearch.etSearch.text.isNotEmpty()) {
+            if (binding.icSearch.etSearch.text.isNotEmpty()) {
                 binding.clList.visibility = View.VISIBLE
                 binding.vpList.visibility = View.VISIBLE
             }
@@ -261,8 +274,30 @@ class MapFragment : Fragment(R.layout.fragment_map) {
 
     }
 
+    fun getStatusBarHeight(context: Context): Int {
+        val resourceId = context.resources.getIdentifier("status_bar_height", "dimen", "android")
+
+        return if (resourceId > 0) {
+            context.resources.getDimensionPixelSize(resourceId)
+        } else {
+            0
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
+
+        requireActivity().window.apply {
+            setFlags(
+                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
+                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+            )
+        }
+
+        if(Build.VERSION.SDK_INT >= 30) {
+            WindowCompat.setDecorFitsSystemWindows(requireActivity().window, true)
+        }
+
         _binding = null
     }
 }

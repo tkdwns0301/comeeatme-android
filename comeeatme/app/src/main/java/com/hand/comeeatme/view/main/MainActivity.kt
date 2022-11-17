@@ -1,22 +1,30 @@
 package com.hand.comeeatme.view.main
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.lifecycleScope
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.hand.comeeatme.R
 import com.hand.comeeatme.databinding.ActivityMainBinding
+import com.hand.comeeatme.util.event.MenuChangeEventBus
 import com.hand.comeeatme.view.main.bookmark.BookmarkFragment
 import com.hand.comeeatme.view.main.home.HomeFragment
-import com.hand.comeeatme.view.main.home.NewPostFragment
+import com.hand.comeeatme.view.main.home.newpost.NewPostFragment
 import com.hand.comeeatme.view.main.map.MapFragment
 import com.hand.comeeatme.view.main.user.UserFragment
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
 
 private const val TAG_HOME = "fm_Home"
@@ -26,38 +34,45 @@ private const val TAG_NEWPOST = "fm_NewPost"
 private const val TAG_BOOKMARK = "fm_Bookmark"
 private const val TAG_USER = "fm_User"
 
-class MainActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMainBinding
+class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
+    companion object {
+        fun newIntent(context: Context) = Intent(context, MainActivity::class.java)
+    }
+
+    private var _binding: ActivityMainBinding? = null
+    private val binding get() = _binding!!
+
+    private val menuChangeEventBus by inject<MenuChangeEventBus>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setFragment(TAG_HOME, HomeFragment())
-
-        binding.bnMain.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.fm_Home -> setFragment(TAG_HOME, HomeFragment())
-                R.id.fm_Map -> setFragment(TAG_MAP, MapFragment())
-                R.id.fm_Bookmark -> setFragment(TAG_BOOKMARK, BookmarkFragment())
-                R.id.fm_User -> setFragment(TAG_USER, UserFragment())
-            }
-            true
-        }
-
-        initListener()
-
-
+        observeData()
+        initView()
     }
 
+    private fun observeData() {
+        lifecycleScope.launch {
+            menuChangeEventBus.mainTabMenuFlow.collect {
+                goToTab(it)
+            }
+        }
+    }
 
-    private fun initListener() {
+    private fun initView() = with(binding) {
+        bnMain.setOnNavigationItemSelectedListener(this@MainActivity)
+        setFragment(HomeFragment.TAG, HomeFragment.newInstance())
+
         binding.ibNewPost.setOnClickListener {
-            Log.e("NewPost", "clicked")
             onNewPost()
         }
+    }
+
+    private fun goToTab(mainTabMenu: MainTabMenu) {
+        binding.bnMain.selectedItemId = mainTabMenu.menuId
     }
 
     private fun onNewPost() {
@@ -82,62 +97,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setFragment(tag: String, fragment: Fragment) {
-        val manager: FragmentManager = supportFragmentManager
-        val ft: FragmentTransaction = manager.beginTransaction()
-
-        if (manager.findFragmentByTag(tag) == null) {
-            ft.add(R.id.fg_MainContainer, fragment, tag)
+        val findFragment = supportFragmentManager.findFragmentByTag(tag)
+        supportFragmentManager.fragments.forEach { fm ->
+            supportFragmentManager.beginTransaction().hide(fm).commitAllowingStateLoss()
         }
 
-        val home = manager.findFragmentByTag(TAG_HOME)
-        val map = manager.findFragmentByTag(TAG_MAP)
-        val newPost = manager.findFragmentByTag(TAG_NEWPOST)
-        val post = manager.findFragmentByTag(TAG_POST)
-        val bookmark = manager.findFragmentByTag(TAG_BOOKMARK)
-        val user = manager.findFragmentByTag(TAG_USER)
-
-        if (home != null) {
-            ft.hide(home)
+        findFragment?.let {
+            supportFragmentManager.beginTransaction().show(it).commitAllowingStateLoss()
+        } ?:kotlin.run {
+            supportFragmentManager.beginTransaction()
+                .add(R.id.fg_MainContainer, fragment, tag)
+                .commitAllowingStateLoss()
         }
 
-        if (map != null) {
-            ft.hide(map)
-        }
-
-        if (newPost != null) {
-            ft.remove(newPost)
-        }
-
-        if (post != null) {
-            ft.remove(post)
-        }
-
-        if(bookmark != null) {
-            ft.hide(bookmark)
-        }
-
-        if(user != null) {
-            ft.hide(user)
-        }
-
-        if (tag == TAG_HOME) {
-            if (home != null) {
-                ft.show(home)
-            }
-        } else if (tag == TAG_MAP) {
-            if (map != null) {
-                ft.show(map)
-            }
-        } else if(tag == TAG_BOOKMARK) {
-            if(bookmark != null) {
-                ft.show(bookmark)
-            }
-        } else if(tag == TAG_USER) {
-            if(user != null) {
-                ft.show(user)
-            }
-        }
-        ft.commitAllowingStateLoss()
     }
 
     interface onBackPressedListener {
@@ -147,7 +119,7 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         val fragmentList = supportFragmentManager.fragments
 
-        if(fragmentList.size != 1) {
+        if (fragmentList.size != 1) {
             for (fragment in fragmentList) {
                 if (fragment is onBackPressedListener) {
                     (fragment as onBackPressedListener).onBackPressed()
@@ -159,4 +131,30 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.fm_Home -> {
+                setFragment(TAG_HOME, HomeFragment())
+                true
+            }
+            R.id.fm_Map -> {
+                setFragment(TAG_MAP, MapFragment())
+                true
+            }
+            R.id.fm_Bookmark -> {
+                setFragment(TAG_BOOKMARK, BookmarkFragment())
+                true
+            }
+            R.id.fm_User -> {
+                setFragment(TAG_USER, UserFragment())
+                true
+            }
+            else -> true
+        }
+    }
+}
+
+enum class MainTabMenu(@IdRes val menuId: Int) {
+    HOME(R.id.fm_Home), MAP(R.id.fm_Map), BOOKMARK(R.id.fm_Bookmark), USER(R.id.fm_User)
 }

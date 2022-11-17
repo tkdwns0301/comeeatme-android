@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
 import com.hand.comeeatme.R
-import com.hand.comeeatme.adapter.BookmarkAdapter
+import com.hand.comeeatme.util.widget.adapter.BookmarkAdapter
 import com.hand.comeeatme.databinding.FragmentBookmarkBinding
 
 class BookmarkFragment : Fragment(R.layout.fragment_bookmark) {

@@ -16,7 +16,7 @@
     </style>
 
     <style name="Divider">
-        <item name="android:background">@color/gray2</item>
+        <item name="android:background">@color/divider</item>
     </style>
     <style name="Divider.Horizontal" parent="Divider">
         <item name="android:layout_width">match_parent</item>
@@ -57,4 +57,11 @@
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="Theme.Comeeatme">
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/basic</item>
+        <item name="background">@null</item>
+    </style>
+
 </resources>

@@ -1,39 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_MapDetail"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar_MapDetail"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="?homeAsUpIndicator">
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:fitsSystemWindows="true"
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-        <TextView
-            android:id="@+id/tv_Title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="게시글"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-    </androidx.appcompat.widget.Toolbar>
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_MapDetail"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:navigationIcon="@drawable/ic_prev_basic_24" />
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/sl_Content"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_MapDetail">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -41,6 +33,14 @@
             android:layout_height="match_parent"
             android:descendantFocusability="blocksDescendants">
 
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_constraintBottom_toTopOf="@id/iv_Image"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/iv_Image"
@@ -48,10 +48,11 @@
                 android:layout_height="0dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/food1"
-                app:layout_constraintDimensionRatio="1:0.5"
+                app:layout_constraintBottom_toTopOf="@id/cl_Information"
+                app:layout_constraintDimensionRatio="379:242"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/view" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_Information"
@@ -60,6 +61,7 @@
                 android:paddingStart="16dp"
                 android:paddingTop="10dp"
                 android:paddingEnd="16dp"
+                app:layout_constraintBottom_toTopOf="@id/divider"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iv_Image">
@@ -68,7 +70,7 @@
                     android:id="@+id/cl_NameAndBookmark"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toTopOf="@id/cl_Location"
+                    app:layout_constraintBottom_toTopOf="@id/tv_Location"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -92,7 +94,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
                         android:text="닭발"
-                        android:textColor="@color/gray2"
+                        android:textColor="#686868"
                         android:textSize="12sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/iv_Bookmark"
@@ -105,7 +107,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
                         android:background="@null"
-                        android:src="@drawable/ic_star"
+                        android:src="@drawable/ic_star_13"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/tv_BookmarkCnt"
                         app:layout_constraintStart_toEndOf="@id/tv_Keyword"
@@ -148,70 +150,33 @@
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_Location"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/tv_Location"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toTopOf="@id/cl_Comment"
+                    android:gravity="center_vertical"
+                    android:text="서울시 강동구 가나다라마사"
+                    android:textColor="@color/basic"
+                    android:textSize="13sp"
+                    app:drawableStartCompat="@drawable/ic_location_24"
+                    app:layout_constraintBottom_toTopOf="@id/tv_Comment"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/cl_NameAndBookmark">
+                    app:layout_constraintTop_toBottomOf="@id/cl_NameAndBookmark" />
 
-                    <ImageView
-                        android:id="@+id/iv_Location"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:src="@drawable/ic_location3"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/tv_Location"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/tv_Location"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="서울시 강동구 가나다라마사"
-                        android:textColor="@color/basic"
-                        android:textSize="13sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/iv_Location"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_Comment"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/tv_Comment"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="성동구 유일무이한 닭발 맛집"
+                    android:textColor="@color/basic"
+                    android:textSize="13sp"
+                    app:drawableStartCompat="@drawable/ic_comment_rounding_24"
                     app:layout_constraintBottom_toTopOf="@id/fl_Tag"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/cl_Location">
-
-                    <ImageView
-                        android:id="@+id/iv_Comment"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:src="@drawable/ic_command"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/tv_Comment"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/tv_Comment"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="성동구 유일무이한 닭발 맛집"
-                        android:textColor="@color/basic"
-                        android:textSize="13sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/iv_Comment"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                    app:layout_constraintTop_toBottomOf="@id/tv_Location" />
 
                 <com.google.android.flexbox.FlexboxLayout
                     android:id="@+id/fl_Tag"
@@ -219,13 +184,14 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/cl_Comment" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_Comment" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <View
                 android:id="@+id/divider"
                 style="@style/Divider.Horizontal"
                 android:layout_marginTop="10dp"
+                app:layout_constraintBottom_toTopOf="@id/cl_IncludingPost"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cl_Information" />
@@ -245,6 +211,7 @@
                     android:id="@+id/cl_TitleAndSort"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toTopOf="@id/rv_IncludingContent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -281,24 +248,15 @@
                             android:id="@+id/tv_Sort"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="거리순"
+                            android:text="최신순"
                             android:textColor="@color/basic"
                             android:textSize="11sp"
+                            app:drawableEndCompat="@drawable/ic_arrow_down_15"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@id/iv_Sort"
+                            app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
-                        <ImageView
-                            android:id="@+id/iv_Sort"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@null"
-                            android:src="@drawable/ic_arrow_down_2"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@id/tv_Sort"
-                            app:layout_constraintTop_toTopOf="parent" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -318,4 +276,4 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
