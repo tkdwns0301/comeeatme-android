@@ -1,4 +1,4 @@
-package com.hand.comeeatme.data.response.home
+package com.hand.comeeatme.data.response.post
 
 import com.google.gson.annotations.Expose
 

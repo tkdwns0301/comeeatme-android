@@ -1,8 +1,8 @@
 package com.hand.comeeatme.data.response.restaurant
 
 import com.google.gson.annotations.Expose
-import com.hand.comeeatme.data.response.home.Pageable
-import com.hand.comeeatme.data.response.home.Sort
+import com.hand.comeeatme.data.response.post.Pageable
+import com.hand.comeeatme.data.response.post.Sort
 
 data class SimpleRestaurantResponse(
     @Expose

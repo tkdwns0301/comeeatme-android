@@ -5,15 +5,19 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.hand.comeeatme.R
 import com.hand.comeeatme.databinding.LayoutHomeImageBinding
-import com.hand.comeeatme.view.main.home.post.PostFragment
+import com.hand.comeeatme.view.main.home.post.DetailPostFragment
 
 class ViewPagerAdapter(
-    private val items: ArrayList<String>,
+    private val postId: Long,
+    private val items: List<String>,
     private val context: Context,
+    private val isDetail: Boolean,
 ) :
     RecyclerView.Adapter<ViewPagerAdapter.PagerViewHolder>() {
 
@@ -28,7 +32,7 @@ class ViewPagerAdapter(
     override fun onBindViewHolder(holder: PagerViewHolder, position: Int) {
         val item = items[position]
 
-        if(item.isEmpty()) {
+        if (item.isEmpty()) {
             holder.images.setImageDrawable(context.getDrawable(R.drawable.food1))
         } else {
             Glide.with(context)
@@ -36,14 +40,16 @@ class ViewPagerAdapter(
                 .into(holder.images)
         }
 
+        if (!isDetail) {
+            holder.images.setOnClickListener {
+                val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
+                val ft: FragmentTransaction = manager.beginTransaction()
 
-        holder.images.setOnClickListener {
-            val manager = (context as AppCompatActivity).supportFragmentManager
-            val ft = manager.beginTransaction()
-
-            ft.add(R.id.fg_MainContainer, PostFragment(), "fm_Post")
-            ft.commitAllowingStateLoss()
+                ft.add(R.id.fg_MainContainer, DetailPostFragment.newInstance(postId), "fm_Post")
+                ft.commitAllowingStateLoss()
+            }
         }
+
     }
 
 

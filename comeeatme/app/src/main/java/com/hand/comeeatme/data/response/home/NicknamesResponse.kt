@@ -1,6 +1,7 @@
 package com.hand.comeeatme.data.response.home
 
 import com.google.gson.annotations.Expose
+import com.hand.comeeatme.data.response.post.Sort
 
 data class NicknamesResponse(
     @Expose

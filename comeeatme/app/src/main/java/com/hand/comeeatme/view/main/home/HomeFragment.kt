@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.hand.comeeatme.data.response.home.Content
+import com.hand.comeeatme.data.response.post.Content
 import com.hand.comeeatme.databinding.FragmentHomeBinding
 import com.hand.comeeatme.util.widget.adapter.home.CommunityAdapter
 import com.hand.comeeatme.view.base.BaseFragment
@@ -124,7 +124,16 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
     }
 
     private fun setAdapter(contents: List<Content>) {
-        adapter = CommunityAdapter(contents, requireContext())
+        adapter = CommunityAdapter(contents, requireContext(), likePost = {
+            viewModel.likePost(it)
+        }, unLikePost = {
+            viewModel.unLikePost(it)
+        }, bookmarkPost = {
+            viewModel.bookmarkPost(it)
+        }, unBookmarkPost = {
+            viewModel.unBookmarkPost(it)
+        }
+         )
         binding.rvHomeList.adapter = adapter
         adapter.notifyDataSetChanged()
     }

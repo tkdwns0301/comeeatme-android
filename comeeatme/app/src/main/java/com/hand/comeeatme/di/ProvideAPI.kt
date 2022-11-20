@@ -31,6 +31,14 @@ fun provideImageService(retrofit: Retrofit): ImageService {
     return retrofit.create(ImageService::class.java)
 }
 
+fun provideLikeService(retrofit: Retrofit) : LikeService {
+    return retrofit.create(LikeService::class.java)
+}
+
+fun provideBookmarkService(retrofit: Retrofit) : BookmarkService {
+    return retrofit.create(BookmarkService::class.java)
+}
+
 fun provideApiRetrofit(
     okHttpClient: OkHttpClient,
     gsonConverterFactory: GsonConverterFactory,

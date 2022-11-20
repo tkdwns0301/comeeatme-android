@@ -1,4 +1,4 @@
-package com.hand.comeeatme.data.response.home
+package com.hand.comeeatme.data.response.post
 
 import com.google.gson.annotations.Expose
 
@@ -47,6 +47,10 @@ data class Content(
     var member: Member,
     @Expose
     var restaurant: Restaurant,
+    @Expose
+    val liked: Boolean,
+    @Expose
+    val bookmarked: Boolean,
 )
 
 data class Member(

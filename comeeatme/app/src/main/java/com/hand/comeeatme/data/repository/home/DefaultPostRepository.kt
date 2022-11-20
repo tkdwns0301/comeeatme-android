@@ -2,8 +2,9 @@ package com.hand.comeeatme.data.repository.home
 
 import com.hand.comeeatme.data.network.PostService
 import com.hand.comeeatme.data.request.home.NewPostRequest
-import com.hand.comeeatme.data.response.home.NewPostResponse
-import com.hand.comeeatme.data.response.home.PostResponse
+import com.hand.comeeatme.data.response.post.DetailPostResponse
+import com.hand.comeeatme.data.response.post.NewPostResponse
+import com.hand.comeeatme.data.response.post.PostResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
@@ -41,6 +42,19 @@ class DefaultPostRepository(
             Authorization = "Bearer $accessToken",
             newPost = newPost
         )
+
+        if(response.isSuccessful) {
+            response.body()!!
+        } else {
+            null
+        }
+    }
+
+    override suspend fun getDetailPost(accessToken: String, postId: Long): DetailPostResponse? = withContext(ioDispatcher) {
+       val response = postService.getDetailPost(
+           Authorization = "Bearer $accessToken",
+           postId = postId,
+       )
 
         if(response.isSuccessful) {
             response.body()!!
