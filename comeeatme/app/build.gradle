@@ -118,4 +118,7 @@ dependencies {
     def koin_version = "3.2.0"
     implementation "io.insert-koin:koin-android:$koin_version"
     implementation "io.insert-koin:koin-androidx-compose:$koin_version"
+
+    // Fragment-ktx
+    implementation "androidx.fragment:fragment-ktx:1.5.4"
 }

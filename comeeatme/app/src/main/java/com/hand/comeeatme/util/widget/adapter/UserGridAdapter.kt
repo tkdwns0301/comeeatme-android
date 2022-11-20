@@ -8,7 +8,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.hand.comeeatme.R
 import com.hand.comeeatme.databinding.LayoutAlbumImageBinding
-import com.hand.comeeatme.view.main.home.post.PostFragment
+import com.hand.comeeatme.view.main.home.post.DetailPostFragment
 
 class UserGridAdapter(
     private val images: ArrayList<ArrayList<Int>>,
@@ -30,7 +30,7 @@ class UserGridAdapter(
             val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
             val ft: FragmentTransaction = manager.beginTransaction()
 
-            ft.add(R.id.fg_MainContainer, PostFragment(), "fm_Post")
+            ft.add(R.id.fg_MainContainer, DetailPostFragment(), "fm_Post")
             ft.commitAllowingStateLoss()
         }
     }

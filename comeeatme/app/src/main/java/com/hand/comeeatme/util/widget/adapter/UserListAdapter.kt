@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.hand.comeeatme.R
 import com.hand.comeeatme.databinding.LayoutHomeItemBinding
-import com.hand.comeeatme.view.main.home.post.PostFragment
+import com.hand.comeeatme.view.main.home.post.DetailPostFragment
 
 class UserListAdapter(
     private val items: ArrayList<ArrayList<Int>>,
@@ -31,7 +31,7 @@ class UserListAdapter(
             val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
             val ft: FragmentTransaction = manager.beginTransaction()
 
-            ft.add(R.id.fg_MainContainer, PostFragment(), "fm_Post")
+            ft.add(R.id.fg_MainContainer, DetailPostFragment(), "fm_Post")
             ft.commitAllowingStateLoss()
         }
 
