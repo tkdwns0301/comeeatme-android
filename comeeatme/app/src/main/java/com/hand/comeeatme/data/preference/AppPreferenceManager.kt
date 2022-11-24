@@ -51,13 +51,13 @@ class AppPreferenceManager(
         return prefs.getString(REFRESH_TOKEN, null)
     }
 
-    fun putMemberId(memberId: Int) {
-        editor.putInt(MEMBER_ID, memberId)
+    fun putMemberId(memberId: Long) {
+        editor.putLong(MEMBER_ID, memberId)
         editor.apply()
     }
 
-    fun getMemberId(): Int? {
-        return prefs.getInt(MEMBER_ID, 0)
+    fun getMemberId(): Long {
+        return prefs.getLong(MEMBER_ID, 0)
     }
 
 

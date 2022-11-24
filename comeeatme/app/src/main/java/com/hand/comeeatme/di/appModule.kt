@@ -3,6 +3,8 @@ package com.hand.comeeatme.di
 import com.hand.comeeatme.data.preference.AppPreferenceManager
 import com.hand.comeeatme.data.repository.bookmark.BookmarkRepository
 import com.hand.comeeatme.data.repository.bookmark.DefaultBookmarkRepository
+import com.hand.comeeatme.data.repository.favorite.DefaultFavoriteRepository
+import com.hand.comeeatme.data.repository.favorite.FavoriteRepository
 import com.hand.comeeatme.data.repository.home.DefaultPostRepository
 import com.hand.comeeatme.data.repository.home.PostRepository
 import com.hand.comeeatme.data.repository.image.DefaultImageRepository
@@ -17,6 +19,9 @@ import com.hand.comeeatme.data.repository.restaurant.DefaultRestaurantRepository
 import com.hand.comeeatme.data.repository.restaurant.RestaurantRepository
 import com.hand.comeeatme.util.event.MenuChangeEventBus
 import com.hand.comeeatme.view.login.LogInViewModel
+import com.hand.comeeatme.view.main.bookmark.BookmarkViewModel
+import com.hand.comeeatme.view.main.bookmark.favorite.FavoritePostViewModel
+import com.hand.comeeatme.view.main.bookmark.post.BookmarkPostViewModel
 import com.hand.comeeatme.view.main.home.HomeViewModel
 import com.hand.comeeatme.view.main.home.newpost.NewPostViewModel
 import com.hand.comeeatme.view.main.home.newpost.album.AlbumViewModel
@@ -37,6 +42,9 @@ val appModule = module {
     viewModel { AlbumViewModel() }
     viewModel { CropViewModel() }
     viewModel { DetailPostViewModel(get(), get(), get(), get(), get()) }
+    viewModel { BookmarkViewModel(get()) }
+    viewModel { BookmarkPostViewModel(get(), get())}
+    viewModel { FavoritePostViewModel(get(), get())}
 
     single<PostRepository> { DefaultPostRepository(get(), get()) }
     single<LogInRepository> { DefaultLogInRepository(get(), get()) }
@@ -45,6 +53,7 @@ val appModule = module {
     single<ImageRepository> { DefaultImageRepository(get(), get()) }
     single<LikeRepository> { DefaultLikeRepository(get(), get()) }
     single<BookmarkRepository> { DefaultBookmarkRepository(get(), get()) }
+    single<FavoriteRepository> { DefaultFavoriteRepository(get(), get())}
 
     // provider
     single { provideApiRetrofit(get(), get(), get()) }
@@ -55,6 +64,7 @@ val appModule = module {
     single { provideImageService(get()) }
     single { provideLikeService(get()) }
     single { provideBookmarkService(get()) }
+    single { provideFavoriteService(get()) }
 
     single { provideGson() }
     single { provideGsonConverterFactory(get()) }

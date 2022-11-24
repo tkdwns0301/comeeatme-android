@@ -98,10 +98,6 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
             startActivity(intent)
         }
 
-        srlHomeList.setOnRefreshListener {
-            refresh()
-        }
-
 
     }
 

@@ -39,6 +39,10 @@ fun provideBookmarkService(retrofit: Retrofit) : BookmarkService {
     return retrofit.create(BookmarkService::class.java)
 }
 
+fun provideFavoriteService(retrofit: Retrofit): FavoriteService {
+    return retrofit.create(FavoriteService::class.java)
+}
+
 fun provideApiRetrofit(
     okHttpClient: OkHttpClient,
     gsonConverterFactory: GsonConverterFactory,

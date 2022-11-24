@@ -1,20 +1,20 @@
-package com.hand.comeeatme.data.repository.bookmark
+package com.hand.comeeatme.data.repository.favorite
 
-import com.hand.comeeatme.data.network.BookmarkService
-import com.hand.comeeatme.data.response.bookmark.BookmarkPostResponse
+import com.hand.comeeatme.data.network.FavoriteService
+import com.hand.comeeatme.data.response.favorite.FavoritePostResponse
 import com.hand.comeeatme.data.response.like.SuccessResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
-class DefaultBookmarkRepository(
-    private val bookmarkService: BookmarkService,
+class DefaultFavoriteRepository(
+    private val favoriteService: FavoriteService,
     private val ioDispatcher: CoroutineDispatcher,
-) : BookmarkRepository {
-    override suspend fun bookmarkPost(accessToken: String, postId: Long): SuccessResponse? =
+) : FavoriteRepository {
+    override suspend fun favoritePost(accessToken: String, restaurantId: Long): SuccessResponse? =
         withContext(ioDispatcher) {
-            val response = bookmarkService.bookmarkPost(
+            val response = favoriteService.favoritePost(
                 Authorization = "Bearer $accessToken",
-                postId = postId
+                restaurantId = restaurantId
             )
 
             if (response.isSuccessful) {
@@ -25,10 +25,10 @@ class DefaultBookmarkRepository(
 
         }
 
-    override suspend fun unBookmarkPost(accessToken: String, postId: Long): SuccessResponse? = withContext(ioDispatcher){
-        val response = bookmarkService.unBookmarkPost(
+    override suspend fun unFavoritePost(accessToken: String, restaurantId: Long): SuccessResponse? = withContext(ioDispatcher){
+        val response = favoriteService.unFavoritePost(
             Authorization = "Bearer $accessToken",
-            postId = postId
+            restaurantId = restaurantId
         )
 
         if(response.isSuccessful) {
@@ -38,14 +38,14 @@ class DefaultBookmarkRepository(
         }
     }
 
-    override suspend fun getAllBookmarked(
+    override suspend fun getAllFavorite(
         accessToken: String,
         memberId: Long,
         page: Long?,
         size: Long?,
         sort: Boolean?,
-    ): BookmarkPostResponse?  = withContext(ioDispatcher) {
-        val response = bookmarkService.getAllBookmarked(
+    ): FavoritePostResponse?  = withContext(ioDispatcher) {
+        val response = favoriteService.getAllFavorite(
             Authorization = "Bearer $accessToken",
             memberId = memberId,
             page = page!!,
