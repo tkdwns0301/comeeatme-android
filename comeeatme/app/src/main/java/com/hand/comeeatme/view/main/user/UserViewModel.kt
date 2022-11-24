@@ -21,6 +21,7 @@ class UserViewModel(
 
     private var profile: String? = null
     private var nickname: String? = null
+    private var introduction: String? = null
 
     fun setProfile(profile: String?) {
         this.profile = profile
@@ -37,6 +38,15 @@ class UserViewModel(
     fun getNickname() : String {
         return nickname!!
     }
+
+    fun setIntroduction(introduction: String) {
+        this.introduction = introduction
+    }
+
+    fun getIntroduction() : String? {
+        return introduction
+    }
+
     fun getUserPost() = viewModelScope.launch {
         val response = postRepository.getUserPost("${appPreferenceManager.getAccessToken()}",
             appPreferenceManager.getMemberId())

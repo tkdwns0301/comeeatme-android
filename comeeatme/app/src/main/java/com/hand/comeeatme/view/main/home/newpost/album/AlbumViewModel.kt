@@ -39,6 +39,10 @@ class AlbumViewModel : BaseViewModel() {
         }
     }
 
+    fun removeAllCheckedPhoto() {
+        checkedPhotoList = arrayListOf()
+    }
+
     fun getCheckedPhotoList(): ArrayList<String> {
         return checkedPhotoList
     }

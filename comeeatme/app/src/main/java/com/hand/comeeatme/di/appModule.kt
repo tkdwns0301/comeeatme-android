@@ -31,6 +31,7 @@ import com.hand.comeeatme.view.main.home.newpost.crop.CropViewModel
 import com.hand.comeeatme.view.main.home.post.DetailPostViewModel
 import com.hand.comeeatme.view.main.home.search.SearchViewModel
 import com.hand.comeeatme.view.main.user.UserViewModel
+import com.hand.comeeatme.view.main.user.edit.UserEditViewModel
 import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -48,8 +49,10 @@ val appModule = module {
     viewModel { BookmarkViewModel(get()) }
     viewModel { BookmarkPostViewModel(get(), get()) }
     viewModel { FavoritePostViewModel(get(), get()) }
-    viewModel { UserViewModel(get(), get(), get(), get(), get())}
+    viewModel { UserViewModel(get(), get(), get(), get(), get()) }
+    viewModel { UserEditViewModel(get(), get(), get()) }
 
+    // repository
     single<PostRepository> { DefaultPostRepository(get(), get()) }
     single<LogInRepository> { DefaultLogInRepository(get(), get()) }
     single<MemberRepository> { DefaultMemberRepository(get(), get()) }

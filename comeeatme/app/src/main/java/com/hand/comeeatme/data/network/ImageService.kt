@@ -10,7 +10,7 @@ interface ImageService {
     @POST("/v1/images/scaled")
     suspend fun sendImages(
         @Header("Authorization") Authorization: String,
-        @Part images: List<MultipartBody.Part>,
+        @Part images: List<MultipartBody.Part>?,
     ): Response<ImageResponse>
 
 }

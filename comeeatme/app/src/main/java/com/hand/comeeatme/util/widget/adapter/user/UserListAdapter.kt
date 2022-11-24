@@ -120,7 +120,7 @@ class UserListAdapter(
                 this.profile.setImageDrawable(context.getDrawable(R.drawable.food1))
             } else {
                 Glide.with(context)
-                    .load(item.member.imageUrl)
+                    .load(profile)
                     .into(this.profile)
             }
 

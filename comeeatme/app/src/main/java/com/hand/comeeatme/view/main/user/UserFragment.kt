@@ -14,6 +14,7 @@ import com.hand.comeeatme.util.widget.adapter.user.UserGridAdapter
 import com.hand.comeeatme.util.widget.adapter.user.UserListAdapter
 import com.hand.comeeatme.view.base.BaseFragment
 import com.hand.comeeatme.view.dialog.UserSortDialog
+import com.hand.comeeatme.view.main.user.edit.UserEditFragment
 import com.hand.comeeatme.view.main.user.menu.HeartReviewActivity
 import com.hand.comeeatme.view.main.user.menu.MyCommentActivity
 import com.hand.comeeatme.view.main.user.menu.MyReviewActivity
@@ -80,7 +81,7 @@ class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
             val manager: FragmentManager = requireActivity().supportFragmentManager
             val ft: FragmentTransaction = manager.beginTransaction()
 
-            ft.add(R.id.fg_MainContainer, UserEditFragment(), "fm_UserEdit")
+            ft.add(R.id.fg_MainContainer, UserEditFragment.newInstance(viewModel.getProfile(), viewModel.getNickname(), viewModel.getIntroduction()), UserEditFragment.TAG)
             ft.commitAllowingStateLoss()
         }
 
@@ -131,6 +132,8 @@ class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
                 .load(data.imageUrl)
                 .into(clProfile)
         }
+
+        viewModel.setIntroduction(data.introduction)
 
         tvName.text = data.nickname
         tvIntroduce.text = data.introduction

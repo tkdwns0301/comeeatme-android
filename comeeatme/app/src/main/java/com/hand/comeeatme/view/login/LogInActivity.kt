@@ -18,7 +18,7 @@ class LogInActivity : BaseActivity<LogInViewModel, ActivityLoginBinding>() {
     override fun getViewBinding(): ActivityLoginBinding =
         ActivityLoginBinding.inflate(layoutInflater)
 
-    private lateinit var callback :(OAuthToken?, Throwable?) -> Unit
+    private lateinit var callback: (OAuthToken?, Throwable?) -> Unit
 
     override fun observeData() = viewModel.loginStateLiveData.observe(this) {
         when (it) {
@@ -43,7 +43,6 @@ class LogInActivity : BaseActivity<LogInViewModel, ActivityLoginBinding>() {
             }
         }
     }
-
 
 
     override fun initView() = with(binding) {
@@ -84,12 +83,9 @@ class LogInActivity : BaseActivity<LogInViewModel, ActivityLoginBinding>() {
         }
 
         btnLogIn.setOnClickListener {
-            if (UserApiClient.instance.isKakaoTalkLoginAvailable(applicationContext)) {
-                UserApiClient.instance.loginWithKakaoTalk(applicationContext, callback = callback)
-            } else {
-                UserApiClient.instance.loginWithKakaoAccount(applicationContext,
-                    callback = callback)
-            }
+            UserApiClient.instance.loginWithKakaoAccount(applicationContext,
+                callback = callback)
+
         }
 
     }

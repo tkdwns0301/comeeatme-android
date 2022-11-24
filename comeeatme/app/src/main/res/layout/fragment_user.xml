@@ -30,16 +30,27 @@
             android:layout_height="match_parent"
             android:descendantFocusability="blocksDescendants">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/cl_Profile"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_Container"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:src="@drawable/food1"
                 app:layout_constraintBottom_toTopOf="@id/cl_Name"
                 app:layout_constraintDimensionRatio="1:0.3"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/cl_Profile"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/food1"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_Name"
@@ -49,7 +60,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5555"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cl_Profile">
+                app:layout_constraintTop_toBottomOf="@id/cl_Container">
 
                 <TextView
                     android:id="@+id/tv_Name"
