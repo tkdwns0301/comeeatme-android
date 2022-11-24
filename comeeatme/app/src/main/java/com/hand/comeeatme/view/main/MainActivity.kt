@@ -22,7 +22,6 @@ import com.hand.comeeatme.view.main.home.HomeFragment
 import com.hand.comeeatme.view.main.home.newpost.NewPostFragment
 import com.hand.comeeatme.view.main.map.MapFragment
 import com.hand.comeeatme.view.main.user.UserFragment
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 

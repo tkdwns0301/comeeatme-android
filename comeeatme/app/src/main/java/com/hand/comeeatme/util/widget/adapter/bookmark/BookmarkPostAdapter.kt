@@ -87,7 +87,7 @@ class BookmarkPostAdapter(
                 val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
                 val ft: FragmentTransaction = manager.beginTransaction()
 
-                ft.add(R.id.fg_MainContainer, DetailPostFragment.newInstance(item.id), "fm_Post")
+                ft.add(R.id.fg_MainContainer, DetailPostFragment.newInstance(item.id), DetailPostFragment.TAG)
                 ft.commitAllowingStateLoss()
             }
         }

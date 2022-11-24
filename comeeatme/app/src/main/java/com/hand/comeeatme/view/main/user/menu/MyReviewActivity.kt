@@ -1,16 +1,16 @@
-package com.hand.comeeatme.view.main.user
+package com.hand.comeeatme.view.main.user.menu
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.hand.comeeatme.databinding.ActivityRecentreviewBinding
+import com.hand.comeeatme.databinding.ActivityMyreviewBinding
 
-class RecentReviewActivity: AppCompatActivity() {
-    private var _binding: ActivityRecentreviewBinding? = null
+class MyReviewActivity: AppCompatActivity() {
+    private var _binding: ActivityMyreviewBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        _binding = ActivityRecentreviewBinding.inflate(layoutInflater)
+        _binding = ActivityMyreviewBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         initView()
@@ -22,7 +22,7 @@ class RecentReviewActivity: AppCompatActivity() {
     }
 
     private fun initListener() {
-        binding.toolbarRecentReview.setNavigationOnClickListener {
+        binding.toolbarMyReview.setNavigationOnClickListener {
             finish()
         }
     }

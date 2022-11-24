@@ -1,16 +1,16 @@
-package com.hand.comeeatme.view.main.user
+package com.hand.comeeatme.view.main.user.menu
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.hand.comeeatme.databinding.ActivityMyreviewBinding
+import com.hand.comeeatme.databinding.ActivityHeartreviewBinding
 
-class MyReviewActivity: AppCompatActivity() {
-    private var _binding: ActivityMyreviewBinding? = null
+class HeartReviewActivity: AppCompatActivity() {
+    private var _binding: ActivityHeartreviewBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        _binding = ActivityMyreviewBinding.inflate(layoutInflater)
+        _binding = ActivityHeartreviewBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         initView()
@@ -22,7 +22,7 @@ class MyReviewActivity: AppCompatActivity() {
     }
 
     private fun initListener() {
-        binding.toolbarMyReview.setNavigationOnClickListener {
+        binding.toolbarHeartReview.setNavigationOnClickListener {
             finish()
         }
     }

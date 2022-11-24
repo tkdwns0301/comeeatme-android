@@ -1,80 +1,74 @@
 package com.hand.comeeatme.view.main.user
 
-import UserGridAdapter
+import android.annotation.SuppressLint
 import android.content.Intent
-import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import com.bumptech.glide.Glide
 import com.hand.comeeatme.R
-import com.hand.comeeatme.util.widget.adapter.UserListAdapter
+import com.hand.comeeatme.data.response.post.Content
+import com.hand.comeeatme.data.response.user.UserDetailData
 import com.hand.comeeatme.databinding.FragmentUserBinding
+import com.hand.comeeatme.util.widget.adapter.user.UserGridAdapter
+import com.hand.comeeatme.util.widget.adapter.user.UserListAdapter
+import com.hand.comeeatme.view.base.BaseFragment
 import com.hand.comeeatme.view.dialog.UserSortDialog
+import com.hand.comeeatme.view.main.user.menu.HeartReviewActivity
+import com.hand.comeeatme.view.main.user.menu.MyCommentActivity
+import com.hand.comeeatme.view.main.user.menu.MyReviewActivity
+import com.hand.comeeatme.view.main.user.menu.RecentReviewActivity
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class UserFragment: Fragment(R.layout.fragment_user) {
-    private var _binding: FragmentUserBinding? = null
-    private val binding get() = _binding!!
+class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
+    companion object {
+        fun newInstance() = UserFragment()
+        const val TAG = "UserFragment"
+    }
+
+    override val viewModel by viewModel<UserViewModel>()
+    override fun getViewBinding(): FragmentUserBinding = FragmentUserBinding.inflate(layoutInflater)
+
+    override fun observeData() {
+        viewModel.userStateLiveData.observe(viewLifecycleOwner) {
+            when (it) {
+                is UserState.Uninitialized -> {
+                    viewModel.getUserDetail()
+                }
+
+                is UserState.Loading -> {
+
+                }
+
+                is UserState.UserDetailSuccess -> {
+                    viewModel.setProfile(it.response.data.imageUrl)
+                    viewModel.setNickname(it.response.data.nickname)
+                    setUserInformation(it.response.data)
+                    viewModel.getUserPost()
+                }
+
+                is UserState.UserPostSuccess -> {
+                    setUserPost(it.response.data.content)
+                }
+
+                is UserState.Error -> {
+
+                }
+            }
+        }
+    }
 
     private lateinit var adapterList: UserListAdapter
     private lateinit var adapterGrid: UserGridAdapter
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentUserBinding.inflate(inflater, container, false)
-
-        initView()
-        initListener()
-
-        return binding.root
-    }
-
-    private fun initView() {
-        val items = ArrayList<ArrayList<Int>>()
-
-        items.add(arrayListOf<Int>(R.drawable.food1, R.drawable.food2))
-        items.add(arrayListOf<Int>(R.drawable.food1, R.drawable.food2))
-        items.add(arrayListOf<Int>(R.drawable.food1, R.drawable.food2))
-        items.add(arrayListOf<Int>(R.drawable.food1, R.drawable.food2))
-        items.add(arrayListOf<Int>(R.drawable.food1, R.drawable.food2))
-
-
-        if(items == null) {
-            binding.rvGrid.visibility = View.INVISIBLE
-            binding.rvList.visibility = View.INVISIBLE
-            binding.clNonPost.visibility = View.VISIBLE
-        } else {
-            binding.clNonPost.visibility = View.INVISIBLE
-            if(binding.rbGrid.isChecked) {
-                binding.rvGrid.visibility = View.VISIBLE
-                binding.rvList.visibility = View.INVISIBLE
-            } else if(binding.rbList.isChecked) {
-                binding.rvGrid.visibility = View.INVISIBLE
-                binding.rvList.visibility = View.VISIBLE
-            }
-            adapterGrid = UserGridAdapter(items, requireContext())
-            adapterList = UserListAdapter(items, requireContext())
-
-            binding.rvGrid.adapter = adapterGrid
-            binding.rvList.adapter = adapterList
-
-            adapterGrid.notifyDataSetChanged()
-            adapterList.notifyDataSetChanged()
-        }
-    }
-
-    private fun initListener() {
-        binding.rgListAndGrid.setOnCheckedChangeListener { group, checkId ->
-            when(checkId) {
+    override fun initView() = with(binding) {
+        rgListAndGrid.setOnCheckedChangeListener { group, checkId ->
+            when (checkId) {
                 R.id.rb_Grid -> {
                     binding.rvList.visibility = View.INVISIBLE
                     binding.rvGrid.visibility = View.VISIBLE
-                } else -> {
+                }
+                else -> {
                     binding.rvList.visibility = View.VISIBLE
                     binding.rvGrid.visibility = View.INVISIBLE
                 }
@@ -82,7 +76,7 @@ class UserFragment: Fragment(R.layout.fragment_user) {
 
         }
 
-        binding.ivName.setOnClickListener {
+        ivName.setOnClickListener {
             val manager: FragmentManager = requireActivity().supportFragmentManager
             val ft: FragmentTransaction = manager.beginTransaction()
 
@@ -90,47 +84,94 @@ class UserFragment: Fragment(R.layout.fragment_user) {
             ft.commitAllowingStateLoss()
         }
 
-        binding.clSort.setOnClickListener {
+        clSort.setOnClickListener {
             UserSortDialog(requireContext()).showDialog()
         }
 
-        binding.clFollower.setOnClickListener {
+        clFollower.setOnClickListener {
             val intent = Intent(requireContext(), FollowActivity::class.java)
             intent.putExtra("isFollowerView", true)
             startActivity(intent)
         }
 
-        binding.clFollowing.setOnClickListener {
+        clFollowing.setOnClickListener {
             val intent = Intent(requireContext(), FollowActivity::class.java)
             intent.putExtra("isFollowerView", false)
             startActivity(intent)
         }
 
-        binding.llMyReview.setOnClickListener {
+        llMyReview.setOnClickListener {
             val intent = Intent(requireContext(), MyReviewActivity::class.java)
             startActivity(intent)
         }
 
-        binding.llRecentReview.setOnClickListener{
+        llRecentReview.setOnClickListener {
             val intent = Intent(requireContext(), RecentReviewActivity::class.java)
             startActivity(intent)
         }
 
-        binding.llMyComment.setOnClickListener {
+        llMyComment.setOnClickListener {
             val intent = Intent(requireContext(), MyCommentActivity::class.java)
             startActivity(intent)
         }
 
-        binding.llHeartReview.setOnClickListener {
+        llHeartReview.setOnClickListener {
             val intent = Intent(requireContext(), HeartReviewActivity::class.java)
             startActivity(intent)
         }
-
-
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private fun setUserInformation(data: UserDetailData) = with(binding) {
+        if (data.imageUrl.isNullOrEmpty()) {
+            clProfile.setImageDrawable(requireContext().getDrawable(R.drawable.food1))
+        } else {
+            Glide.with(requireContext())
+                .load(data.imageUrl)
+                .into(clProfile)
+        }
+
+        tvName.text = data.nickname
+        tvIntroduce.text = data.introduction
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun setUserPost(contents: List<Content>) {
+        if (contents.isNullOrEmpty()) {
+            binding.rvGrid.visibility = View.INVISIBLE
+            binding.rvList.visibility = View.INVISIBLE
+            binding.clNonPost.visibility = View.VISIBLE
+        } else {
+            binding.clNonPost.visibility = View.INVISIBLE
+            if (binding.rbGrid.isChecked) {
+                binding.rvGrid.visibility = View.VISIBLE
+                binding.rvList.visibility = View.INVISIBLE
+            } else if (binding.rbList.isChecked) {
+                binding.rvGrid.visibility = View.INVISIBLE
+                binding.rvList.visibility = View.VISIBLE
+            }
+            adapterGrid = UserGridAdapter(contents, requireContext())
+            adapterList = UserListAdapter(contents, requireContext(),
+                viewModel.getProfile(), viewModel.getNickname(),
+                likePost = {
+                    viewModel.likePost(it)
+                },
+                unLikePost = {
+                    viewModel.unLikePost(it)
+                },
+                bookmarkPost = {
+                    viewModel.bookmarkPost(it)
+                },
+                unBookmarkPost = {
+                    viewModel.unBookmarkPost(it)
+                })
+
+            binding.rvGrid.adapter = adapterGrid
+            binding.rvList.adapter = adapterList
+
+            adapterGrid.notifyDataSetChanged()
+            adapterList.notifyDataSetChanged()
+        }
     }
 }

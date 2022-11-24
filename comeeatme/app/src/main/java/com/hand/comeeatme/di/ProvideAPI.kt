@@ -43,6 +43,11 @@ fun provideFavoriteService(retrofit: Retrofit): FavoriteService {
     return retrofit.create(FavoriteService::class.java)
 }
 
+fun provideUserService(retrofit: Retrofit): UserService {
+    return retrofit.create(UserService::class.java)
+}
+
+
 fun provideApiRetrofit(
     okHttpClient: OkHttpClient,
     gsonConverterFactory: GsonConverterFactory,

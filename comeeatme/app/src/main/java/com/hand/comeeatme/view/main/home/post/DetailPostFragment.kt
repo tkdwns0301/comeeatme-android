@@ -30,6 +30,7 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
     MainActivity.onBackPressedListener {
     companion object {
         const val POST_ID = "postId"
+        const val TAG = "DetailFragment"
 
         fun newInstance(postId: Long) : DetailPostFragment {
             val bundle = bundleOf(

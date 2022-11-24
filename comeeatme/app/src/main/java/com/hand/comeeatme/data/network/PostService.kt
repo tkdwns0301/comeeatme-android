@@ -1,6 +1,6 @@
 package com.hand.comeeatme.data.network
 
-import com.hand.comeeatme.data.request.home.NewPostRequest
+import com.hand.comeeatme.data.request.Post.NewPostRequest
 import com.hand.comeeatme.data.response.post.DetailPostResponse
 import com.hand.comeeatme.data.response.post.NewPostResponse
 import com.hand.comeeatme.data.response.post.PostResponse
@@ -24,10 +24,15 @@ interface PostService {
         @Body newPost: NewPostRequest,
     ): Response<NewPostResponse>
 
-    @Headers("content-type: application/json")
     @GET("/v1/posts/{postId}")
     suspend fun getDetailPost(
         @Header("Authorization") Authorization: String,
         @Path("postId") postId: Long,
     ): Response<DetailPostResponse>
+
+    @GET("/v1/members/{memberId}/posts")
+    suspend fun getUserPost(
+        @Header("Authorization") Authorization: String,
+        @Path("memberId") memberId: Long,
+    ) : Response<PostResponse>
 }
