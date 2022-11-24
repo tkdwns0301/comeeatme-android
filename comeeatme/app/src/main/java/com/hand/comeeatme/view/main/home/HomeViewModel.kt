@@ -59,7 +59,7 @@ class HomeViewModel(
             homeStateLiveData.value = HomeState.BookmarkPostSuccess
         } ?: run {
             homeStateLiveData.value = HomeState.Error(
-                "북마크 취소 실패"
+                "북마크 실패"
             )
         }
     }
