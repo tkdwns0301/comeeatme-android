@@ -1,6 +1,7 @@
 package com.hand.comeeatme.view.main.home.newpost.album
 
 import AlbumAdapter
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -139,6 +140,7 @@ class AlbumActivity : BaseActivity<AlbumViewModel, ActivityAlbumBinding>() {
         viewModel.setThumbnailList(thumbnailList)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun setAdapter(thumbnails: ArrayList<Thumbnail>) {
         adapter = AlbumAdapter(
             thumbnails,

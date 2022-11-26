@@ -2,7 +2,9 @@ package com.hand.comeeatme.view.main.user
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.bumptech.glide.Glide
@@ -15,10 +17,10 @@ import com.hand.comeeatme.util.widget.adapter.user.UserListAdapter
 import com.hand.comeeatme.view.base.BaseFragment
 import com.hand.comeeatme.view.dialog.UserSortDialog
 import com.hand.comeeatme.view.main.user.edit.UserEditFragment
-import com.hand.comeeatme.view.main.user.menu.HeartReviewActivity
-import com.hand.comeeatme.view.main.user.menu.MyCommentActivity
-import com.hand.comeeatme.view.main.user.menu.MyReviewActivity
-import com.hand.comeeatme.view.main.user.menu.RecentReviewActivity
+import com.hand.comeeatme.view.main.user.menu.heartreview.HeartReviewFragment
+import com.hand.comeeatme.view.main.user.menu.mycomment.MyCommentFragment
+import com.hand.comeeatme.view.main.user.menu.myreview.MyReviewFragment
+import com.hand.comeeatme.view.main.user.menu.recentreview.RecentReviewFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
@@ -63,15 +65,15 @@ class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
     private lateinit var adapterGrid: UserGridAdapter
 
     override fun initView() = with(binding) {
-        rgListAndGrid.setOnCheckedChangeListener { group, checkId ->
+        rgListAndGrid.setOnCheckedChangeListener { _, checkId ->
             when (checkId) {
                 R.id.rb_Grid -> {
-                    binding.rvList.visibility = View.INVISIBLE
-                    binding.rvGrid.visibility = View.VISIBLE
+                    binding.rvList.isGone = true
+                    binding.rvGrid.isVisible = true
                 }
                 else -> {
-                    binding.rvList.visibility = View.VISIBLE
-                    binding.rvGrid.visibility = View.INVISIBLE
+                    binding.rvList.isVisible = true
+                    binding.rvGrid.isGone = true
                 }
             }
 
@@ -102,23 +104,42 @@ class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
         }
 
         llMyReview.setOnClickListener {
-            val intent = Intent(requireContext(), MyReviewActivity::class.java)
-            startActivity(intent)
+            val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
+            val ft: FragmentTransaction = manager.beginTransaction()
+
+            ft.add(R.id.fg_MainContainer,
+                MyReviewFragment.newInstance(),
+                MyReviewFragment.TAG)
+            ft.commitAllowingStateLoss()
         }
 
         llRecentReview.setOnClickListener {
-            val intent = Intent(requireContext(), RecentReviewActivity::class.java)
-            startActivity(intent)
+            val manager: FragmentManager = requireActivity().supportFragmentManager
+            val ft: FragmentTransaction = manager.beginTransaction()
+
+            ft.add(R.id.fg_MainContainer, RecentReviewFragment.newInstance(), RecentReviewFragment.TAG)
+            ft.commitAllowingStateLoss()
         }
 
         llMyComment.setOnClickListener {
-            val intent = Intent(requireContext(), MyCommentActivity::class.java)
-            startActivity(intent)
+            val manager: FragmentManager = requireActivity().supportFragmentManager
+            val ft: FragmentTransaction = manager.beginTransaction()
+
+            ft.add(R.id.fg_MainContainer, MyCommentFragment.newInstance(), MyCommentFragment.TAG)
+            ft.commitAllowingStateLoss()
         }
 
         llHeartReview.setOnClickListener {
-            val intent = Intent(requireContext(), HeartReviewActivity::class.java)
-            startActivity(intent)
+            val manager: FragmentManager = requireActivity().supportFragmentManager
+            val ft: FragmentTransaction = manager.beginTransaction()
+
+            ft.add(R.id.fg_MainContainer, HeartReviewFragment.newInstance(), HeartReviewFragment.TAG)
+            ft.commitAllowingStateLoss()
+        }
+
+        srlUser.setOnRefreshListener {
+            viewModel.getUserPost()
+            srlUser.isRefreshing = false
         }
     }
 
@@ -142,17 +163,17 @@ class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
     @SuppressLint("NotifyDataSetChanged")
     private fun setUserPost(contents: List<Content>) {
         if (contents.isNullOrEmpty()) {
-            binding.rvGrid.visibility = View.INVISIBLE
-            binding.rvList.visibility = View.INVISIBLE
-            binding.clNonPost.visibility = View.VISIBLE
+            binding.rvGrid.isGone = true
+            binding.rvList.isGone = true
+            binding.clNonPost.isVisible = true
         } else {
-            binding.clNonPost.visibility = View.INVISIBLE
+            binding.clNonPost.isGone = true
             if (binding.rbGrid.isChecked) {
-                binding.rvGrid.visibility = View.VISIBLE
-                binding.rvList.visibility = View.INVISIBLE
+                binding.rvGrid.isVisible = true
+                binding.rvList.isGone = true
             } else if (binding.rbList.isChecked) {
-                binding.rvGrid.visibility = View.INVISIBLE
-                binding.rvList.visibility = View.VISIBLE
+                binding.rvGrid.isGone = true
+                binding.rvList.isVisible = true
             }
             adapterGrid = UserGridAdapter(contents, requireContext())
             adapterList = UserListAdapter(contents, requireContext(),
@@ -177,4 +198,5 @@ class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
             adapterList.notifyDataSetChanged()
         }
     }
+
 }

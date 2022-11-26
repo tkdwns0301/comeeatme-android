@@ -53,9 +53,9 @@
         <activity android:name=".view.main.home.search.SearchActivity" />
         <activity android:name=".view.main.map.MapDetailActivity"/>
         <activity android:name=".view.main.user.FollowActivity"/>
-        <activity android:name=".view.main.user.menu.HeartReviewActivity"/>
-        <activity android:name=".view.main.user.menu.MyCommentActivity"/>
-        <activity android:name=".view.main.user.menu.MyReviewActivity"/>
-        <activity android:name=".view.main.user.menu.RecentReviewActivity"/>
+        <activity android:name=".view.main.user.menu.heartreview.HeartReviewFragment"/>
+        <activity android:name=".view.main.user.menu.mycomment.MyCommentFragment"/>
+        <activity android:name=".view.main.user.menu.myreview.MyReviewFragment"/>
+        <activity android:name=".view.main.user.menu.recentreview.RecentReviewFragment"/>
     </application>
 </manifest>

@@ -32,6 +32,10 @@ import com.hand.comeeatme.view.main.home.post.DetailPostViewModel
 import com.hand.comeeatme.view.main.home.search.SearchViewModel
 import com.hand.comeeatme.view.main.user.UserViewModel
 import com.hand.comeeatme.view.main.user.edit.UserEditViewModel
+import com.hand.comeeatme.view.main.user.menu.heartreview.HeartReviewViewModel
+import com.hand.comeeatme.view.main.user.menu.mycomment.MyCommentViewModel
+import com.hand.comeeatme.view.main.user.menu.myreview.MyReviewViewModel
+import com.hand.comeeatme.view.main.user.menu.recentreview.RecentReviewViewModel
 import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -51,6 +55,10 @@ val appModule = module {
     viewModel { FavoritePostViewModel(get(), get()) }
     viewModel { UserViewModel(get(), get(), get(), get(), get()) }
     viewModel { UserEditViewModel(get(), get(), get()) }
+    viewModel { MyReviewViewModel(get(), get())}
+    viewModel { MyCommentViewModel(get())}
+    viewModel { HeartReviewViewModel(get())}
+    viewModel { RecentReviewViewModel(get())}
 
     // repository
     single<PostRepository> { DefaultPostRepository(get(), get()) }
