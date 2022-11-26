@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hand.comeeatme.data.preference.AppPreferenceManager
 import com.hand.comeeatme.data.repository.logIn.LogInRepository
-import com.hand.comeeatme.data.request.logIn.TokenRequest
+import com.hand.comeeatme.data.request.aouth.TokenRequest
 import com.hand.comeeatme.data.response.logIn.TokenResponse
 import com.hand.comeeatme.view.base.BaseViewModel
 import kotlinx.coroutines.Dispatchers

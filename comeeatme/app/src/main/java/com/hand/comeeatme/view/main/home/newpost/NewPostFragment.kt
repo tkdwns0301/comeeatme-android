@@ -161,7 +161,7 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
                 )
             } else {
                 selectPhotoLauncher.launch(
-                    AlbumActivity.newIntent(requireContext())
+                    AlbumActivity.newIntent(requireContext(), true)
                 )
             }
         }

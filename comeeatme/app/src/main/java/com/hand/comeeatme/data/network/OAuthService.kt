@@ -1,6 +1,6 @@
 package com.hand.comeeatme.data.network
 
-import com.hand.comeeatme.data.request.logIn.TokenRequest
+import com.hand.comeeatme.data.request.aouth.TokenRequest
 import com.hand.comeeatme.data.response.logIn.TokenResponse
 import retrofit2.Response
 import retrofit2.http.Body

@@ -12,7 +12,7 @@ class DefaultImageRepository(
 ): ImageRepository {
     override suspend fun sendImages(
         accessToken: String,
-        images: ArrayList<MultipartBody.Part>,
+        images: ArrayList<MultipartBody.Part>?,
     ): ImageResponse? = withContext(ioDispatcher) {
         val response = imageService.sendImages(
             Authorization = "Bearer $accessToken",

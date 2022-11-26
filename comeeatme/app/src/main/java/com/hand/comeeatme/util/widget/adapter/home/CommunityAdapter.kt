@@ -1,7 +1,6 @@
 package com.hand.comeeatme.util.widget.adapter.home
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -46,7 +45,6 @@ class CommunityAdapter(
         holder.container.setOnClickListener {
             val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
             val ft: FragmentTransaction = manager.beginTransaction()
-            Log.e("Adapter: postId, position", "${item.id}, $position")
 
             ft.add(R.id.fg_MainContainer, DetailPostFragment.newInstance(item.id), "fm_Post")
             ft.commitAllowingStateLoss()

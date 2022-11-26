@@ -47,7 +47,6 @@ class CropActivity : BaseActivity<CropViewModel, ActivityCropBinding>() {
             }
 
             is CropState.CompressFinish -> {
-                Log.e("CompressPath", "${it.compressPhotoPathList}")
                 intent.putExtra(NewPostViewModel.COMPRESSED_PHOTO_KEY, it.compressPhotoPathList)
                 setResult(RESULT_OK, intent)
                 finish()

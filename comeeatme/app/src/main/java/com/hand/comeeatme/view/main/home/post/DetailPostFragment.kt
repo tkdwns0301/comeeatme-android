@@ -30,6 +30,7 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
     MainActivity.onBackPressedListener {
     companion object {
         const val POST_ID = "postId"
+        const val TAG = "DetailFragment"
 
         fun newInstance(postId: Long) : DetailPostFragment {
             val bundle = bundleOf(
@@ -256,10 +257,10 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
         val manager: FragmentManager? = activity?.supportFragmentManager
         val ft: FragmentTransaction = manager!!.beginTransaction()
 
-        val post = manager.findFragmentByTag("fm_Post")
+        val fragment = manager.findFragmentByTag(TAG)
 
-        if (post != null) {
-            ft.remove(post)
+        if (fragment != null) {
+            ft.remove(fragment)
         }
 
         ft.commitAllowingStateLoss()

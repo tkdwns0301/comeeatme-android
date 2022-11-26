@@ -1,4 +1,4 @@
-package com.hand.comeeatme.data.request.home
+package com.hand.comeeatme.data.request.Post
 
 data class NewPostRequest(
     var restaurantId: Long?,

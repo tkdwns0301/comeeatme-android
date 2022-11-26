@@ -1,6 +1,7 @@
 package com.hand.comeeatme.view.main.home.newpost.album
 
 import AlbumAdapter
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -8,7 +9,6 @@ import android.graphics.BitmapFactory
 import android.media.ThumbnailUtils
 import android.net.Uri
 import android.provider.MediaStore
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -25,8 +25,13 @@ import java.io.File
 
 class AlbumActivity : BaseActivity<AlbumViewModel, ActivityAlbumBinding>() {
     companion object {
-        fun newIntent(context: Context) =
-            Intent(context, AlbumActivity::class.java)
+        const val IS_PROFILE = "isProfile"
+        fun newIntent(context: Context, isProfile: Boolean) =
+            Intent(context, AlbumActivity::class.java).putExtra(IS_PROFILE, isProfile)
+    }
+
+    private val isProfile by lazy {
+        intent.getBooleanExtra(IS_PROFILE, false)
     }
 
     override fun getViewBinding(): ActivityAlbumBinding =
@@ -59,12 +64,13 @@ class AlbumActivity : BaseActivity<AlbumViewModel, ActivityAlbumBinding>() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == AppCompatActivity.RESULT_OK && requestCode == 100) {
-            Log.e("compress", "${data!!.getStringArrayListExtra(NewPostViewModel.COMPRESSED_PHOTO_KEY) as ArrayList<String>}")
-
             val intent = Intent(this, NewPostFragment::class.java)
-            intent.putExtra(NewPostViewModel.COMPRESSED_PHOTO_KEY, data!!.getStringArrayListExtra(NewPostViewModel.COMPRESSED_PHOTO_KEY) as ArrayList<String> )
+            intent.putExtra(NewPostViewModel.COMPRESSED_PHOTO_KEY,
+                data!!.getStringArrayListExtra(NewPostViewModel.COMPRESSED_PHOTO_KEY) as ArrayList<String>)
             setResult(RESULT_OK, intent)
             finish()
+
+
         }
     }
 
@@ -134,6 +140,7 @@ class AlbumActivity : BaseActivity<AlbumViewModel, ActivityAlbumBinding>() {
         viewModel.setThumbnailList(thumbnailList)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun setAdapter(thumbnails: ArrayList<Thumbnail>) {
         adapter = AlbumAdapter(
             thumbnails,
@@ -149,13 +156,19 @@ class AlbumActivity : BaseActivity<AlbumViewModel, ActivityAlbumBinding>() {
     }
 
     private fun addCheckedImage(photo: Thumbnail) {
-        if (viewModel.getCheckedPhotoList().size < 10) {
-            viewModel.getThumbnailList()[photo.position].isChecked = true
+        if (isProfile) {
+            viewModel.removeAllCheckedPhoto()
             viewModel.addCheckedPhotoItem(photo.path)
-            Log.e("Album: checkedPhotoList", "${viewModel.getCheckedPhotoList()}")
-            adapter.notifyDataSetChanged()
+            startActivityForResult(CropActivity.newIntent(applicationContext,
+                viewModel.getCheckedPhotoList()), 100)
         } else {
-            Toast.makeText(this, "최대 10장의 사진을 선택할 수 있습니다.", Toast.LENGTH_SHORT).show()
+            if (viewModel.getCheckedPhotoList().size < 10) {
+                viewModel.getThumbnailList()[photo.position].isChecked = true
+                viewModel.addCheckedPhotoItem(photo.path)
+                adapter.notifyDataSetChanged()
+            } else {
+                Toast.makeText(this, "최대 10장의 사진을 선택할 수 있습니다.", Toast.LENGTH_SHORT).show()
+            }
         }
 
 

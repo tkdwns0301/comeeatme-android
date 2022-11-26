@@ -17,6 +17,8 @@ import com.hand.comeeatme.data.repository.member.DefaultMemberRepository
 import com.hand.comeeatme.data.repository.member.MemberRepository
 import com.hand.comeeatme.data.repository.restaurant.DefaultRestaurantRepository
 import com.hand.comeeatme.data.repository.restaurant.RestaurantRepository
+import com.hand.comeeatme.data.repository.user.DefaultUserRepository
+import com.hand.comeeatme.data.repository.user.UserRepository
 import com.hand.comeeatme.util.event.MenuChangeEventBus
 import com.hand.comeeatme.view.login.LogInViewModel
 import com.hand.comeeatme.view.main.bookmark.BookmarkViewModel
@@ -28,6 +30,12 @@ import com.hand.comeeatme.view.main.home.newpost.album.AlbumViewModel
 import com.hand.comeeatme.view.main.home.newpost.crop.CropViewModel
 import com.hand.comeeatme.view.main.home.post.DetailPostViewModel
 import com.hand.comeeatme.view.main.home.search.SearchViewModel
+import com.hand.comeeatme.view.main.user.UserViewModel
+import com.hand.comeeatme.view.main.user.edit.UserEditViewModel
+import com.hand.comeeatme.view.main.user.menu.heartreview.HeartReviewViewModel
+import com.hand.comeeatme.view.main.user.menu.mycomment.MyCommentViewModel
+import com.hand.comeeatme.view.main.user.menu.myreview.MyReviewViewModel
+import com.hand.comeeatme.view.main.user.menu.recentreview.RecentReviewViewModel
 import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -43,9 +51,16 @@ val appModule = module {
     viewModel { CropViewModel() }
     viewModel { DetailPostViewModel(get(), get(), get(), get(), get()) }
     viewModel { BookmarkViewModel(get()) }
-    viewModel { BookmarkPostViewModel(get(), get())}
-    viewModel { FavoritePostViewModel(get(), get())}
+    viewModel { BookmarkPostViewModel(get(), get()) }
+    viewModel { FavoritePostViewModel(get(), get()) }
+    viewModel { UserViewModel(get(), get(), get(), get(), get()) }
+    viewModel { UserEditViewModel(get(), get(), get()) }
+    viewModel { MyReviewViewModel(get(), get())}
+    viewModel { MyCommentViewModel(get())}
+    viewModel { HeartReviewViewModel(get())}
+    viewModel { RecentReviewViewModel(get())}
 
+    // repository
     single<PostRepository> { DefaultPostRepository(get(), get()) }
     single<LogInRepository> { DefaultLogInRepository(get(), get()) }
     single<MemberRepository> { DefaultMemberRepository(get(), get()) }
@@ -53,7 +68,8 @@ val appModule = module {
     single<ImageRepository> { DefaultImageRepository(get(), get()) }
     single<LikeRepository> { DefaultLikeRepository(get(), get()) }
     single<BookmarkRepository> { DefaultBookmarkRepository(get(), get()) }
-    single<FavoriteRepository> { DefaultFavoriteRepository(get(), get())}
+    single<FavoriteRepository> { DefaultFavoriteRepository(get(), get()) }
+    single<UserRepository> { DefaultUserRepository(get(), get()) }
 
     // provider
     single { provideApiRetrofit(get(), get(), get()) }
@@ -65,6 +81,7 @@ val appModule = module {
     single { provideLikeService(get()) }
     single { provideBookmarkService(get()) }
     single { provideFavoriteService(get()) }
+    single { provideUserService(get()) }
 
     single { provideGson() }
     single { provideGsonConverterFactory(get()) }
