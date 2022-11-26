@@ -8,7 +8,7 @@ import com.hand.comeeatme.data.preference.AppPreferenceManager
 import com.hand.comeeatme.data.repository.home.PostRepository
 import com.hand.comeeatme.data.repository.image.ImageRepository
 import com.hand.comeeatme.data.repository.restaurant.RestaurantRepository
-import com.hand.comeeatme.data.request.Post.NewPostRequest
+import com.hand.comeeatme.data.request.post.NewPostRequest
 import com.hand.comeeatme.view.base.BaseViewModel
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull

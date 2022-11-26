@@ -3,6 +3,8 @@ package com.hand.comeeatme.di
 import com.hand.comeeatme.data.preference.AppPreferenceManager
 import com.hand.comeeatme.data.repository.bookmark.BookmarkRepository
 import com.hand.comeeatme.data.repository.bookmark.DefaultBookmarkRepository
+import com.hand.comeeatme.data.repository.comment.CommentRepository
+import com.hand.comeeatme.data.repository.comment.DefaultCommentRepository
 import com.hand.comeeatme.data.repository.favorite.DefaultFavoriteRepository
 import com.hand.comeeatme.data.repository.favorite.FavoriteRepository
 import com.hand.comeeatme.data.repository.home.DefaultPostRepository
@@ -70,6 +72,7 @@ val appModule = module {
     single<BookmarkRepository> { DefaultBookmarkRepository(get(), get()) }
     single<FavoriteRepository> { DefaultFavoriteRepository(get(), get()) }
     single<UserRepository> { DefaultUserRepository(get(), get()) }
+    single<CommentRepository> { DefaultCommentRepository(get(), get())}
 
     // provider
     single { provideApiRetrofit(get(), get(), get()) }
@@ -82,6 +85,7 @@ val appModule = module {
     single { provideBookmarkService(get()) }
     single { provideFavoriteService(get()) }
     single { provideUserService(get()) }
+    single { provideCommentService(get()) }
 
     single { provideGson() }
     single { provideGsonConverterFactory(get()) }

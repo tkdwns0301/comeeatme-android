@@ -1,7 +1,7 @@
 package com.hand.comeeatme.data.repository.home
 
 import com.hand.comeeatme.data.network.PostService
-import com.hand.comeeatme.data.request.Post.NewPostRequest
+import com.hand.comeeatme.data.request.post.NewPostRequest
 import com.hand.comeeatme.data.response.post.DetailPostResponse
 import com.hand.comeeatme.data.response.post.NewPostResponse
 import com.hand.comeeatme.data.response.post.PostResponse
