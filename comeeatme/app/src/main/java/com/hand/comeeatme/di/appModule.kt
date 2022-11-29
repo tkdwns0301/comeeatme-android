@@ -51,7 +51,7 @@ val appModule = module {
     viewModel { NewPostViewModel(get(), get(), get(), get()) }
     viewModel { AlbumViewModel() }
     viewModel { CropViewModel() }
-    viewModel { DetailPostViewModel(get(), get(), get(), get(), get()) }
+    viewModel { DetailPostViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { BookmarkViewModel(get()) }
     viewModel { BookmarkPostViewModel(get(), get()) }
     viewModel { FavoritePostViewModel(get(), get()) }

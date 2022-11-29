@@ -14,7 +14,7 @@ data class CommentListResponse(
 
 data class CommentListData(
     @Expose
-    val content: CommentListContent,
+    val content: List<CommentListContent>,
     @Expose
     val pageable: Pageable,
     @Expose
@@ -37,13 +37,13 @@ data class CommentListContent(
     @Expose
     val id: Long,
     @Expose
-    val parentId: Long,
+    val parentId: Long?,
     @Expose
     val deleted: Boolean,
     @Expose
     val content: String,
     @Expose
-    val createAt: String,
+    val createdAt: String,
     @Expose
     val member: Member,
 )
