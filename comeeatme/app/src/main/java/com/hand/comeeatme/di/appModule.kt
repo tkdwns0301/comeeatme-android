@@ -7,8 +7,8 @@ import com.hand.comeeatme.data.repository.comment.CommentRepository
 import com.hand.comeeatme.data.repository.comment.DefaultCommentRepository
 import com.hand.comeeatme.data.repository.favorite.DefaultFavoriteRepository
 import com.hand.comeeatme.data.repository.favorite.FavoriteRepository
-import com.hand.comeeatme.data.repository.home.DefaultPostRepository
-import com.hand.comeeatme.data.repository.home.PostRepository
+import com.hand.comeeatme.data.repository.post.DefaultPostRepository
+import com.hand.comeeatme.data.repository.post.PostRepository
 import com.hand.comeeatme.data.repository.image.DefaultImageRepository
 import com.hand.comeeatme.data.repository.image.ImageRepository
 import com.hand.comeeatme.data.repository.like.DefaultLikeRepository

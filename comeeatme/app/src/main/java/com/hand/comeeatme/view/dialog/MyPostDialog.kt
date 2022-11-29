@@ -6,19 +6,18 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.WindowManager
-import com.hand.comeeatme.databinding.DialogCommentMyBinding
+import com.hand.comeeatme.databinding.DialogMyPostBinding
 
-class MyCommentDialog(
+class MyPostDialog(
     context: Context,
-    val modifyComment: () -> Unit,
-    val deleteComment: () -> Unit,
-): Dialog(context) {
-    private lateinit var binding: DialogCommentMyBinding
+    val modifyPost: () -> Unit,
+    val deletePost: () -> Unit,
+) : Dialog(context) {
+    private lateinit var binding: DialogMyPostBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        binding = DialogCommentMyBinding.inflate(layoutInflater)
+        binding = DialogMyPostBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initView()
     }
@@ -36,12 +35,17 @@ class MyCommentDialog(
         setCancelable(true)
 
         llModify.setOnClickListener {
-            modifyComment.invoke()
+            modifyPost.invoke()
+            dismiss()
+        }
+
+        llShare.setOnClickListener {
+            // TODO 공유하기
             dismiss()
         }
 
         llDelete.setOnClickListener {
-            deleteComment.invoke()
+            deletePost.invoke()
             dismiss()
         }
     }

@@ -6,19 +6,17 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.WindowManager
-import com.hand.comeeatme.databinding.DialogCommentMyBinding
+import com.hand.comeeatme.databinding.DialogOtherPostBinding
 
-class MyCommentDialog(
-    context: Context,
-    val modifyComment: () -> Unit,
-    val deleteComment: () -> Unit,
+class OtherPostDialog(
+    context: Context
 ): Dialog(context) {
-    private lateinit var binding: DialogCommentMyBinding
+    private lateinit var binding: DialogOtherPostBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = DialogCommentMyBinding.inflate(layoutInflater)
+        binding = DialogOtherPostBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initView()
     }
@@ -35,14 +33,20 @@ class MyCommentDialog(
         setCanceledOnTouchOutside(true)
         setCancelable(true)
 
-        llModify.setOnClickListener {
-            modifyComment.invoke()
+        llBookmark.setOnClickListener {
+            // TODO 북마크
             dismiss()
         }
 
-        llDelete.setOnClickListener {
-            deleteComment.invoke()
+        llShare.setOnClickListener {
+            // TODO 공유하기
+            dismiss()
+        }
+
+        llReport.setOnClickListener {
+            // TODO 신고하기
             dismiss()
         }
     }
+
 }

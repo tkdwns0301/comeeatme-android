@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.res.ColorStateList
 import android.graphics.Rect
-import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -33,8 +32,10 @@ import com.hand.comeeatme.util.KeyboardVisibilityUtil
 import com.hand.comeeatme.util.widget.adapter.comment.CommentListAdapter
 import com.hand.comeeatme.util.widget.adapter.home.ViewPagerAdapter
 import com.hand.comeeatme.view.base.BaseFragment
-import com.hand.comeeatme.view.dialog.PostDialog
+import com.hand.comeeatme.view.dialog.MyPostDialog
+import com.hand.comeeatme.view.dialog.OtherPostDialog
 import com.hand.comeeatme.view.main.MainActivity
+import com.hand.comeeatme.view.main.home.newpost.NewPostFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import kotlin.math.abs
@@ -88,6 +89,7 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
 
                 is DetailPostState.Success -> {
                     binding.clLoading.isGone = true
+                    viewModel.setPostWriterMemberId(it.response!!.data.member.id)
                     setView(it.response!!.data)
                 }
 
@@ -99,6 +101,10 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
                 is DetailPostState.WritingCommentSuccess -> {
                     viewModel.getDetailPost()
                     viewModel.getCommentList(0, 10, false)
+                }
+
+                is DetailPostState.DeletePostSuccess -> {
+                    finish()
                 }
 
                 is DetailPostState.Error -> {
@@ -155,8 +161,25 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
         toolbarPost.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.toolbar_Menu -> {
-                    // TODO Dialog 띄워서 신고하기 등등 보여주기
-                    PostDialog(requireContext()).showDialog()
+                    if(viewModel.getPostWriterMemberId() == viewModel.getMemberId()) {
+                        MyPostDialog(
+                            requireContext(),
+                            modifyPost = {
+                                // TODO 정보도 같이 넘겨주기 (사진은 안바뀌게)
+                                val manager: FragmentManager = requireActivity().supportFragmentManager
+                                val ft: FragmentTransaction = manager.beginTransaction()
+
+                                ft.add(R.id.fg_MainContainer, NewPostFragment.newInstance(), NewPostFragment.TAG)
+                                ft.commitAllowingStateLoss()
+                            },
+                            deletePost = {
+                                viewModel.deletePost()
+                            }
+                        ).show()
+                    } else {
+                        OtherPostDialog(requireContext()).show()
+                    }
+
                     true
                 }
                 else -> {
@@ -209,6 +232,7 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
 
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun setAdapter(contents: List<CommentListContent>) {
         adapter = CommentListAdapter(
             contents,
@@ -234,17 +258,6 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
 
         binding.rvCommentList.adapter = adapter
         adapter.notifyDataSetChanged()
-    }
-
-    private fun scrollToView(view: View?, scrollView: NestedScrollView?, count: Int) {
-        var count = count
-        if (view != null && view != scrollView) {
-            count += view.bottom
-            scrollToView(view.parent as View, scrollView, count)
-        } else if (scrollView != null) {
-            val finalCount = count
-            Handler().postDelayed(Runnable { scrollView.smoothScrollTo(0, finalCount) }, 200)
-        }
     }
 
     @SuppressLint("UseCompatLoadingForDrawables", "SetTextI18n")

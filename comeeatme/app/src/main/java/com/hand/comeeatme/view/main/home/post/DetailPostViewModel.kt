@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.hand.comeeatme.data.preference.AppPreferenceManager
 import com.hand.comeeatme.data.repository.bookmark.BookmarkRepository
 import com.hand.comeeatme.data.repository.comment.CommentRepository
-import com.hand.comeeatme.data.repository.home.PostRepository
 import com.hand.comeeatme.data.repository.like.LikeRepository
+import com.hand.comeeatme.data.repository.post.PostRepository
 import com.hand.comeeatme.data.request.comment.ModifyCommentRequest
 import com.hand.comeeatme.data.request.comment.WritingCommentRequest
 import com.hand.comeeatme.view.base.BaseViewModel
@@ -41,6 +41,8 @@ class DetailPostViewModel(
         "AROUND_CLOCK" to "24시간"
     )
 
+    private var postWriterMemberId: Long? = null
+
     fun getHashTagEngToKor(): HashMap<String, String> {
         return hashTagEngToKor
     }
@@ -49,8 +51,32 @@ class DetailPostViewModel(
         return postId
     }
 
+    fun setPostWriterMemberId(memberId: Long) {
+        postWriterMemberId = memberId
+    }
+
+    fun getPostWriterMemberId(): Long? {
+        return postWriterMemberId
+    }
+
+
     fun getMemberId(): Long {
         return appPreferenceManager.getMemberId()
+    }
+
+    fun deletePost() = viewModelScope.launch {
+        detailPostStateLiveData.value = DetailPostState.Loading
+
+        val response = postRepository.deletePost("${appPreferenceManager.getAccessToken()}", postId)
+
+        response?.let {
+            detailPostStateLiveData.value = DetailPostState.DeletePostSuccess
+        } ?:run {
+            detailPostStateLiveData.value = DetailPostState.Error(
+                "게시글을 삭제하는 도중 오류가 발생했습니다."
+            )
+        }
+
     }
 
     fun modifyComment(commentId: Long, content: String) = viewModelScope.launch {

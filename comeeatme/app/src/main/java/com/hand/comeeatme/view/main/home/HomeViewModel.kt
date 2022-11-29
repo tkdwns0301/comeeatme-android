@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hand.comeeatme.data.preference.AppPreferenceManager
 import com.hand.comeeatme.data.repository.bookmark.BookmarkRepository
-import com.hand.comeeatme.data.repository.home.PostRepository
+import com.hand.comeeatme.data.repository.post.PostRepository
 import com.hand.comeeatme.data.repository.like.LikeRepository
 import com.hand.comeeatme.view.base.BaseViewModel
 import kotlinx.coroutines.launch

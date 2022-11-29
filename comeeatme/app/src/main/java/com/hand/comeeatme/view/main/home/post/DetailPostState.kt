@@ -23,6 +23,7 @@ sealed class DetailPostState {
     ): DetailPostState()
 
     object WritingCommentSuccess: DetailPostState()
+    object DeletePostSuccess: DetailPostState()
 
     @SuppressLint("SupportAnnotationUsage")
     data class Error(

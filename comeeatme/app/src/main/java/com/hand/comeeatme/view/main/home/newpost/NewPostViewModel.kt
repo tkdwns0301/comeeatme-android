@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.android.material.chip.Chip
 import com.hand.comeeatme.data.preference.AppPreferenceManager
-import com.hand.comeeatme.data.repository.home.PostRepository
+import com.hand.comeeatme.data.repository.post.PostRepository
 import com.hand.comeeatme.data.repository.image.ImageRepository
 import com.hand.comeeatme.data.repository.restaurant.RestaurantRepository
 import com.hand.comeeatme.data.request.post.NewPostRequest
