@@ -1,6 +1,7 @@
 package com.hand.comeeatme.view.main.home.newpost
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -20,6 +21,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
@@ -28,6 +30,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.chip.Chip
 import com.hand.comeeatme.R
+import com.hand.comeeatme.data.response.post.DetailPostData
 import com.hand.comeeatme.databinding.FragmentNewpostBinding
 import com.hand.comeeatme.util.widget.adapter.NewPostPhotosAdapter
 import com.hand.comeeatme.util.widget.adapter.SearchRestaurantAdapter
@@ -42,14 +45,33 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
     MainActivity.onBackPressedListener {
 
     companion object {
+        const val IS_MODIFY = "isModify"
+        const val POST_ID = "postId"
         const val TAG = "NewPostFragment"
 
-        fun newInstance() = NewPostFragment()
+        fun newInstance(isModify: Boolean?, postId: Long?) : NewPostFragment {
+            val bundle = bundleOf(
+                IS_MODIFY to isModify,
+                POST_ID to postId
+            )
+
+            return NewPostFragment().apply {
+                arguments = bundle
+            }
+        }
     }
 
     override val viewModel by viewModel<NewPostViewModel>()
     override fun getViewBinding(): FragmentNewpostBinding =
         FragmentNewpostBinding.inflate(layoutInflater)
+
+    private val isModify by lazy {
+        arguments?.getBoolean(IS_MODIFY, false)
+    }
+
+    private val postId by lazy {
+        arguments?.getLong(POST_ID, -1)
+    }
 
     private lateinit var photoAdapter: NewPostPhotosAdapter
     private lateinit var restaurantAdapter: SearchRestaurantAdapter
@@ -73,11 +95,14 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
             }
         }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun observeData() {
         viewModel.newPostStateLiveData.observe(viewLifecycleOwner) {
             when (it) {
                 is NewPostState.Uninitialized -> {
-
+                    if(isModify == true) {
+                        viewModel.getDetailPost(postId!!)
+                    }
                 }
 
                 is NewPostState.Loading -> {
@@ -88,11 +113,7 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
                 }
 
                 is NewPostState.CompressPhotoFinish -> {
-                    photoAdapter = NewPostPhotosAdapter(
-                        it.compressPhotoList
-                    )
-                    binding.rvSelectedImages.adapter = photoAdapter
-                    photoAdapter.notifyDataSetChanged()
+                    setImageAdapter(it.compressPhotoList, false)
                 }
 
                 is NewPostState.NewPostReady -> {
@@ -117,7 +138,14 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
                         }
                     )
                     binding.icLocation.rvLocationResult.adapter = restaurantAdapter
+                }
 
+                is NewPostState.DetailPostSuccess -> {
+                    setView(it.response.data)
+                }
+
+                is NewPostState.ModifyPostSuccess -> {
+                    finish()
                 }
 
                 is NewPostState.Error -> {
@@ -174,7 +202,12 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
             } else if (tvFinish.currentTextColor == ContextCompat.getColor(requireContext(),
                     R.color.basic)
             ) {
-                viewModel.getImageIds()
+                if(isModify == false) {
+                    viewModel.getImageIds()
+                } else {
+                    viewModel.modifyPost(postId!!)
+                }
+
             }
         }
 
@@ -272,6 +305,30 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
         icHashTag.tvInit.setOnClickListener {
             viewModel.clearHashTag()
         }
+    }
+
+    private fun setView(data: DetailPostData) = with(binding) {
+        tvSelectedLocation.text = data.restaurant.name
+        viewModel.setRestaurantId(data.restaurant.id)
+
+        clImageSelect.isGone = true
+
+        viewModel.getChipList().forEach { chip ->
+            Log.e("chip text:", viewModel.hashTagKorToEng(chip.text.toString()))
+
+            if(data.hashtags.contains(viewModel.hashTagKorToEng("${chip.text}"))) {
+                chip.isChecked = true
+            }
+        }
+
+        setImageAdapter(data.imageUrls as ArrayList<String>, true)
+        viewModel.setResultPhotoList(data.imageUrls)
+
+        etContent.setText(data.content)
+        viewModel.setContent(data.content)
+
+
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -382,6 +439,10 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
         layoutParams.rightMargin = dpToPx(10)
         addView(chip, childCount, layoutParams)
 
+        if(!isSelected) {
+            viewModel.addChip(chip)
+        }
+
 
     }
 
@@ -392,6 +453,17 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
         binding.etContent.clearFocus()
         binding.icLocation.etSearch.clearFocus()
     }
+
+    private fun setImageAdapter(data: ArrayList<String>, isModify: Boolean) {
+        photoAdapter = NewPostPhotosAdapter(
+            requireContext(),
+            data,
+            isModify
+        )
+        binding.rvSelectedImages.adapter = photoAdapter
+        photoAdapter.notifyDataSetChanged()
+    }
+
 
 //    private fun setAdapter() {
 //        if (images != null) {
@@ -415,7 +487,7 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
         val manager: FragmentManager? = activity?.supportFragmentManager
         val ft: FragmentTransaction = manager!!.beginTransaction()
 
-        val newPost = manager.findFragmentByTag("fm_NewPost")
+        val newPost = manager.findFragmentByTag(TAG)
 
         if (newPost != null) {
             ft.remove(newPost)

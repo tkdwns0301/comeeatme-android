@@ -2,6 +2,7 @@ package com.hand.comeeatme.view.main.home.newpost
 
 import android.annotation.SuppressLint
 import androidx.annotation.StringRes
+import com.hand.comeeatme.data.response.post.DetailPostResponse
 import com.hand.comeeatme.data.response.post.NewPostResponse
 import com.hand.comeeatme.data.response.restaurant.SimpleRestaurantResponse
 
@@ -29,6 +30,11 @@ sealed class NewPostState {
         val compressPhotoList: ArrayList<String>,
     ) : NewPostState()
 
+    data class DetailPostSuccess(
+        val response: DetailPostResponse
+    ): NewPostState()
+
+    object ModifyPostSuccess: NewPostState()
 
     object Loading : NewPostState()
 }

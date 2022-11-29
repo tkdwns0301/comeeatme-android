@@ -169,7 +169,7 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
                                 val manager: FragmentManager = requireActivity().supportFragmentManager
                                 val ft: FragmentTransaction = manager.beginTransaction()
 
-                                ft.add(R.id.fg_MainContainer, NewPostFragment.newInstance(), NewPostFragment.TAG)
+                                ft.add(R.id.fg_MainContainer, NewPostFragment.newInstance(true, postId), NewPostFragment.TAG)
                                 ft.commitAllowingStateLoss()
                             },
                             deletePost = {
@@ -327,7 +327,7 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
             flSelectHashTag.addItem(viewModel.getHashTagEngToKor()[i]!!)
         }
 
-        tvCommentCount.text = "(${data.commentCount}}"
+        tvCommentCount.text = "(${data.commentCount})"
         tvLikeCount.text = "(${data.likeCount})"
 
         // TODO 시간 처리
