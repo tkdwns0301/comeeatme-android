@@ -175,7 +175,6 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
             icHashTag.flEtc.addItem(etc, false)
         }
 
-        // TODO 1. 앨범아이콘 클릭
         clImageSelect.setOnClickListener {
             val readPermission = ActivityCompat.checkSelfPermission(
                 requireContext(),
@@ -189,7 +188,7 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
                 )
             } else {
                 selectPhotoLauncher.launch(
-                    AlbumActivity.newIntent(requireContext(), true)
+                    AlbumActivity.newIntent(requireContext(), false)
                 )
             }
         }

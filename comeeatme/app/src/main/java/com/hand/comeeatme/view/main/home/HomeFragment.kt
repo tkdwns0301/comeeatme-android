@@ -28,7 +28,7 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
     override fun getViewBinding(): FragmentHomeBinding = FragmentHomeBinding.inflate(layoutInflater)
 
     private lateinit var adapter: CommunityAdapter
-    private var checkedChipList = ArrayList<String>()
+    private var checkedHashTagList = ArrayList<String>()
 
     override fun observeData() {
         viewModel.homeStateLiveData.observe(viewLifecycleOwner) {
@@ -88,9 +88,7 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
         }
 
         ibHashTag.setOnClickListener {
-            val intent = Intent(requireContext(), HashTagActivity::class.java)
-            intent.putExtra("checkedChip", checkedChipList)
-            startActivityForResult(intent, 100)
+            startActivityForResult(HashTagActivity.newIntent(requireContext(), checkedHashTagList), 100)
         }
 
         ibSearch.setOnClickListener {
@@ -98,21 +96,22 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
             startActivity(intent)
         }
 
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == AppCompatActivity.RESULT_OK && requestCode == 100) {
-            checkedChipList = data!!.getStringArrayListExtra("checkedChip") as ArrayList<String>
-            Log.e("checkedChipList", "$checkedChipList")
+            checkedHashTagList = data!!.getStringArrayListExtra(HashTagActivity.CHECKED_HASHTAG) as ArrayList<String>
 
-            if (checkedChipList.size == 0) {
+            if (checkedHashTagList.size == 0) {
                 binding.clHashTagNum.visibility = View.INVISIBLE
+                viewModel.loadPost(0, 10, false, null)
             } else {
+                Log.e("hashTagList", "$checkedHashTagList")
                 binding.clHashTagNum.visibility = View.VISIBLE
-                binding.tvHashTag.text = "${checkedChipList.size}"
+                binding.tvHashTag.text = "${checkedHashTagList.size}"
+                viewModel.loadPost(0, 10, false, checkedHashTagList)
             }
 
         }
