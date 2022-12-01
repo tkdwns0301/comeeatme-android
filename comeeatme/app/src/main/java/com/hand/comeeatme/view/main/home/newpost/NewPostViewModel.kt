@@ -147,12 +147,12 @@ class NewPostViewModel(
         page: Long?,
         size: Long?,
         sort: Boolean?,
-        name: String,
+        keyword: String,
     ) = viewModelScope.launch {
         newPostStateLiveData.value = NewPostState.Loading
         val response =
             restaurantRepository.getSearchRestaurants("${appPreferenceManager.getAccessToken()}",
-                page, size, sort, name
+                page, size, sort, keyword
             )
 
         response?.let {

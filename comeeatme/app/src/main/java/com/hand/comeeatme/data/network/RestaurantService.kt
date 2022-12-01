@@ -13,6 +13,6 @@ interface RestaurantService {
         @Query("page") page: Long?,
         @Query("size") size: Long?,
         @Query("sort") sort: Boolean?,
-        @Query("name") name: String,
+        @Query("keyword") keyword: String,
     ): Response<SimpleRestaurantResponse>
 }

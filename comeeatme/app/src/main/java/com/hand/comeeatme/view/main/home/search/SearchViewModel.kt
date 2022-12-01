@@ -37,7 +37,7 @@ class SearchViewModel(
         page: Long?,
         size: Long?,
         sort: Boolean?,
-        name: String,
+        keyword: String,
     ) = viewModelScope.launch {
         searchStateLiveData.value = SearchState.Loading
 
@@ -46,7 +46,7 @@ class SearchViewModel(
             page,
             size,
             sort,
-            name
+            keyword
         )
 
         response?.let {
