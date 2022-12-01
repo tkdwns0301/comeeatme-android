@@ -7,8 +7,6 @@ import com.hand.comeeatme.data.repository.comment.CommentRepository
 import com.hand.comeeatme.data.repository.comment.DefaultCommentRepository
 import com.hand.comeeatme.data.repository.favorite.DefaultFavoriteRepository
 import com.hand.comeeatme.data.repository.favorite.FavoriteRepository
-import com.hand.comeeatme.data.repository.post.DefaultPostRepository
-import com.hand.comeeatme.data.repository.post.PostRepository
 import com.hand.comeeatme.data.repository.image.DefaultImageRepository
 import com.hand.comeeatme.data.repository.image.ImageRepository
 import com.hand.comeeatme.data.repository.like.DefaultLikeRepository
@@ -17,6 +15,8 @@ import com.hand.comeeatme.data.repository.logIn.DefaultLogInRepository
 import com.hand.comeeatme.data.repository.logIn.LogInRepository
 import com.hand.comeeatme.data.repository.member.DefaultMemberRepository
 import com.hand.comeeatme.data.repository.member.MemberRepository
+import com.hand.comeeatme.data.repository.post.DefaultPostRepository
+import com.hand.comeeatme.data.repository.post.PostRepository
 import com.hand.comeeatme.data.repository.restaurant.DefaultRestaurantRepository
 import com.hand.comeeatme.data.repository.restaurant.RestaurantRepository
 import com.hand.comeeatme.data.repository.user.DefaultUserRepository
@@ -47,7 +47,7 @@ val appModule = module {
     // viewModel
     viewModel { LogInViewModel(get(), get()) }
     viewModel { HomeViewModel(get(), get(), get(), get()) }
-    viewModel { SearchViewModel(get(), get()) }
+    viewModel { SearchViewModel(get(), get(), get()) }
     viewModel { NewPostViewModel(get(), get(), get(), get()) }
     viewModel { AlbumViewModel() }
     viewModel { CropViewModel() }

@@ -33,7 +33,7 @@ import com.hand.comeeatme.R
 import com.hand.comeeatme.data.response.post.DetailPostData
 import com.hand.comeeatme.databinding.FragmentNewpostBinding
 import com.hand.comeeatme.util.widget.adapter.NewPostPhotosAdapter
-import com.hand.comeeatme.util.widget.adapter.SearchRestaurantAdapter
+import com.hand.comeeatme.util.widget.adapter.SearchNewPostRestaurantAdapter
 import com.hand.comeeatme.view.base.BaseFragment
 import com.hand.comeeatme.view.main.MainActivity
 import com.hand.comeeatme.view.main.home.newpost.album.AlbumActivity
@@ -49,7 +49,7 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
         const val POST_ID = "postId"
         const val TAG = "NewPostFragment"
 
-        fun newInstance(isModify: Boolean?, postId: Long?) : NewPostFragment {
+        fun newInstance(isModify: Boolean?, postId: Long?): NewPostFragment {
             val bundle = bundleOf(
                 IS_MODIFY to isModify,
                 POST_ID to postId
@@ -74,7 +74,7 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
     }
 
     private lateinit var photoAdapter: NewPostPhotosAdapter
-    private lateinit var restaurantAdapter: SearchRestaurantAdapter
+    private lateinit var restaurantAdapter: SearchNewPostRestaurantAdapter
 
     private var images = ArrayList<Uri>()
     private var checkedImageList = ArrayList<String>()
@@ -100,7 +100,7 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
         viewModel.newPostStateLiveData.observe(viewLifecycleOwner) {
             when (it) {
                 is NewPostState.Uninitialized -> {
-                    if(isModify == true) {
+                    if (isModify == true) {
                         viewModel.getDetailPost(postId!!)
                     }
                 }
@@ -127,9 +127,10 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
                 }
 
                 is NewPostState.SearchRestaurantSuccess -> {
-                    restaurantAdapter = SearchRestaurantAdapter(
+                    restaurantAdapter = SearchNewPostRestaurantAdapter(
                         requireContext(),
                         it.restaurants.data.content,
+                        false,
                         onClickItem = {
                             viewModel.setRestaurantId(it.id)
                             binding.tvSelectedLocation.text = it.name
@@ -201,7 +202,7 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
             } else if (tvFinish.currentTextColor == ContextCompat.getColor(requireContext(),
                     R.color.basic)
             ) {
-                if(isModify == false) {
+                if (isModify == false) {
                     viewModel.getImageIds()
                 } else {
                     viewModel.modifyPost(postId!!)
@@ -283,7 +284,7 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
             true
         }
 
-        etContent.addTextChangedListener (object : TextWatcher {
+        etContent.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
 
@@ -315,7 +316,7 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
         viewModel.getChipList().forEach { chip ->
             Log.e("chip text:", viewModel.hashTagKorToEng(chip.text.toString()))
 
-            if(data.hashtags.contains(viewModel.hashTagKorToEng("${chip.text}"))) {
+            if (data.hashtags.contains(viewModel.hashTagKorToEng("${chip.text}"))) {
                 chip.isChecked = true
             }
         }
@@ -325,7 +326,6 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
 
         etContent.setText(data.content)
         viewModel.setContent(data.content)
-
 
 
     }
@@ -438,7 +438,7 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
         layoutParams.rightMargin = dpToPx(10)
         addView(chip, childCount, layoutParams)
 
-        if(!isSelected) {
+        if (!isSelected) {
             viewModel.addChip(chip)
         }
 

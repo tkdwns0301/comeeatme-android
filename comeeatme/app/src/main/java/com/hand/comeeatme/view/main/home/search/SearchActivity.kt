@@ -1,22 +1,18 @@
 package com.hand.comeeatme.view.main.home.search
 
-import android.content.Context
-import android.preference.PreferenceManager
-import android.util.Log
+import android.annotation.SuppressLint
 import android.view.KeyEvent
-import android.view.MotionEvent
 import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.hand.comeeatme.R
+import com.hand.comeeatme.data.response.home.NicknameContent
+import com.hand.comeeatme.data.response.restaurant.SimpleRestaurantContent
 import com.hand.comeeatme.databinding.ActivitySearchBinding
-import com.hand.comeeatme.util.widget.adapter.RecentSearchAdapter
+import com.hand.comeeatme.util.widget.adapter.home.SearchRestaurantAdapter
+import com.hand.comeeatme.util.widget.adapter.home.SearchUserAdapter
 import com.hand.comeeatme.view.base.BaseActivity
-import org.json.JSONArray
-import org.json.JSONException
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
@@ -24,26 +20,31 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     override val viewModel by viewModel<SearchViewModel>()
     override fun getViewBinding(): ActivitySearchBinding = ActivitySearchBinding.inflate(layoutInflater)
 
-    private lateinit var adapter: RecentSearchAdapter
-
-    private var recentSearchList = ArrayList<String>()
+    private lateinit var userAdapter: SearchUserAdapter
+    private lateinit var restaurantAdapter: SearchRestaurantAdapter
 
     override fun observeData() = viewModel.searchStateLiveData.observe(this) {
         when(it) {
             is SearchState.Uninitialized -> {
-                binding.pbLoading.isGone = true
+                binding.clLoading.isGone = true
             }
 
             is SearchState.Loading -> {
-                binding.pbLoading.isVisible = true
+                binding.clLoading.isVisible = true
             }
 
-            is SearchState.Success -> {
-                binding.pbLoading.isGone = true
+            is SearchState.SearchUserSuccess -> {
+                binding.clLoading.isGone = true
+                setUserAdapter(it.response!!.data.content)
+            }
+
+            is SearchState.SearchRestaurantSuccess -> {
+                binding.clLoading.isGone = true
+                setRestaurantAdapter(it.response!!.data.content)
             }
 
             is SearchState.Error -> {
-                binding.pbLoading.isGone = true
+                binding.clLoading.isGone = true
             }
         }
 
@@ -51,47 +52,22 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
 
     override fun initView() = with(binding){
-        toolbarSearch.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.toolbar_Search -> {
-                    if (!recentSearchList.contains("${binding.etSearch.text}")) {
-                        recentSearchList.add(0, "${binding.etSearch.text}")
-                        adapter.notifyDataSetChanged()
-                    } else {
-                        recentSearchList.remove("${binding.etSearch.text}")
-                        recentSearchList.add(0, "${binding.etSearch.text}")
-                        adapter.notifyDataSetChanged()
-                    }
+        rvSearchList.layoutManager =LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
 
-                    binding.etSearch.text = null
-                    binding.etSearch.clearFocus()
-                    true
-                }
-                else -> {
-                    super.onOptionsItemSelected(it)
-
-                }
-            }
-        }
-
-        binding.toolbarSearch.setNavigationOnClickListener {
+        ibPrev.setOnClickListener {
             finish()
         }
+
+        ibSearch.setOnClickListener {
+            searchAnything("${etSearch.text}")
+
+        }
+
 
         etSearch.setOnEditorActionListener(object: TextView.OnEditorActionListener {
             override fun onEditorAction(p0: TextView?, p1: Int, p2: KeyEvent?): Boolean {
                 if(p1 == EditorInfo.IME_ACTION_SEARCH) {
-                    if (!recentSearchList.contains("${binding.etSearch.text}")) {
-                        recentSearchList.add(0, "${binding.etSearch.text}")
-                        adapter.notifyDataSetChanged()
-                    } else {
-                        recentSearchList.remove("${binding.etSearch.text}")
-                        recentSearchList.add(0, "${binding.etSearch.text}")
-                        adapter.notifyDataSetChanged()
-                    }
-
-                    binding.etSearch.text = null
-                    binding.etSearch.clearFocus()
+                    searchAnything("${etSearch.text}")
                     return true
                 }
                 return false
@@ -99,83 +75,90 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
 
         })
 
-        initRecyclerView()
     }
 
-    private fun initRecyclerView() {
-        val layoutManager =
-            LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
-        binding.rvRecentSearch.layoutManager = layoutManager
-
-        setAdapter()
-    }
-
-    private fun setAdapter() {
-        adapter = RecentSearchAdapter(
-            recentSearchList,
-            onClickDeleteIcon = {
-                deleteTask(it)
+    private fun searchAnything(query: String) = with(binding){
+        if(query.isNotEmpty()) {
+            if(query[0] == '@') {
+                viewModel.getSearchNicknames(query.substring(1, query.length))
+            } else {
+                viewModel.getSearchRestaurants(null, null, null, query)
             }
+        }
+
+        binding.etSearch.clearFocus()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun setUserAdapter(contents: List<NicknameContent>) {
+        userAdapter = SearchUserAdapter(
+            contents,
+            applicationContext
         )
-        binding.rvRecentSearch.adapter = adapter
-        adapter.notifyDataSetChanged()
-
+        binding.rvSearchList.adapter = userAdapter
+        userAdapter.notifyDataSetChanged()
     }
 
-    private fun deleteTask(position: Int) {
-        recentSearchList.removeAt(position)
-        adapter.notifyDataSetChanged()
+    @SuppressLint("NotifyDataSetChanged")
+    private fun setRestaurantAdapter(contents: List<SimpleRestaurantContent>) {
+        restaurantAdapter = SearchRestaurantAdapter(
+            applicationContext,
+            contents
+        )
+
+        binding.rvSearchList.adapter = restaurantAdapter
+        restaurantAdapter.notifyDataSetChanged()
     }
 
-    private fun setPreferences(context: Context) {
-        val pref = PreferenceManager.getDefaultSharedPreferences(context)
-        val editor = pref.edit()
-        val jsonArray = JSONArray()
-
-        for (i in 0 until recentSearchList.size) {
-            jsonArray.put(recentSearchList[i])
-        }
-
-        if (jsonArray.length() != 0) {
-            editor.putString("RecentSearch", jsonArray.toString())
-        } else {
-            editor.putString("RecentSearch", null)
-        }
-
-        editor.apply()
-    }
-
-    private fun getPreferences(context: Context) {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        val jsonString = prefs.getString("RecentSearch", null)
-
-        if (jsonString != null) {
-            try {
-                val jsonArray = JSONArray(jsonString)
-
-                for (i in 0 until jsonArray.length()) {
-                    val searchQuery = jsonArray[i].toString()
-                    recentSearchList.add(searchQuery)
-                }
-            } catch (e: JSONException) {
-                Log.e("JSON ERROR", "${e.printStackTrace()}")
-            }
-        }
-
-        Log.e("getPreferences", "$recentSearchList")
-    }
-
-    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
-        val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
-        //currentFocus!!.clearFocus()
-
-
-        return super.dispatchTouchEvent(ev)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        setPreferences(this)
-    }
+//    private fun setPreferences(context: Context) {
+//        val pref = PreferenceManager.getDefaultSharedPreferences(context)
+//        val editor = pref.edit()
+//        val jsonArray = JSONArray()
+//
+//        for (i in 0 until recentSearchList.size) {
+//            jsonArray.put(recentSearchList[i])
+//        }
+//
+//        if (jsonArray.length() != 0) {
+//            editor.putString("RecentSearch", jsonArray.toString())
+//        } else {
+//            editor.putString("RecentSearch", null)
+//        }
+//
+//        editor.apply()
+//    }
+//
+//    private fun getPreferences(context: Context) {
+//        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+//        val jsonString = prefs.getString("RecentSearch", null)
+//
+//        if (jsonString != null) {
+//            try {
+//                val jsonArray = JSONArray(jsonString)
+//
+//                for (i in 0 until jsonArray.length()) {
+//                    val searchQuery = jsonArray[i].toString()
+//                    recentSearchList.add(searchQuery)
+//                }
+//            } catch (e: JSONException) {
+//                e("JSON ERROR", "${e.printStackTrace()}")
+//            }
+//        }
+//
+//        e("getPreferences", "$recentSearchList")
+//    }
+//
+//    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+//        val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//        imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+//        //currentFocus!!.clearFocus()
+//
+//
+//        return super.dispatchTouchEvent(ev)
+//    }
+//
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        setPreferences(this)
+//    }
 }

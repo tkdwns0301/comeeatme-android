@@ -7,9 +7,12 @@ import retrofit2.http.Header
 import retrofit2.http.Query
 
 interface MemberService {
+    //
     @GET("v1/members")
     suspend fun getSearchNicknames(
         @Header("Authorization") Authorization: String,
         @Query("nickname") nickname: String,
     ): Response<NicknamesResponse>
+
+
 }
