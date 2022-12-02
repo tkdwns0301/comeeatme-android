@@ -138,7 +138,7 @@ class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
         }
 
         srlUser.setOnRefreshListener {
-            viewModel.getMemberPost()
+            viewModel.getMemberDetail()
             srlUser.isRefreshing = false
         }
     }

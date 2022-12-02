@@ -136,7 +136,7 @@ class UserEditFragment : BaseFragment<UserEditViewModel, FragmentUserEditBinding
 
             }
 
-            viewModel.getImageIds(etNickName.text.toString(), etIntroduce.text.toString())
+            viewModel.modifyMemberInformation("${etNickName.text}", "${etIntroduce.text}")
         }
 
 

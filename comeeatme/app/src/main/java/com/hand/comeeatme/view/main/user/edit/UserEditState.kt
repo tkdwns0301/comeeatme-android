@@ -13,6 +13,8 @@ sealed class UserEditState {
         @StringRes val message: String,
     ) : UserEditState()
 
+    object GetImageIdSuccess: UserEditState()
+
     data class CompressPhotoFinish (
         val compressPhotoList: ArrayList<String>,
     ) : UserEditState()

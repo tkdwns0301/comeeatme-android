@@ -1,11 +1,9 @@
 package com.hand.comeeatme.data.repository.member
 
 import com.hand.comeeatme.data.network.MemberService
+import com.hand.comeeatme.data.request.member.MemberModifyProfileRequest
 import com.hand.comeeatme.data.request.member.MemberModifyRequest
-import com.hand.comeeatme.data.response.member.MemberDetailResponse
-import com.hand.comeeatme.data.response.member.MemberDuplicationResponse
-import com.hand.comeeatme.data.response.member.MemberModifyResponse
-import com.hand.comeeatme.data.response.member.MemberSearchResponse
+import com.hand.comeeatme.data.response.member.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
@@ -44,6 +42,26 @@ class DefaultMemberRepository(
 
         if (response.isSuccessful) {
             if (!response.body()!!.success) {
+                null
+            } else {
+                response.body()!!
+            }
+        } else {
+            null
+        }
+    }
+
+    override suspend fun modifyMemberProfile(
+        accessToken: String,
+        modifyProfile: MemberModifyProfileRequest
+    ): MemberModifyProfileResponse? = withContext(ioDispatcher){
+        val response = memberService.modifyMemberProfile(
+            Authorization = "Bearer $accessToken",
+            modifyProfileRequest =  modifyProfile
+        )
+
+        if(response.isSuccessful) {
+            if(!response.body()!!.success) {
                 null
             } else {
                 response.body()!!

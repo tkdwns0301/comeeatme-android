@@ -1,5 +1,6 @@
 package com.hand.comeeatme.data.network
 
+import com.hand.comeeatme.data.request.member.MemberModifyProfileRequest
 import com.hand.comeeatme.data.request.member.MemberModifyRequest
 import com.hand.comeeatme.data.response.member.*
 import retrofit2.Response
@@ -20,6 +21,14 @@ interface MemberService {
         @Header("Authorization") Authorization: String,
         @Body information: MemberModifyRequest
     ): Response<MemberModifyResponse>
+
+    // 회원 이미지 수정
+    @Headers("content-type: application/json")
+    @PATCH("/v1/member/image")
+    suspend fun modifyMemberProfile(
+        @Header("Authorization") Authorization: String,
+        @Body modifyProfileRequest: MemberModifyProfileRequest
+    ): Response<MemberModifyProfileResponse>
 
     // 회원 리스트 조회
     @GET("/v1/members")
