@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.hand.comeeatme.data.response.home.NicknameContent
+import com.hand.comeeatme.data.response.member.MemberSearchContent
 import com.hand.comeeatme.data.response.restaurant.SimpleRestaurantContent
 import com.hand.comeeatme.databinding.ActivitySearchBinding
 import com.hand.comeeatme.util.widget.adapter.home.SearchRestaurantAdapter
@@ -90,7 +90,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun setUserAdapter(contents: List<NicknameContent>) {
+    private fun setUserAdapter(contents: List<MemberSearchContent>) {
         userAdapter = SearchUserAdapter(
             contents,
             applicationContext

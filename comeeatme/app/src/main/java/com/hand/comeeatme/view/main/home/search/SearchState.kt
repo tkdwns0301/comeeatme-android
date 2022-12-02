@@ -2,14 +2,14 @@ package com.hand.comeeatme.view.main.home.search
 
 import android.annotation.SuppressLint
 import androidx.annotation.StringRes
-import com.hand.comeeatme.data.response.home.NicknamesResponse
+import com.hand.comeeatme.data.response.member.MemberSearchResponse
 import com.hand.comeeatme.data.response.restaurant.SimpleRestaurantResponse
 
 sealed class SearchState {
     object Uninitialized : SearchState()
 
     data class SearchUserSuccess(
-        val response: NicknamesResponse?,
+        val response: MemberSearchResponse?,
     ) : SearchState()
 
     data class SearchRestaurantSuccess(

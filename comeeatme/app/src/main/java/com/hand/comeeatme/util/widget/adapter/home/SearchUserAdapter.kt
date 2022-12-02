@@ -4,14 +4,18 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.hand.comeeatme.R
-import com.hand.comeeatme.data.response.home.NicknameContent
+import com.hand.comeeatme.data.response.member.MemberSearchContent
 import com.hand.comeeatme.databinding.LayoutSearchUserBinding
+import com.hand.comeeatme.view.main.user.other.OtherPageFragment
 
 class SearchUserAdapter(
-    private val items: List<NicknameContent>,
+    private val items: List<MemberSearchContent>,
     private val context: Context,
 ): RecyclerView.Adapter<SearchUserAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -34,7 +38,7 @@ class SearchUserAdapter(
         val nickname = binding.tvNickName
 
         @SuppressLint("UseCompatLoadingForDrawables")
-        fun bind(context: Context, item: NicknameContent) {
+        fun bind(context: Context, item: MemberSearchContent) {
             if(item.imageUrl.isNullOrEmpty()) {
                 profile.setImageDrawable(context.getDrawable(R.drawable.food1))
             } else {
@@ -46,7 +50,13 @@ class SearchUserAdapter(
             nickname.text = item.nickname
 
             itemView.setOnClickListener {
-                // TODO 사용자 상세페이지, memberId 넘겨주기
+                val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
+                val ft: FragmentTransaction = manager.beginTransaction()
+
+                ft.add(R.id.fg_MainContainer, OtherPageFragment.newInstance(item.id), OtherPageFragment.TAG)
+                ft.commitAllowingStateLoss()
+
+
             }
         }
     }

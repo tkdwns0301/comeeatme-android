@@ -1,6 +1,6 @@
-package com.hand.comeeatme.data.request.user
+package com.hand.comeeatme.data.request.member
 
-data class UserModifyRequest(
+data class MemberModifyRequest(
     val nickname: String,
     val introduction: String?,
     val imageId: Long?,

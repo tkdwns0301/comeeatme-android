@@ -1,4 +1,4 @@
-package com.hand.comeeatme.view.main.user
+package com.hand.comeeatme.view.main.user.other
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -10,53 +10,62 @@ import com.hand.comeeatme.data.repository.post.PostRepository
 import com.hand.comeeatme.view.base.BaseViewModel
 import kotlinx.coroutines.launch
 
-class UserViewModel(
+class OtherPageViewModel(
     private val appPreferenceManager: AppPreferenceManager,
     private val memberRepository: MemberRepository,
     private val postRepository: PostRepository,
     private val likeRepository: LikeRepository,
     private val bookmarkRepository: BookmarkRepository,
 ) : BaseViewModel() {
-    val userStateLiveData = MutableLiveData<UserState>(UserState.Uninitialized)
+
+    val otherPageStateLiveData = MutableLiveData<OtherPageState>(OtherPageState.Uninitialized)
 
     private var profile: String? = null
     private var nickname: String? = null
-    private var introduction: String? = null
 
     fun setProfile(profile: String?) {
         this.profile = profile
     }
 
-    fun getProfile() : String? {
-        return profile
-    }
+    fun getProfile(): String? = profile
 
-    fun setNickname(nickname: String) {
+    fun setNickname(nickname: String?) {
         this.nickname = nickname
     }
 
-    fun getNickname() : String {
-        return nickname!!
-    }
+    fun getNickname(): String? = nickname
 
-    fun setIntroduction(introduction: String) {
-        this.introduction = introduction
-    }
+    fun getDetailMember(memberId: Long) = viewModelScope.launch {
+        otherPageStateLiveData.value = OtherPageState.Loading
 
-    fun getIntroduction() : String? {
-        return introduction
-    }
-
-    fun getMemberPost() = viewModelScope.launch {
-        val response = postRepository.getMemberPost("${appPreferenceManager.getAccessToken()}",
-            appPreferenceManager.getMemberId())
+        val response = memberRepository.getDetailMember(
+            "${appPreferenceManager.getAccessToken()}",
+            memberId
+        )
 
         response?.let {
-            userStateLiveData.value = UserState.UserPostSuccess(
-                response = it,
+            otherPageStateLiveData.value = OtherPageState.Success(
+                response = it
             )
         } ?: run {
-            userStateLiveData.value = UserState.Error(
+            otherPageStateLiveData.value = OtherPageState.Error(
+                "사용자 정보를 불러오는 도중 오류가 발생했습니다."
+            )
+        }
+    }
+
+    fun getMemberPost(memberId: Long) = viewModelScope.launch {
+        val response = postRepository.getMemberPost(
+            "${appPreferenceManager.getAccessToken()}",
+            memberId
+        )
+
+        response?.let {
+            otherPageStateLiveData.value = OtherPageState.MemberPostSuccess(
+                response = it
+            )
+        }?:run {
+            otherPageStateLiveData.value = OtherPageState.Error(
                 "사용자 글을 불러오는 도중 오류가 발생했습니다."
             )
         }
@@ -68,9 +77,9 @@ class UserViewModel(
         val response = likeRepository.likePost("${appPreferenceManager.getAccessToken()}", postId)
 
         response?.let {
-            userStateLiveData.value = UserState.LikePostSuccess
+            otherPageStateLiveData.value = OtherPageState.LikePostSuccess
         } ?: run {
-            userStateLiveData.value = UserState.Error(
+            otherPageStateLiveData.value = OtherPageState.Error(
                 "좋아요 실패"
             )
         }
@@ -82,9 +91,9 @@ class UserViewModel(
         val response = likeRepository.unLikePost("${appPreferenceManager.getAccessToken()}", postId)
 
         response?.let {
-            userStateLiveData.value = UserState.UnLikePostSuccess
+            otherPageStateLiveData.value = OtherPageState.UnLikePostSuccess
         } ?: run {
-            userStateLiveData.value = UserState.Error(
+            otherPageStateLiveData.value = OtherPageState.Error(
                 "좋아요 취소 실패"
             )
         }
@@ -97,9 +106,9 @@ class UserViewModel(
             bookmarkRepository.bookmarkPost("${appPreferenceManager.getAccessToken()}", postId)
 
         response?.let {
-            userStateLiveData.value = UserState.BookmarkPostSuccess
+            otherPageStateLiveData.value = OtherPageState.BookmarkPostSuccess
         } ?: run {
-            userStateLiveData.value = UserState.Error(
+            otherPageStateLiveData.value = OtherPageState.Error(
                 "북마크 실패"
             )
         }
@@ -112,27 +121,13 @@ class UserViewModel(
             bookmarkRepository.unBookmarkPost("${appPreferenceManager.getAccessToken()}", postId)
 
         response?.let {
-            userStateLiveData.value = UserState.UnBookmarkPostSuccess
+            otherPageStateLiveData.value = OtherPageState.UnBookmarkPostSuccess
         } ?: run {
-            userStateLiveData.value = UserState.Error(
+            otherPageStateLiveData.value = OtherPageState.Error(
                 "북마크 취소 실패"
             )
         }
     }
 
 
-    fun getMemberDetail() = viewModelScope.launch {
-        val response = memberRepository.getDetailMember("${appPreferenceManager.getAccessToken()}",
-            appPreferenceManager.getMemberId())
-
-        response?.let {
-            userStateLiveData.value = UserState.UserDetailSuccess(
-                response = it
-            )
-        } ?: run {
-            userStateLiveData.value = UserState.Error(
-                "사용자 정보를 불러오는 도중 오류가 발생했습니다."
-            )
-        }
-    }
 }

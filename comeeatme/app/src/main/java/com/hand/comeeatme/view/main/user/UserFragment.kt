@@ -9,8 +9,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.bumptech.glide.Glide
 import com.hand.comeeatme.R
+import com.hand.comeeatme.data.response.member.MemberDetailData
 import com.hand.comeeatme.data.response.post.Content
-import com.hand.comeeatme.data.response.user.UserDetailData
 import com.hand.comeeatme.databinding.FragmentUserBinding
 import com.hand.comeeatme.util.widget.adapter.user.UserGridAdapter
 import com.hand.comeeatme.util.widget.adapter.user.UserListAdapter
@@ -36,7 +36,7 @@ class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
         viewModel.userStateLiveData.observe(viewLifecycleOwner) {
             when (it) {
                 is UserState.Uninitialized -> {
-                    viewModel.getUserDetail()
+                    viewModel.getMemberDetail()
                 }
 
                 is UserState.Loading -> {
@@ -47,7 +47,7 @@ class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
                     viewModel.setProfile(it.response.data.imageUrl)
                     viewModel.setNickname(it.response.data.nickname)
                     setUserInformation(it.response.data)
-                    viewModel.getUserPost()
+                    viewModel.getMemberPost()
                 }
 
                 is UserState.UserPostSuccess -> {
@@ -138,14 +138,14 @@ class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
         }
 
         srlUser.setOnRefreshListener {
-            viewModel.getUserPost()
+            viewModel.getMemberPost()
             srlUser.isRefreshing = false
         }
     }
 
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    private fun setUserInformation(data: UserDetailData) = with(binding) {
+    private fun setUserInformation(data: MemberDetailData) = with(binding) {
         if (data.imageUrl.isNullOrEmpty()) {
             clProfile.setImageDrawable(requireContext().getDrawable(R.drawable.food1))
         } else {

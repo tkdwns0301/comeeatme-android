@@ -13,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isGone
@@ -36,6 +37,7 @@ import com.hand.comeeatme.view.dialog.MyPostDialog
 import com.hand.comeeatme.view.dialog.OtherPostDialog
 import com.hand.comeeatme.view.main.MainActivity
 import com.hand.comeeatme.view.main.home.newpost.NewPostFragment
+import com.hand.comeeatme.view.main.user.other.OtherPageFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import kotlin.math.abs
@@ -133,6 +135,14 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
 
         rvCommentList.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+
+        clProfileNameFollow.setOnClickListener {
+            val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
+            val ft: FragmentTransaction = manager.beginTransaction()
+
+            ft.add(R.id.fg_MainContainer, OtherPageFragment.newInstance(viewModel.getMemberId()), OtherPageFragment.TAG)
+            ft.commitAllowingStateLoss()
+        }
 
         tbFollow.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {

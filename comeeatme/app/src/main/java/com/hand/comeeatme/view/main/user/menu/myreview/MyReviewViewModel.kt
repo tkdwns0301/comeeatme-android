@@ -16,7 +16,7 @@ class MyReviewViewModel(
     fun getUserPost() = viewModelScope.launch {
         myReviewStateLiveData.value = MyReviewState.Loading
 
-        val response = postRepository.getUserPost("${appPreferenceManager.getAccessToken()}", appPreferenceManager.getMemberId())
+        val response = postRepository.getMemberPost("${appPreferenceManager.getAccessToken()}", appPreferenceManager.getMemberId())
 
         response?.let {
             myReviewStateLiveData.value = MyReviewState.Success(
