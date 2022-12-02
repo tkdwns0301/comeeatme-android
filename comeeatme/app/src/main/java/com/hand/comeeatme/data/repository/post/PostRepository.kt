@@ -17,7 +17,7 @@ interface PostRepository {
 
     suspend fun putNewPost(accessToken: String, newPost: NewPostRequest): NewPostResponse?
     suspend fun getDetailPost(accessToken: String, postId: Long): DetailPostResponse?
-    suspend fun getUserPost(accessToken: String, memberId: Long): PostResponse?
+    suspend fun getMemberPost(accessToken: String, memberId: Long): PostResponse?
     suspend fun modifyPost(
         accessToken: String,
         postId: Long,

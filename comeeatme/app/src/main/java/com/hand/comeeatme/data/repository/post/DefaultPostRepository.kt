@@ -65,7 +65,7 @@ class DefaultPostRepository(
             }
         }
 
-    override suspend fun getUserPost(accessToken: String, memberId: Long): PostResponse? =
+    override suspend fun getMemberPost(accessToken: String, memberId: Long): PostResponse? =
         withContext(ioDispatcher) {
             val response = postService.getUserPost(
                 Authorization = "Bearer $accessToken",

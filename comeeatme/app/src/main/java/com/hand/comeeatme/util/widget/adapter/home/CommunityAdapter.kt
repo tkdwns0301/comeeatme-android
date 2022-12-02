@@ -1,5 +1,6 @@
 package com.hand.comeeatme.util.widget.adapter.home
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -15,6 +16,7 @@ import com.hand.comeeatme.R
 import com.hand.comeeatme.data.response.post.Content
 import com.hand.comeeatme.databinding.LayoutHomeItemBinding
 import com.hand.comeeatme.view.main.home.post.DetailPostFragment
+import com.hand.comeeatme.view.main.user.other.OtherPageFragment
 
 class CommunityAdapter(
     private val items: List<Content>,
@@ -35,68 +37,7 @@ class CommunityAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
 
-        holder.viewPager.adapter = ViewPagerAdapter(item.id, item.imageUrls, context, false)
-        holder.viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-
-        holder.container.setOnClickListener {
-            val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
-            val ft: FragmentTransaction = manager.beginTransaction()
-
-            ft.add(R.id.fg_MainContainer, DetailPostFragment.newInstance(item.id), DetailPostFragment.TAG)
-            ft.commitAllowingStateLoss()
-        }
-
-        when (item.imageUrls.size) {
-            1 -> {
-                holder.imageCount.setImageResource(R.drawable.ic_image1_24)
-            }
-            2 -> {
-                holder.imageCount.setImageResource(R.drawable.ic_image2_24)
-            }
-            3 -> {
-                holder.imageCount.setImageResource(R.drawable.ic_image3_24)
-            }
-            4 -> {
-                holder.imageCount.setImageResource(R.drawable.ic_image4_24)
-            }
-            5 -> {
-                holder.imageCount.setImageResource(R.drawable.ic_image5_24)
-            }
-            6 -> {
-                holder.imageCount.setImageResource(R.drawable.ic_image6_24)
-            }
-            7 -> {
-                holder.imageCount.setImageResource(R.drawable.ic_image7_24)
-            }
-            8 -> {
-                holder.imageCount.setImageResource(R.drawable.ic_image8_24)
-            }
-            9 -> {
-                holder.imageCount.setImageResource(R.drawable.ic_image9_24)
-            }
-            10 -> {
-                holder.imageCount.setImageResource(R.drawable.ic_image10_24)
-            }
-        }
-
-        holder.location.text = "${item.restaurant.name}"
-        holder.name.text = "${item.member.nickname}"
-
-        if (item.member.imageUrl.isNullOrEmpty()) {
-            holder.profile.setImageDrawable(context.getDrawable(R.drawable.food1))
-        } else {
-            Glide.with(context)
-                .load(item.member.imageUrl)
-                .into(holder.profile)
-        }
-
-        holder.content.text = "${item.content}"
-        holder.commentCount.text = "(${item.commentCount})"
-        holder.likeCount.text = "(${item.likeCount})"
-
-        holder.like.isChecked = item.liked
-        holder.bookmark.isChecked = item.bookmarked
-
+        holder.bind(context, item)
 
         holder.like.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
@@ -113,6 +54,8 @@ class CommunityAdapter(
                 unBookmarkPost.invoke(item.id)
             }
         }
+
+
     }
 
     override fun getItemCount(): Int {
@@ -120,17 +63,101 @@ class CommunityAdapter(
     }
 
     class ViewHolder(binding: LayoutHomeItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        val container = binding.clHomeItem
-        val viewPager = binding.vpPhotos
-        val imageCount: ImageView = binding.ivNumber
-        val location: TextView = binding.tvLocation
-        val locationContainer = binding.clLocation
-        val name = binding.tvNickName
-        val profile = binding.cvProfile
-        val content = binding.tvContent
-        val commentCount = binding.tvComment
-        val likeCount = binding.tvLike
+
+        private val viewPager = binding.vpPhotos
+        private val imageCount: ImageView = binding.ivNumber
+        private val location: TextView = binding.tvLocation
+
+        private val name = binding.tvNickName
+        private val profile = binding.cvProfile
+        private val userContainer = binding.clProfileNameFollow
+        private val content = binding.tvContent
+        private val commentCount = binding.tvComment
+        private val likeCount = binding.tvLike
         val like = binding.tbLike
         val bookmark = binding.tbBookmark
+
+        @SuppressLint("UseCompatLoadingForDrawables", "SetTextI18n")
+        fun bind(context: Context, item: Content) {
+            viewPager.adapter = ViewPagerAdapter(item.id, item.imageUrls, context, false)
+            viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+
+            when (item.imageUrls.size) {
+                1 -> {
+                    imageCount.setImageResource(R.drawable.ic_image1_24)
+                }
+                2 -> {
+                    imageCount.setImageResource(R.drawable.ic_image2_24)
+                }
+                3 -> {
+                    imageCount.setImageResource(R.drawable.ic_image3_24)
+                }
+                4 -> {
+                    imageCount.setImageResource(R.drawable.ic_image4_24)
+                }
+                5 -> {
+                    imageCount.setImageResource(R.drawable.ic_image5_24)
+                }
+                6 -> {
+                    imageCount.setImageResource(R.drawable.ic_image6_24)
+                }
+                7 -> {
+                    imageCount.setImageResource(R.drawable.ic_image7_24)
+                }
+                8 -> {
+                    imageCount.setImageResource(R.drawable.ic_image8_24)
+                }
+                9 -> {
+                    imageCount.setImageResource(R.drawable.ic_image9_24)
+                }
+                10 -> {
+                    imageCount.setImageResource(R.drawable.ic_image10_24)
+                }
+            }
+
+            location.text = item.restaurant.name
+            name.text = item.member.nickname
+
+            if (item.member.imageUrl.isNullOrEmpty()) {
+                profile.setImageDrawable(context.getDrawable(R.drawable.food1))
+            } else {
+                Glide.with(context)
+                    .load(item.member.imageUrl)
+                    .into(profile)
+            }
+
+            content.text = item.content
+            commentCount.text = "(${item.commentCount})"
+            likeCount.text = "(${item.likeCount})"
+
+            like.isChecked = item.liked
+            bookmark.isChecked = item.bookmarked
+
+            itemView.setOnClickListener {
+                val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
+                val ft: FragmentTransaction = manager.beginTransaction()
+
+                ft.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_out, R.anim.fade_in)
+                    .add(R.id.fg_MainContainer, DetailPostFragment.newInstance(item.id), DetailPostFragment.TAG)
+                ft.addToBackStack(DetailPostFragment.TAG).commitAllowingStateLoss()
+
+//                ft.add(R.id.fg_MainContainer, DetailPostFragment.newInstance(item.id), DetailPostFragment.TAG)
+//                ft.commitAllowingStateLoss()
+            }
+
+            userContainer.setOnClickListener {
+                val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
+                val ft: FragmentTransaction = manager.beginTransaction()
+
+                ft.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+                    .add(R.id.fg_MainContainer, OtherPageFragment.newInstance(item.member.id), OtherPageFragment.TAG)
+
+                ft.addToBackStack(OtherPageFragment.TAG).commitAllowingStateLoss()
+
+//                ft.add(R.id.fg_MainContainer, OtherPageFragment.newInstance(item.member.id), OtherPageFragment.TAG)
+//                ft.commitAllowingStateLoss()
+            }
+
+        }
     }
 }

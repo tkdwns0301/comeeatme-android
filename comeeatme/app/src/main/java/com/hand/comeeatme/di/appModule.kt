@@ -19,8 +19,6 @@ import com.hand.comeeatme.data.repository.post.DefaultPostRepository
 import com.hand.comeeatme.data.repository.post.PostRepository
 import com.hand.comeeatme.data.repository.restaurant.DefaultRestaurantRepository
 import com.hand.comeeatme.data.repository.restaurant.RestaurantRepository
-import com.hand.comeeatme.data.repository.user.DefaultUserRepository
-import com.hand.comeeatme.data.repository.user.UserRepository
 import com.hand.comeeatme.util.event.MenuChangeEventBus
 import com.hand.comeeatme.view.login.LogInViewModel
 import com.hand.comeeatme.view.main.bookmark.BookmarkViewModel
@@ -38,6 +36,7 @@ import com.hand.comeeatme.view.main.user.menu.heartreview.HeartReviewViewModel
 import com.hand.comeeatme.view.main.user.menu.mycomment.MyCommentViewModel
 import com.hand.comeeatme.view.main.user.menu.myreview.MyReviewViewModel
 import com.hand.comeeatme.view.main.user.menu.recentreview.RecentReviewViewModel
+import com.hand.comeeatme.view.main.user.other.OtherPageViewModel
 import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -61,6 +60,7 @@ val appModule = module {
     viewModel { MyCommentViewModel(get())}
     viewModel { HeartReviewViewModel(get())}
     viewModel { RecentReviewViewModel(get())}
+    viewModel { OtherPageViewModel(get(), get(), get(), get(), get())}
 
     // repository
     single<PostRepository> { DefaultPostRepository(get(), get()) }
@@ -71,7 +71,6 @@ val appModule = module {
     single<LikeRepository> { DefaultLikeRepository(get(), get()) }
     single<BookmarkRepository> { DefaultBookmarkRepository(get(), get()) }
     single<FavoriteRepository> { DefaultFavoriteRepository(get(), get()) }
-    single<UserRepository> { DefaultUserRepository(get(), get()) }
     single<CommentRepository> { DefaultCommentRepository(get(), get())}
 
     // provider
@@ -84,7 +83,6 @@ val appModule = module {
     single { provideLikeService(get()) }
     single { provideBookmarkService(get()) }
     single { provideFavoriteService(get()) }
-    single { provideUserService(get()) }
     single { provideCommentService(get()) }
 
     single { provideGson() }

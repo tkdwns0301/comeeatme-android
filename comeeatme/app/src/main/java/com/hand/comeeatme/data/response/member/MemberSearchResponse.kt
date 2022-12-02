@@ -1,19 +1,19 @@
-package com.hand.comeeatme.data.response.user
+package com.hand.comeeatme.data.response.member
 
 import com.google.gson.annotations.Expose
 import com.hand.comeeatme.data.response.post.Pageable
 import com.hand.comeeatme.data.response.post.Sort
 
-data class UserSearchResultResponse(
+data class MemberSearchResponse(
     @Expose
     val success: Boolean,
     @Expose
-    val data: UserSearchResultData
+    val data: MemberSearchData
 )
 
-data class UserSearchResultData(
+data class MemberSearchData(
     @Expose
-    val content: List<UserSearchResultContent>,
+    val content: List<MemberSearchContent>,
     @Expose
     val pageable: Pageable,
     @Expose
@@ -32,11 +32,11 @@ data class UserSearchResultData(
     val empty: Boolean,
 )
 
-data class UserSearchResultContent(
+data class MemberSearchContent(
     @Expose
     val id: Long,
     @Expose
     val nickname: String,
     @Expose
-    val imageUrl: List<String>,
+    val imageUrl: String,
 )

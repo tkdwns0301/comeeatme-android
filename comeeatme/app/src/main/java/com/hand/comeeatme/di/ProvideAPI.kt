@@ -31,20 +31,16 @@ fun provideImageService(retrofit: Retrofit): ImageService {
     return retrofit.create(ImageService::class.java)
 }
 
-fun provideLikeService(retrofit: Retrofit) : LikeService {
+fun provideLikeService(retrofit: Retrofit): LikeService {
     return retrofit.create(LikeService::class.java)
 }
 
-fun provideBookmarkService(retrofit: Retrofit) : BookmarkService {
+fun provideBookmarkService(retrofit: Retrofit): BookmarkService {
     return retrofit.create(BookmarkService::class.java)
 }
 
 fun provideFavoriteService(retrofit: Retrofit): FavoriteService {
     return retrofit.create(FavoriteService::class.java)
-}
-
-fun provideUserService(retrofit: Retrofit): UserService {
-    return retrofit.create(UserService::class.java)
 }
 
 fun provideCommentService(retrofit: Retrofit): CommentService {
@@ -66,13 +62,13 @@ fun provideApiRetrofit(
         .build()
 }
 
-fun provideGson() : Gson {
+fun provideGson(): Gson {
     return GsonBuilder().setLenient().create()
 }
 
 fun provideGsonConverterFactory(
-    gson: Gson
-): GsonConverterFactory{
+    gson: Gson,
+): GsonConverterFactory {
     return GsonConverterFactory.create(gson)
 }
 

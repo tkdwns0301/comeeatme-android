@@ -4,8 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hand.comeeatme.data.preference.AppPreferenceManager
 import com.hand.comeeatme.data.repository.image.ImageRepository
-import com.hand.comeeatme.data.repository.user.UserRepository
-import com.hand.comeeatme.data.request.user.UserModifyRequest
+import com.hand.comeeatme.data.repository.member.MemberRepository
+import com.hand.comeeatme.data.request.member.MemberModifyProfileRequest
+import com.hand.comeeatme.data.request.member.MemberModifyRequest
 import com.hand.comeeatme.view.base.BaseViewModel
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -15,7 +16,7 @@ import java.io.File
 
 class UserEditViewModel(
     private val appPreferenceManager: AppPreferenceManager,
-    private val userRepository: UserRepository,
+    private val memberRepository: MemberRepository,
     private val imageRepository: ImageRepository,
 ) : BaseViewModel() {
     val userEditStateLiveData = MutableLiveData<UserEditState>(UserEditState.Uninitialized)
@@ -34,7 +35,7 @@ class UserEditViewModel(
         )
     }
 
-    fun getImageIds(nickname: String, introduction: String?) = viewModelScope.launch {
+    private fun getImageIds() = viewModelScope.launch {
         userEditStateLiveData.value = UserEditState.Loading
 
         val images: ArrayList<MultipartBody.Part> = arrayListOf()
@@ -51,28 +52,49 @@ class UserEditViewModel(
             imageRepository.sendImages("${appPreferenceManager.getAccessToken()}", images)
 
         response?.let {
-            modifyUserInformation(nickname, introduction, it.data.ids[0])
+            setProfileImage(it.data.ids[0])
         } ?: run {
             userEditStateLiveData.value = UserEditState.Error(
                 "프로필 사진을 전송하는 도중 오류가 발생했습니다."
             )
         }
-
-
     }
 
-    private fun modifyUserInformation(nickname: String, introduction: String?, imageId: Long?) =
-        viewModelScope.launch {
-            val information = UserModifyRequest(nickname, introduction, imageId)
+    private fun setProfileImage(imageId: Long) = viewModelScope.launch {
+        val modifyProfileRequest = MemberModifyProfileRequest(imageId)
 
-            val response = userRepository.modifyUserInformation(
+        val response = memberRepository.modifyMemberProfile(
+            "${appPreferenceManager.getAccessToken()}",
+            modifyProfileRequest
+        )
+
+        response?.let {
+            userEditStateLiveData.value = UserEditState.Success
+        } ?: run {
+            userEditStateLiveData.value = UserEditState.Error(
+                "프로필 사진을 수정하는 도중 오류가 발생했습니다."
+            )
+        }
+    }
+
+
+    fun modifyMemberInformation(nickname: String, introduction: String?) =
+        viewModelScope.launch {
+            val information = MemberModifyRequest(nickname, introduction)
+
+            val response = memberRepository.modifyMemberInformation(
                 "${appPreferenceManager.getAccessToken()}",
                 information
             )
 
             response?.let {
                 appPreferenceManager.putMemberId(it.data.id)
-                userEditStateLiveData.value = UserEditState.Success
+
+                if (compressPhotoPathList.isNotEmpty()) {
+                    getImageIds()
+                } else {
+                    userEditStateLiveData.value = UserEditState.Success
+                }
             } ?: run {
                 userEditStateLiveData.value = UserEditState.Error(
                     "프로필을 수정하는 도중 오류가 발생했습니다."
