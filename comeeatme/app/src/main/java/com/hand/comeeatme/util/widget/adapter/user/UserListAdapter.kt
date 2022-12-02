@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide
 import com.hand.comeeatme.R
 import com.hand.comeeatme.data.response.post.Content
 import com.hand.comeeatme.databinding.LayoutHomeItemBinding
-import com.hand.comeeatme.util.widget.adapter.ViewPagerAdapter
+import com.hand.comeeatme.util.widget.adapter.home.ViewPagerAdapter
 import com.hand.comeeatme.view.main.home.post.DetailPostFragment
 
 class UserListAdapter(

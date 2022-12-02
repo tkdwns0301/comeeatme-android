@@ -1,7 +1,8 @@
-package com.hand.comeeatme.data.repository.home
+package com.hand.comeeatme.data.repository.post
 
 import com.hand.comeeatme.data.network.PostService
-import com.hand.comeeatme.data.request.Post.NewPostRequest
+import com.hand.comeeatme.data.request.post.ModifyPostRequest
+import com.hand.comeeatme.data.request.post.NewPostRequest
 import com.hand.comeeatme.data.response.post.DetailPostResponse
 import com.hand.comeeatme.data.response.post.NewPostResponse
 import com.hand.comeeatme.data.response.post.PostResponse
@@ -69,6 +70,38 @@ class DefaultPostRepository(
             val response = postService.getUserPost(
                 Authorization = "Bearer $accessToken",
                 memberId = memberId
+            )
+
+            if (response.isSuccessful) {
+                response.body()!!
+            } else {
+                null
+            }
+        }
+
+    override suspend fun modifyPost(
+        accessToken: String,
+        postId: Long,
+        modifyPost: ModifyPostRequest,
+    ): NewPostResponse? = withContext(ioDispatcher) {
+        val response = postService.modifyPost(
+            Authorization = "Bearer $accessToken",
+            postId = postId,
+            modifyPost = modifyPost
+        )
+
+        if (response.isSuccessful) {
+            response.body()!!
+        } else {
+            null
+        }
+    }
+
+    override suspend fun deletePost(accessToken: String, postId: Long): NewPostResponse? =
+        withContext(ioDispatcher) {
+            val response = postService.deletePost(
+                Authorization = "Bearer $accessToken",
+                postId = postId,
             )
 
             if (response.isSuccessful) {

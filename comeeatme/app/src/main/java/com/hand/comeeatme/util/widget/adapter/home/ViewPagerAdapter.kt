@@ -1,4 +1,4 @@
-package com.hand.comeeatme.util.widget.adapter
+package com.hand.comeeatme.util.widget.adapter.home
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -18,8 +18,7 @@ class ViewPagerAdapter(
     private val items: List<String>,
     private val context: Context,
     private val isDetail: Boolean,
-) :
-    RecyclerView.Adapter<ViewPagerAdapter.PagerViewHolder>() {
+) : RecyclerView.Adapter<ViewPagerAdapter.PagerViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PagerViewHolder {
         val binding =
@@ -45,7 +44,7 @@ class ViewPagerAdapter(
                 val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
                 val ft: FragmentTransaction = manager.beginTransaction()
 
-                ft.add(R.id.fg_MainContainer, DetailPostFragment.newInstance(postId), "fm_Post")
+                ft.add(R.id.fg_MainContainer, DetailPostFragment.newInstance(postId), DetailPostFragment.TAG)
                 ft.commitAllowingStateLoss()
             }
         }

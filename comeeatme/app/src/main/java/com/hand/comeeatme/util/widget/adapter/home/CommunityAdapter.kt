@@ -12,10 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.hand.comeeatme.R
-import com.hand.comeeatme.data.network.LikeService
 import com.hand.comeeatme.data.response.post.Content
 import com.hand.comeeatme.databinding.LayoutHomeItemBinding
-import com.hand.comeeatme.util.widget.adapter.ViewPagerAdapter
 import com.hand.comeeatme.view.main.home.post.DetailPostFragment
 
 class CommunityAdapter(
@@ -26,14 +24,12 @@ class CommunityAdapter(
     val bookmarkPost: (postId: Long) -> Unit,
     val unBookmarkPost: (postId: Long) -> Unit,
 ) : RecyclerView.Adapter<CommunityAdapter.ViewHolder>() {
-    private lateinit var likeService: LikeService
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
             LayoutHomeItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-        return ViewHolder(binding!!)
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -46,7 +42,7 @@ class CommunityAdapter(
             val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
             val ft: FragmentTransaction = manager.beginTransaction()
 
-            ft.add(R.id.fg_MainContainer, DetailPostFragment.newInstance(item.id), "fm_Post")
+            ft.add(R.id.fg_MainContainer, DetailPostFragment.newInstance(item.id), DetailPostFragment.TAG)
             ft.commitAllowingStateLoss()
         }
 

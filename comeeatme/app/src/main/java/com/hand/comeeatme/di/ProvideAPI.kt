@@ -47,6 +47,10 @@ fun provideUserService(retrofit: Retrofit): UserService {
     return retrofit.create(UserService::class.java)
 }
 
+fun provideCommentService(retrofit: Retrofit): CommentService {
+    return retrofit.create(CommentService::class.java)
+}
+
 
 fun provideApiRetrofit(
     okHttpClient: OkHttpClient,

@@ -1,9 +1,10 @@
 package com.hand.comeeatme.view.main.home.hashtag
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -18,18 +19,22 @@ import com.hand.comeeatme.view.main.home.HomeFragment
 import kotlin.math.roundToInt
 
 class HashTagActivity : AppCompatActivity() {
+    companion object {
+        const val CHECKED_HASHTAG = "checkedHashTagList"
+
+        fun newIntent(context: Context, checkedChipList: ArrayList<String>) =
+            Intent(context, HashTagActivity::class.java)
+                .putExtra(CHECKED_HASHTAG, checkedChipList)
+    }
+
     private var _binding: ActivityHashtagBinding? = null
     private val binding get() = _binding!!
-
-    private lateinit var moodFL: FlexboxLayout
-    private lateinit var priceFL: FlexboxLayout
-    private lateinit var etcFL: FlexboxLayout
 
     private val moodList: Array<String> = arrayOf("혼밥", "데이트", "단체모임", "특별한 날", "감성있는")
     private val priceList: Array<String> = arrayOf("가성비", "자극적인", "고급스러운", "신선한 재료", "시그니쳐 메뉴")
     private val etcList: Array<String> = arrayOf("친절", "청결", "반려동물 동반", "아이 동반", "24시간", "주차장")
     private var checkedChipList = ArrayList<Chip>()
-    private var checkedChipNames: ArrayList<String>? = null
+    private var checkedHashTagList: ArrayList<String>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,9 +42,7 @@ class HashTagActivity : AppCompatActivity() {
         _binding = ActivityHashtagBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        checkedChipNames = intent.getStringArrayListExtra("checkedChip") as ArrayList<String>
-
-        Log.e("checkedChipNames", "$checkedChipNames")
+        checkedHashTagList = intent.getStringArrayListExtra(CHECKED_HASHTAG) as ArrayList<String>
 
         initView()
         initListener()
@@ -47,7 +50,7 @@ class HashTagActivity : AppCompatActivity() {
 
     private fun initView() {
         moodList.forEach {
-            if (checkedChipNames!!.contains(it)) {
+            if (checkedHashTagList!!.contains(it)) {
                 binding.flMood.addItem(it, true)
             } else {
                 binding.flMood.addItem(it, false)
@@ -56,7 +59,7 @@ class HashTagActivity : AppCompatActivity() {
         }
 
         priceList.forEach {
-            if (checkedChipNames!!.contains(it)) {
+            if (checkedHashTagList!!.contains(it)) {
                 binding.flPrice.addItem(it, true)
             } else {
                 binding.flPrice.addItem(it, false)
@@ -64,7 +67,7 @@ class HashTagActivity : AppCompatActivity() {
         }
 
         etcList.forEach {
-            if (checkedChipNames!!.contains(it)) {
+            if (checkedHashTagList!!.contains(it)) {
                 binding.flEtc.addItem(it, true)
             } else {
                 binding.flEtc.addItem(it, false)
@@ -75,32 +78,39 @@ class HashTagActivity : AppCompatActivity() {
     }
 
 
-    private fun initListener() = with(binding){
+    private fun initListener() = with(binding) {
         ibPrev.setOnClickListener {
             // TODO 해쉬태그 검색 결과 전송
             val intent = Intent(applicationContext, HomeFragment::class.java)
-            intent.putExtra("checkedChip", checkedChipNames)
+            intent.putExtra(CHECKED_HASHTAG, checkedHashTagList)
             setResult(RESULT_OK, intent)
             finish()
         }
 
         tvFinish.setOnClickListener {
             val intent = Intent(applicationContext, HomeFragment::class.java)
-            intent.putExtra("checkedChip", checkedChipNames)
+            intent.putExtra(CHECKED_HASHTAG, checkedHashTagList)
             setResult(RESULT_OK, intent)
             finish()
-            true
+        }
+
+        tvInit.setOnClickListener {
+
+            for (i in 0 until checkedChipList.size) {
+                checkedChipList[0].isChecked = false
+            }
         }
 
 
     }
 
+    @SuppressLint("SetTextI18n")
     private fun FlexboxLayout.addItem(tag: String, isSelected: Boolean) {
 
         val chip = LayoutInflater.from(context).inflate(R.layout.layout_chip_custom, null) as Chip
 
         chip.apply {
-            text = "$tag"
+            text = "  $tag  "
             textSize = 14f
             textAlignment = View.TEXT_ALIGNMENT_CENTER
             isCheckable = true
@@ -131,16 +141,15 @@ class HashTagActivity : AppCompatActivity() {
 
             )
 
-            setOnCheckedChangeListener { buttonView, isChecked ->
+            setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
-                    // TODO 체크 했을 때 처리
-                    if (!checkedChipNames!!.contains(tag)) {
-                        checkedChipNames!!.add(tag)
+                    if (!checkedHashTagList!!.contains(tag)) {
+                        checkedHashTagList!!.add(tag)
+                        checkedChipList.add(chip)
                     }
                 } else {
-                    // TODO 체크 풀었을 때 처리
                     checkedChipList.remove(chip)
-                    checkedChipNames!!.remove(tag)
+                    checkedHashTagList!!.remove(tag)
                 }
             }
 

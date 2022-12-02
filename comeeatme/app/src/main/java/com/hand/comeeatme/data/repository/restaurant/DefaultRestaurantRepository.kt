@@ -14,14 +14,14 @@ class DefaultRestaurantRepository(
         page: Long?,
         size: Long?,
         sort: Boolean?,
-        name: String,
+        keyword: String,
     ): SimpleRestaurantResponse? = withContext(ioDispatcher) {
         val response = restaurantService.getSearchRestaurantList(
             Authorization = "Bearer $accessToken",
             page = page,
             size = size,
             sort = sort,
-            name = name
+            keyword = keyword
         )
 
         if (response.isSuccessful) {

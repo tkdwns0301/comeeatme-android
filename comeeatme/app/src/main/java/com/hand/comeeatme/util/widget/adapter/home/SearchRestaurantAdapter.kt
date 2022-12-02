@@ -1,16 +1,15 @@
-package com.hand.comeeatme.util.widget.adapter
+package com.hand.comeeatme.util.widget.adapter.home
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hand.comeeatme.data.response.restaurant.SimpleRestaurantContent
-import com.hand.comeeatme.databinding.LayoutNewpostSearchRestaurantBinding
+import com.hand.comeeatme.databinding.LayoutSearchRestaurantBinding
 
 class SearchRestaurantAdapter(
     private val context: Context,
     private val items: List<SimpleRestaurantContent>,
-    private val onClickItem: (restaurant: SimpleRestaurantContent) -> Unit,
 ) : RecyclerView.Adapter<SearchRestaurantAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(
@@ -18,7 +17,7 @@ class SearchRestaurantAdapter(
         viewType: Int,
     ): SearchRestaurantAdapter.ViewHolder {
         val binding =
-            LayoutNewpostSearchRestaurantBinding.inflate(LayoutInflater.from(parent.context),
+            LayoutSearchRestaurantBinding.inflate(LayoutInflater.from(parent.context),
                 parent,
                 false)
 
@@ -26,12 +25,9 @@ class SearchRestaurantAdapter(
     }
 
     override fun onBindViewHolder(holder: SearchRestaurantAdapter.ViewHolder, position: Int) {
-        holder.name.text = items[position].name
-        holder.address.text = items[position].addressName
+        val item = items[position]
 
-        holder.container.setOnClickListener {
-            onClickItem.invoke(items[position])
-        }
+        holder.bind(item)
 
     }
 
@@ -39,10 +35,18 @@ class SearchRestaurantAdapter(
         return items.size
     }
 
-    class ViewHolder(binding: LayoutNewpostSearchRestaurantBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        val container = binding.container
-        val name = binding.tvName
-        val address = binding.tvAddress
+    class ViewHolder(binding: LayoutSearchRestaurantBinding) : RecyclerView.ViewHolder(binding.root) {
+
+        private val name = binding.tvRestaurantName
+        private val address = binding.tvAddress
+
+        fun bind(item: SimpleRestaurantContent) {
+            name.text = item.name
+            address.text = item.addressName
+
+            itemView.setOnClickListener {
+                // TODO 식당 상세페이지
+            }
+        }
     }
 }

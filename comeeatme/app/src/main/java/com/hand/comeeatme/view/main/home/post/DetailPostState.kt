@@ -2,6 +2,7 @@ package com.hand.comeeatme.view.main.home.post
 
 import android.annotation.SuppressLint
 import androidx.annotation.StringRes
+import com.hand.comeeatme.data.response.comment.CommentListResponse
 import com.hand.comeeatme.data.response.post.DetailPostResponse
 
 sealed class DetailPostState {
@@ -16,6 +17,13 @@ sealed class DetailPostState {
 
     object BookmarkPostSuccess: DetailPostState()
     object UnBookmarkPostSuccess: DetailPostState()
+
+    data class CommentListSuccess(
+        val response: CommentListResponse?
+    ): DetailPostState()
+
+    object WritingCommentSuccess: DetailPostState()
+    object DeletePostSuccess: DetailPostState()
 
     @SuppressLint("SupportAnnotationUsage")
     data class Error(

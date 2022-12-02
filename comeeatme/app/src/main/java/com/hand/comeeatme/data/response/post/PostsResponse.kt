@@ -59,7 +59,7 @@ data class Member(
     @Expose
     var nickname: String,
     @Expose
-    var imageUrl: String,
+    var imageUrl: String?,
 )
 
 data class Restaurant(

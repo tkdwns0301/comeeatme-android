@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         val manager: FragmentManager = supportFragmentManager
         val ft: FragmentTransaction = manager.beginTransaction()
 
-        ft.add(R.id.fg_MainContainer, NewPostFragment(), "fm_NewPost")
+        ft.add(R.id.fg_MainContainer, NewPostFragment.newInstance(false, null), NewPostFragment.TAG)
 
         ft.commitAllowingStateLoss()
     }

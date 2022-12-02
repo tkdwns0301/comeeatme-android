@@ -4,8 +4,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hand.comeeatme.data.preference.AppPreferenceManager
 import com.hand.comeeatme.data.repository.bookmark.BookmarkRepository
-import com.hand.comeeatme.data.repository.home.PostRepository
+import com.hand.comeeatme.data.repository.comment.CommentRepository
 import com.hand.comeeatme.data.repository.like.LikeRepository
+import com.hand.comeeatme.data.repository.post.PostRepository
+import com.hand.comeeatme.data.request.comment.ModifyCommentRequest
+import com.hand.comeeatme.data.request.comment.WritingCommentRequest
 import com.hand.comeeatme.view.base.BaseViewModel
 import kotlinx.coroutines.launch
 
@@ -15,6 +18,7 @@ class DetailPostViewModel(
     private val postRepository: PostRepository,
     private val likeRepository: LikeRepository,
     private val bookmarkRepository: BookmarkRepository,
+    private val commentRepository: CommentRepository,
 ) : BaseViewModel() {
     val detailPostStateLiveData = MutableLiveData<DetailPostState>(DetailPostState.Uninitialized)
 
@@ -37,6 +41,8 @@ class DetailPostViewModel(
         "AROUND_CLOCK" to "24시간"
     )
 
+    private var postWriterMemberId: Long? = null
+
     fun getHashTagEngToKor(): HashMap<String, String> {
         return hashTagEngToKor
     }
@@ -44,6 +50,60 @@ class DetailPostViewModel(
     fun getPostId(): Long {
         return postId
     }
+
+    fun setPostWriterMemberId(memberId: Long) {
+        postWriterMemberId = memberId
+    }
+
+    fun getPostWriterMemberId(): Long? {
+        return postWriterMemberId
+    }
+
+
+    fun getMemberId(): Long {
+        return appPreferenceManager.getMemberId()
+    }
+
+    fun deletePost() = viewModelScope.launch {
+        detailPostStateLiveData.value = DetailPostState.Loading
+
+        val response = postRepository.deletePost("${appPreferenceManager.getAccessToken()}", postId)
+
+        response?.let {
+            detailPostStateLiveData.value = DetailPostState.DeletePostSuccess
+        } ?:run {
+            detailPostStateLiveData.value = DetailPostState.Error(
+                "게시글을 삭제하는 도중 오류가 발생했습니다."
+            )
+        }
+
+    }
+
+    fun modifyComment(commentId: Long, content: String) = viewModelScope.launch {
+        val modifyCommentRequest = ModifyCommentRequest(content)
+        val response = commentRepository.modifyComment("${appPreferenceManager.getAccessToken()}", postId, commentId, modifyCommentRequest)
+
+        response?.let {
+            detailPostStateLiveData.value = DetailPostState.WritingCommentSuccess
+        } ?:run {
+            detailPostStateLiveData.value = DetailPostState.Error(
+                "댓글을 수정하는 도중 오류가 발생했습니다."
+            )
+        }
+    }
+
+    fun deleteComment(commentId: Long) = viewModelScope.launch {
+        val response = commentRepository.deleteComment("${appPreferenceManager.getAccessToken()}", postId, commentId)
+
+        response?.let {
+            detailPostStateLiveData.value = DetailPostState.WritingCommentSuccess
+        } ?:run {
+            detailPostStateLiveData.value = DetailPostState.Error(
+                "댓글을 삭제하는 도중 오류가 발생했습니다."
+            )
+        }
+    }
+
 
     fun likePost(postId: Long) = viewModelScope.launch {
         val response = likeRepository.likePost("${appPreferenceManager.getAccessToken()}", postId)
@@ -96,6 +156,20 @@ class DetailPostViewModel(
 
     }
 
+    fun writingComment(parentId: Long?, comment: String) = viewModelScope.launch {
+        val commentRequest = WritingCommentRequest(parentId, comment)
+        val response = commentRepository.writingComment("${appPreferenceManager.getAccessToken()}", postId, commentRequest)
+
+        response?.let {
+            detailPostStateLiveData.value = DetailPostState.WritingCommentSuccess
+        }?: run {
+            detailPostStateLiveData.value = DetailPostState.Error(
+                "댓글을 작성하는 도중 오류가 발생했습니다."
+            )
+        }
+
+    }
+
     fun getDetailPost() = viewModelScope.launch {
         detailPostStateLiveData.value = DetailPostState.Loading
 
@@ -109,6 +183,28 @@ class DetailPostViewModel(
         } ?: run {
             detailPostStateLiveData.value = DetailPostState.Error(
                 "글을 불러오는 도중 오류가 발생했습니다."
+            )
+        }
+    }
+
+    fun getCommentList(page: Long, size: Long, sort: Boolean) = viewModelScope.launch {
+        detailPostStateLiveData.value = DetailPostState.Loading
+
+        val response = commentRepository.getCommentList(
+            "${appPreferenceManager.getAccessToken()}",
+            postId,
+            page,
+            size,
+            sort
+        )
+
+        response?.let {
+            detailPostStateLiveData.value = DetailPostState.CommentListSuccess(
+                response = it
+            )
+        }?: run {
+            detailPostStateLiveData.value = DetailPostState.Error(
+                "댓글을 불러오는 도중 오류가 발생했습니다."
             )
         }
     }

@@ -5,10 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.android.material.chip.Chip
 import com.hand.comeeatme.data.preference.AppPreferenceManager
-import com.hand.comeeatme.data.repository.home.PostRepository
 import com.hand.comeeatme.data.repository.image.ImageRepository
+import com.hand.comeeatme.data.repository.post.PostRepository
 import com.hand.comeeatme.data.repository.restaurant.RestaurantRepository
-import com.hand.comeeatme.data.request.Post.NewPostRequest
+import com.hand.comeeatme.data.request.post.ModifyPostRequest
+import com.hand.comeeatme.data.request.post.NewPostRequest
 import com.hand.comeeatme.view.base.BaseViewModel
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -45,6 +46,26 @@ class NewPostViewModel(
         "24시간" to "AROUND_CLOCK"
     )
 
+    private val hashTagEngToKor = hashMapOf<String, String>(
+        "MOODY" to "감성있는",
+        "EATING_ALON" to "혼밥",
+        "GROUP_MEETING" to "단체모임",
+        "DATE" to "데이트",
+        "SPECIAL_DAY" to "특별한 날",
+        "FRESH_INGREDIENT" to "신선한 재료",
+        "SIGNATURE_MENU" to "시그니쳐 메뉴",
+        "COST_EFFECTIVENESS" to "가성비",
+        "LUXURIOUSNESS" to "고급스러운",
+        "STRONG_TASTE" to "자극적인",
+        "KINDNESS" to "친절",
+        "CLEANLINESS" to "청결",
+        "PARKING" to "주차장",
+        "PET" to "반려동물 동반",
+        "CHILD" to "아이 동반",
+        "AROUND_CLOCK" to "24시간"
+    )
+
+    private var chipList: ArrayList<Chip> = arrayListOf()
     private var checkedChipList: ArrayList<Chip> = arrayListOf()
     private var compressPhotoPathList: ArrayList<String> = arrayListOf()
     private var hashTagList: ArrayList<String> = arrayListOf()
@@ -52,6 +73,12 @@ class NewPostViewModel(
     private var content: String? = null
 
     val newPostStateLiveData = MutableLiveData<NewPostState>(NewPostState.Uninitialized)
+
+    fun addChip(chip: Chip) {
+        chipList.add(chip)
+    }
+
+    fun getChipList(): List<Chip> = chipList
 
     fun addHashTag(tag: String, chip: Chip) {
         hashTagList.add(hashTagKorToEng[tag]!!)
@@ -61,6 +88,10 @@ class NewPostViewModel(
     fun removeHashTag(tag: String, chip: Chip) {
         hashTagList.remove(hashTagKorToEng[tag]!!)
         checkedChipList.remove(chip)
+    }
+
+    fun hashTagKorToEng(tag: String) : String {
+        return this.hashTagKorToEng[tag]!!
     }
 
     fun getCheckedChipList(): List<Chip> {
@@ -116,12 +147,12 @@ class NewPostViewModel(
         page: Long?,
         size: Long?,
         sort: Boolean?,
-        name: String,
+        keyword: String,
     ) = viewModelScope.launch {
         newPostStateLiveData.value = NewPostState.Loading
         val response =
             restaurantRepository.getSearchRestaurants("${appPreferenceManager.getAccessToken()}",
-                page, size, sort, name
+                page, size, sort, keyword
             )
 
         response?.let {
@@ -173,6 +204,38 @@ class NewPostViewModel(
         } ?: run {
             newPostStateLiveData.value = NewPostState.Error(
                 "새로운 글 쓰기 실패"
+            )
+        }
+    }
+
+    fun getDetailPost(postId : Long) = viewModelScope.launch {
+        newPostStateLiveData.value = NewPostState.Loading
+
+        val response = postRepository.getDetailPost("${appPreferenceManager.getAccessToken()}", postId)
+
+        response?.let {
+            newPostStateLiveData.value = NewPostState.DetailPostSuccess(
+                response = it
+            )
+        }?:run {
+            newPostStateLiveData.value = NewPostState.Error(
+                "수정을 위한 글을 불러오는 도중 오류가 발생했습니다."
+            )
+        }
+    }
+
+    fun modifyPost(postId: Long) = viewModelScope.launch {
+        newPostStateLiveData.value = NewPostState.Loading
+
+        val modifyPostRequest = ModifyPostRequest(restaurantId!!, hashTagList, content!!)
+
+        val response = postRepository.modifyPost("${appPreferenceManager.getAccessToken()}", postId, modifyPostRequest)
+
+        response?.let {
+            newPostStateLiveData.value = NewPostState.ModifyPostSuccess
+        } ?:run {
+            newPostStateLiveData.value = NewPostState.Error(
+                "글을 수정하는 도중 오류가 발생했습니다."
             )
         }
     }
