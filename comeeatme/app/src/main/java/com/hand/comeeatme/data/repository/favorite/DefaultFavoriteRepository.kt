@@ -10,9 +10,9 @@ class DefaultFavoriteRepository(
     private val favoriteService: FavoriteService,
     private val ioDispatcher: CoroutineDispatcher,
 ) : FavoriteRepository {
-    override suspend fun favoritePost(accessToken: String, restaurantId: Long): SuccessResponse? =
+    override suspend fun favoriteRestaurant(accessToken: String, restaurantId: Long): SuccessResponse? =
         withContext(ioDispatcher) {
-            val response = favoriteService.favoritePost(
+            val response = favoriteService.favoriteRestaurant(
                 Authorization = "Bearer $accessToken",
                 restaurantId = restaurantId
             )
@@ -25,8 +25,8 @@ class DefaultFavoriteRepository(
 
         }
 
-    override suspend fun unFavoritePost(accessToken: String, restaurantId: Long): SuccessResponse? = withContext(ioDispatcher){
-        val response = favoriteService.unFavoritePost(
+    override suspend fun unFavoriteRestaurant(accessToken: String, restaurantId: Long): SuccessResponse? = withContext(ioDispatcher){
+        val response = favoriteService.unFavoriteRestaurant(
             Authorization = "Bearer $accessToken",
             restaurantId = restaurantId
         )

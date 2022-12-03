@@ -46,6 +46,7 @@ class DetailRestaurantFragment :
     override fun getViewBinding(): FragmentDetailRestaurantBinding =
         FragmentDetailRestaurantBinding.inflate(layoutInflater)
 
+    @SuppressLint("SetTextI18n")
     override fun observeData() {
         viewModel.detailRestaurantStateLiveData.observe(viewLifecycleOwner) {
             when (it) {
@@ -66,6 +67,16 @@ class DetailRestaurantFragment :
                     setRestaurantImage(it.response.data.content)
                 }
 
+                is DetailRestaurantState.FavoriteSuccess -> {
+                    val cnt = Integer.parseInt("${binding.tvFavoriteCnt.text}")
+                    binding.tvFavoriteCnt.text = "${cnt+1}"
+                }
+
+                is DetailRestaurantState.UnFavoriteSuccess -> {
+                    val cnt = Integer.parseInt("${binding.tvFavoriteCnt.text}")
+                    binding.tvFavoriteCnt.text = "${cnt-1}"
+                }
+
                 is DetailRestaurantState.Error -> {
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
                 }
@@ -76,6 +87,14 @@ class DetailRestaurantFragment :
     override fun initView() = with(binding) {
         toolbarRestaurantDetail.setNavigationOnClickListener {
             finish()
+        }
+
+        tbFavorite.setOnClickListener {
+            if(tbFavorite.isChecked) {
+                viewModel.favoriteRestaurant(restaurantId!!)
+            } else {
+                viewModel.unFavoriteRestaurant(restaurantId!!)
+            }
         }
     }
 

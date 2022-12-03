@@ -18,6 +18,9 @@ sealed class DetailRestaurantState {
         val response: RestaurantImageResponse
     ): DetailRestaurantState()
 
+    object FavoriteSuccess: DetailRestaurantState()
+    object UnFavoriteSuccess: DetailRestaurantState()
+
     @SuppressLint("SupportAnnotationUsage")
     data class Error(
         @StringRes val message: String,

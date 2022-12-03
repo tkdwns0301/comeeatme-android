@@ -14,10 +14,10 @@ class FavoritePostViewModel(
     val favoritePostStateLiveData =
         MutableLiveData<FavoritePostState>(FavoritePostState.Uninitialized)
 
-    fun favoritePost(
+    fun favoriteRestaurant(
         restaurantId: Long,
     ) = viewModelScope.launch {
-        val response = favoriteRepository.favoritePost("${appPreferenceManager.getAccessToken()}",
+        val response = favoriteRepository.favoriteRestaurant("${appPreferenceManager.getAccessToken()}",
             restaurantId)
 
         response?.let {
@@ -29,10 +29,10 @@ class FavoritePostViewModel(
         }
     }
 
-    fun unFavoritePost(
+    fun unFavoriteRestaurant(
         restaurantId: Long,
     ) = viewModelScope.launch {
-        val response = favoriteRepository.unFavoritePost("${appPreferenceManager.getAccessToken()}",
+        val response = favoriteRepository.unFavoriteRestaurant("${appPreferenceManager.getAccessToken()}",
             restaurantId)
 
         response?.let {

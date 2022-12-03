@@ -57,12 +57,12 @@ val appModule = module {
     viewModel { FavoritePostViewModel(get(), get()) }
     viewModel { UserViewModel(get(), get(), get(), get(), get()) }
     viewModel { UserEditViewModel(get(), get(), get()) }
-    viewModel { MyReviewViewModel(get(), get())}
-    viewModel { MyCommentViewModel(get())}
-    viewModel { HeartReviewViewModel(get())}
-    viewModel { RecentReviewViewModel(get())}
-    viewModel { OtherPageViewModel(get(), get(), get(), get(), get())}
-    viewModel { DetailRestaurantViewModel(get(), get(), get())}
+    viewModel { MyReviewViewModel(get(), get()) }
+    viewModel { MyCommentViewModel(get()) }
+    viewModel { HeartReviewViewModel(get()) }
+    viewModel { RecentReviewViewModel(get()) }
+    viewModel { OtherPageViewModel(get(), get(), get(), get(), get()) }
+    viewModel { DetailRestaurantViewModel(get(), get(), get(), get()) }
 
     // repository
     single<PostRepository> { DefaultPostRepository(get(), get()) }
@@ -73,7 +73,7 @@ val appModule = module {
     single<LikeRepository> { DefaultLikeRepository(get(), get()) }
     single<BookmarkRepository> { DefaultBookmarkRepository(get(), get()) }
     single<FavoriteRepository> { DefaultFavoriteRepository(get(), get()) }
-    single<CommentRepository> { DefaultCommentRepository(get(), get())}
+    single<CommentRepository> { DefaultCommentRepository(get(), get()) }
 
     // provider
     single { provideApiRetrofit(get(), get(), get()) }

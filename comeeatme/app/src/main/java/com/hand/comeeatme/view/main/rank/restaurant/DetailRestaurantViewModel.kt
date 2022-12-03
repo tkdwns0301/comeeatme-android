@@ -3,6 +3,7 @@ package com.hand.comeeatme.view.main.rank.restaurant
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hand.comeeatme.data.preference.AppPreferenceManager
+import com.hand.comeeatme.data.repository.favorite.FavoriteRepository
 import com.hand.comeeatme.data.repository.image.ImageRepository
 import com.hand.comeeatme.data.repository.restaurant.RestaurantRepository
 import com.hand.comeeatme.view.base.BaseViewModel
@@ -12,6 +13,7 @@ class DetailRestaurantViewModel(
     private val appPreferenceManager: AppPreferenceManager,
     private val restaurantRepository: RestaurantRepository,
     private val imageRepository: ImageRepository,
+    private val favoriteRepository: FavoriteRepository,
 ): BaseViewModel() {
 
     val detailRestaurantStateLiveData = MutableLiveData<DetailRestaurantState>(DetailRestaurantState.Uninitialized)
@@ -50,6 +52,35 @@ class DetailRestaurantViewModel(
         }?:run {
             detailRestaurantStateLiveData.value = DetailRestaurantState.Error(
                 "음식점 정보를 불러오는 도중 오류가 발생했습니다."
+            )
+        }
+    }
+
+    fun favoriteRestaurant(restaurantId: Long) = viewModelScope.launch {
+        val response = favoriteRepository.favoriteRestaurant(
+            "${appPreferenceManager.getAccessToken()}",
+            restaurantId
+        )
+
+        response?.let {
+            detailRestaurantStateLiveData.value = DetailRestaurantState.FavoriteSuccess
+        }?:run{
+            detailRestaurantStateLiveData.value = DetailRestaurantState.Error(
+                "즐겨찾기를 하는 도중 오류가 발생했습니다."
+            )
+        }
+    }
+
+    fun unFavoriteRestaurant(restaurantId: Long) = viewModelScope.launch {
+        val response = favoriteRepository.unFavoriteRestaurant(
+            "${appPreferenceManager.getAccessToken()}",
+            restaurantId
+        )
+        response?.let {
+            detailRestaurantStateLiveData.value = DetailRestaurantState.UnFavoriteSuccess
+        }?:run {
+            detailRestaurantStateLiveData.value = DetailRestaurantState.Error(
+                "즐겨찾기를 취소하는 도중 오류가 발생했습니다."
             )
         }
     }
