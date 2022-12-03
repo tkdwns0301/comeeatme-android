@@ -1,4 +1,4 @@
-
+package com.hand.comeeatme.util.widget.adapter
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View

@@ -51,7 +51,7 @@ val appModule = module {
     viewModel { NewPostViewModel(get(), get(), get(), get()) }
     viewModel { AlbumViewModel() }
     viewModel { CropViewModel() }
-    viewModel { DetailPostViewModel(get(), get(), get(), get(), get(), get()) }
+    viewModel { DetailPostViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { BookmarkViewModel(get()) }
     viewModel { BookmarkPostViewModel(get(), get()) }
     viewModel { FavoritePostViewModel(get(), get()) }
@@ -62,7 +62,7 @@ val appModule = module {
     viewModel { HeartReviewViewModel(get()) }
     viewModel { RecentReviewViewModel(get()) }
     viewModel { OtherPageViewModel(get(), get(), get(), get(), get()) }
-    viewModel { DetailRestaurantViewModel(get(), get(), get(), get()) }
+    viewModel { DetailRestaurantViewModel(get(), get(), get(), get(), get()) }
 
     // repository
     single<PostRepository> { DefaultPostRepository(get(), get()) }

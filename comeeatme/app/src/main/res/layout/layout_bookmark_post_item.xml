@@ -20,14 +20,14 @@
 
         <include
             android:id="@+id/ic_Image1"
-            layout="@layout/layout_map_image"
+            layout="@layout/layout_image"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_columnWeight="1" />
 
         <include
             android:id="@+id/ic_Image2"
-            layout="@layout/layout_map_image"
+            layout="@layout/layout_image"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
@@ -35,7 +35,7 @@
 
         <include
             android:id="@+id/ic_Image3"
-            layout="@layout/layout_map_image"
+            layout="@layout/layout_image"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"

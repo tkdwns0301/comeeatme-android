@@ -5,6 +5,7 @@ import com.hand.comeeatme.data.request.post.NewPostRequest
 import com.hand.comeeatme.data.response.post.DetailPostResponse
 import com.hand.comeeatme.data.response.post.NewPostResponse
 import com.hand.comeeatme.data.response.post.PostResponse
+import com.hand.comeeatme.data.response.post.RestaurantPostResponse
 
 interface PostRepository {
     suspend fun getPosts(
@@ -14,15 +15,14 @@ interface PostRepository {
         sort: Boolean?,
         hashTags: List<String>?,
     ): PostResponse?
-
-    suspend fun putNewPost(accessToken: String, newPost: NewPostRequest): NewPostResponse?
-    suspend fun getDetailPost(accessToken: String, postId: Long): DetailPostResponse?
     suspend fun getMemberPost(accessToken: String, memberId: Long): PostResponse?
+    suspend fun getRestaurantPosts(accessToken: String, restaurantId: Long): RestaurantPostResponse?
+    suspend fun getDetailPost(accessToken: String, postId: Long): DetailPostResponse?
+    suspend fun putNewPost(accessToken: String, newPost: NewPostRequest): NewPostResponse?
     suspend fun modifyPost(
         accessToken: String,
         postId: Long,
         modifyPost: ModifyPostRequest,
     ): NewPostResponse?
-
     suspend fun deletePost(accessToken: String, postId: Long): NewPostResponse?
 }

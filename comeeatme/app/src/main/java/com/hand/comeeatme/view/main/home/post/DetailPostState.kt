@@ -3,6 +3,7 @@ package com.hand.comeeatme.view.main.home.post
 import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 import com.hand.comeeatme.data.response.comment.CommentListResponse
+import com.hand.comeeatme.data.response.image.RestaurantImageResponse
 import com.hand.comeeatme.data.response.post.DetailPostResponse
 
 sealed class DetailPostState {
@@ -20,6 +21,10 @@ sealed class DetailPostState {
 
     data class CommentListSuccess(
         val response: CommentListResponse?
+    ): DetailPostState()
+
+    data class RestaurantImageSuccess(
+        val response: RestaurantImageResponse?
     ): DetailPostState()
 
     object WritingCommentSuccess: DetailPostState()

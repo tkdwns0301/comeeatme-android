@@ -1,5 +1,6 @@
 package com.hand.comeeatme.view.main.bookmark.favorite
 
+import android.annotation.SuppressLint
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hand.comeeatme.data.response.favorite.FavoritePostContent
 import com.hand.comeeatme.databinding.LayoutBookmarkFavoriteBinding
@@ -48,6 +49,7 @@ class FavoritePostFragment: BaseFragment<FavoritePostViewModel, LayoutBookmarkFa
 
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun setAdapter(contents: List<FavoritePostContent>) {
         adapter = FavoritePostAdapter(requireContext(), contents)
         binding.rvStarList.adapter = adapter

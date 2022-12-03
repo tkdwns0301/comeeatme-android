@@ -3,6 +3,7 @@ package com.hand.comeeatme.view.main.rank.restaurant
 import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 import com.hand.comeeatme.data.response.image.RestaurantImageResponse
+import com.hand.comeeatme.data.response.post.RestaurantPostResponse
 import com.hand.comeeatme.data.response.restaurant.DetailRestaurantResponse
 
 sealed class DetailRestaurantState {
@@ -16,6 +17,10 @@ sealed class DetailRestaurantState {
 
     data class ImageSuccess(
         val response: RestaurantImageResponse
+    ): DetailRestaurantState()
+
+    data class RestaurantPostsSuccess(
+        val response: RestaurantPostResponse
     ): DetailRestaurantState()
 
     object FavoriteSuccess: DetailRestaurantState()

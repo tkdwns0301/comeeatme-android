@@ -11,13 +11,16 @@ import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.chip.Chip
 import com.hand.comeeatme.R
 import com.hand.comeeatme.data.response.image.RestaurantImageContent
+import com.hand.comeeatme.data.response.post.RestaurantPostContent
 import com.hand.comeeatme.data.response.restaurant.DetailRestaurantData
 import com.hand.comeeatme.databinding.FragmentDetailRestaurantBinding
+import com.hand.comeeatme.util.widget.adapter.RestaurantPostsAdapter
 import com.hand.comeeatme.view.base.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.roundToInt
@@ -41,6 +44,7 @@ class DetailRestaurantFragment :
     private val restaurantId by lazy {
         arguments?.getLong(RESTAURANT_ID, -1)
     }
+    private lateinit var adapter: RestaurantPostsAdapter
 
     override val viewModel by viewModel<DetailRestaurantViewModel>()
     override fun getViewBinding(): FragmentDetailRestaurantBinding =
@@ -53,6 +57,7 @@ class DetailRestaurantFragment :
                 is DetailRestaurantState.Uninitialized -> {
                     viewModel.getDetailRestaurant(restaurantId!!)
                     viewModel.getRestaurantImage(restaurantId!!)
+                    viewModel.getRestaurantPosts(restaurantId!!)
                 }
 
                 is DetailRestaurantState.Loading -> {
@@ -65,6 +70,10 @@ class DetailRestaurantFragment :
 
                 is DetailRestaurantState.ImageSuccess -> {
                     setRestaurantImage(it.response.data.content)
+                }
+
+                is DetailRestaurantState.RestaurantPostsSuccess -> {
+                    setAdapter(it.response.data.content)
                 }
 
                 is DetailRestaurantState.FavoriteSuccess -> {
@@ -85,6 +94,8 @@ class DetailRestaurantFragment :
     }
 
     override fun initView() = with(binding) {
+        rvIncludingContent.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+
         toolbarRestaurantDetail.setNavigationOnClickListener {
             finish()
         }
@@ -96,6 +107,10 @@ class DetailRestaurantFragment :
                 viewModel.unFavoriteRestaurant(restaurantId!!)
             }
         }
+
+        srlRestaurantDetail.setOnRefreshListener {
+            refresh()
+        }
     }
 
     private fun setDetailView(data: DetailRestaurantData) = with(binding) {
@@ -103,6 +118,8 @@ class DetailRestaurantFragment :
         tvFavoriteCnt.text = "${data.favoriteCount}"
         tbFavorite.isChecked = data.favorited
         tvLocation.text = data.address.roadName
+
+        flTag.removeAllViews()
         data.hashtags.forEach { hashTag ->
             flTag.addItem(hashTag)
         }
@@ -119,13 +136,25 @@ class DetailRestaurantFragment :
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    private fun setAdapter(contents: List<RestaurantPostContent>) {
+        adapter = RestaurantPostsAdapter(
+            requireContext(),
+            contents
+        )
+
+        binding.rvIncludingContent.adapter = adapter
+        adapter.notifyDataSetChanged()
+    }
+
+    @SuppressLint( "InflateParams", "SetTextI18n")
     private fun FlexboxLayout.addItem(tag: String) {
 
         val chip = LayoutInflater.from(context).inflate(R.layout.layout_chip_custom, null) as Chip
 
         chip.apply {
-            text = "$tag"
-            textSize = 14f
+            text = "#" + viewModel.hashTagEngToKor(tag)
+            textSize = 13f
             textAlignment = View.TEXT_ALIGNMENT_CENTER
             isChecked = false
             checkedIcon = null
@@ -173,6 +202,13 @@ class DetailRestaurantFragment :
             resources.displayMetrics
         )
             .roundToInt()
+
+    private fun refresh() {
+        viewModel.getDetailRestaurant(restaurantId!!)
+        viewModel.getRestaurantImage(restaurantId!!)
+        viewModel.getRestaurantPosts(restaurantId!!)
+        binding.srlRestaurantDetail.isRefreshing = false
+    }
 
     private fun finish() {
         val manager: FragmentManager? = activity?.supportFragmentManager

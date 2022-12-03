@@ -5,6 +5,7 @@ import com.hand.comeeatme.data.request.post.NewPostRequest
 import com.hand.comeeatme.data.response.post.DetailPostResponse
 import com.hand.comeeatme.data.response.post.NewPostResponse
 import com.hand.comeeatme.data.response.post.PostResponse
+import com.hand.comeeatme.data.response.post.RestaurantPostResponse
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -26,7 +27,13 @@ interface PostService {
         @Path("memberId") memberId: Long,
     ) : Response<PostResponse>
 
-    // TODO 음식점 게시물 리스트 조회
+    // 음식점 게시물 리스트 조회
+    @GET("/v1/restaurants/{restaurantId}/posts")
+    suspend fun getRestaurantPosts(
+        @Header("Authorization") Authorization: String,
+        @Path("restaurantId") restaurantId: Long,
+    ): Response<RestaurantPostResponse>
+
 
     // 게시물 상세조회
     @GET("/v1/posts/{postId}")

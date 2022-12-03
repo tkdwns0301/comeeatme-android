@@ -1,6 +1,6 @@
 package com.hand.comeeatme.view.main.home.newpost.album
 
-import AlbumAdapter
+import com.hand.comeeatme.util.widget.adapter.AlbumAdapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent

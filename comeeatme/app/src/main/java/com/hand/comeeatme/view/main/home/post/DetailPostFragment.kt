@@ -94,7 +94,15 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
                     binding.clLoading.isGone = true
                     viewModel.setPostWriterMemberId(it.response!!.data.member.id)
                     viewModel.setRestaurantId(it.response.data.restaurant.id)
+                    viewModel.getRestaurantImage(it.response.data.restaurant.id)
                     setView(it.response.data)
+                }
+
+                is DetailPostState.RestaurantImageSuccess -> {
+                    binding.clLoading.isGone = true
+                    Glide.with(requireContext())
+                        .load(it.response!!.data.content[0].imageUrl)
+                        .into(binding.ivRestaurantImage)
                 }
 
                 is DetailPostState.CommentListSuccess -> {
