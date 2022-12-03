@@ -30,6 +30,7 @@ import com.hand.comeeatme.view.main.home.newpost.album.AlbumViewModel
 import com.hand.comeeatme.view.main.home.newpost.crop.CropViewModel
 import com.hand.comeeatme.view.main.home.post.DetailPostViewModel
 import com.hand.comeeatme.view.main.home.search.SearchViewModel
+import com.hand.comeeatme.view.main.rank.restaurant.DetailRestaurantViewModel
 import com.hand.comeeatme.view.main.user.UserViewModel
 import com.hand.comeeatme.view.main.user.edit.UserEditViewModel
 import com.hand.comeeatme.view.main.user.menu.heartreview.HeartReviewViewModel
@@ -61,6 +62,7 @@ val appModule = module {
     viewModel { HeartReviewViewModel(get())}
     viewModel { RecentReviewViewModel(get())}
     viewModel { OtherPageViewModel(get(), get(), get(), get(), get())}
+    viewModel { DetailRestaurantViewModel(get(), get(), get())}
 
     // repository
     single<PostRepository> { DefaultPostRepository(get(), get()) }

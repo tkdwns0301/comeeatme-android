@@ -42,6 +42,13 @@ class DetailPostViewModel(
     )
 
     private var postWriterMemberId: Long? = null
+    private var restaurantId: Long? = null
+
+    fun setRestaurantId(restaurantId: Long) {
+        this.restaurantId = restaurantId
+    }
+
+    fun getRestaurantId() = restaurantId
 
     fun getHashTagEngToKor(): HashMap<String, String> {
         return hashTagEngToKor
