@@ -22,7 +22,7 @@ import com.hand.comeeatme.data.repository.restaurant.RestaurantRepository
 import com.hand.comeeatme.util.event.MenuChangeEventBus
 import com.hand.comeeatme.view.login.LogInViewModel
 import com.hand.comeeatme.view.main.bookmark.BookmarkViewModel
-import com.hand.comeeatme.view.main.bookmark.favorite.FavoritePostViewModel
+import com.hand.comeeatme.view.main.bookmark.favorite.FavoriteRestaurantViewModel
 import com.hand.comeeatme.view.main.bookmark.post.BookmarkPostViewModel
 import com.hand.comeeatme.view.main.home.HomeViewModel
 import com.hand.comeeatme.view.main.home.newpost.NewPostViewModel
@@ -54,7 +54,7 @@ val appModule = module {
     viewModel { DetailPostViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { BookmarkViewModel(get()) }
     viewModel { BookmarkPostViewModel(get(), get()) }
-    viewModel { FavoritePostViewModel(get(), get()) }
+    viewModel { FavoriteRestaurantViewModel(get(), get()) }
     viewModel { UserViewModel(get(), get(), get(), get(), get()) }
     viewModel { UserEditViewModel(get(), get(), get()) }
     viewModel { MyReviewViewModel(get(), get()) }

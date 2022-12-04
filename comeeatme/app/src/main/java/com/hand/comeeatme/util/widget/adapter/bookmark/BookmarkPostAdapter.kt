@@ -5,6 +5,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
@@ -36,39 +37,26 @@ class BookmarkPostAdapter(
     override fun getItemCount(): Int = items.size
 
 
-    class ViewHolder(binding: LayoutBookmarkPostItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        private val image1 = binding.icImage1.ivImage
-        private val image2 = binding.icImage2.ivImage
-        private val image3 = binding.icImage3.ivImage
+    class ViewHolder(binding: LayoutBookmarkPostItemBinding) : RecyclerView.ViewHolder(binding.root) {
+        private val imageContainers = arrayListOf(
+            binding.icImage1.cvImage, binding.icImage2.cvImage, binding.icImage3.cvImage
+        )
+        private val images = arrayListOf(
+            binding.icImage1.ivImage, binding.icImage2.ivImage, binding.icImage3.ivImage
+        )
+
         private val profile = binding.clImage
         private val nickname = binding.tvName
         private val bookmark = binding.tbBookmark
         private val content = binding.tvContent
 
+        @SuppressLint("UseCompatLoadingForDrawables")
         fun bind(context: Context, item: BookmarkPostContent) {
-            if (item.imageUrls[0].isNullOrEmpty()) {
-                image1.setImageDrawable(context.getDrawable(R.drawable.food1))
-            } else {
+            item.imageUrls.forEachIndexed {index, imageUrl ->
+                imageContainers[index].isVisible = true
                 Glide.with(context)
-                    .load(item.imageUrls[0])
-                    .into(image1)
-            }
-
-            if (item.imageUrls[1].isNullOrEmpty()) {
-                image2.setImageDrawable(context.getDrawable(R.drawable.food1))
-            } else {
-                Glide.with(context)
-                    .load(item.imageUrls[1])
-                    .into(image2)
-            }
-
-            if (item.imageUrls[2].isNullOrEmpty()) {
-                image3.setImageDrawable(context.getDrawable(R.drawable.food1))
-            } else {
-                Glide.with(context)
-                    .load(item.imageUrls[2])
-                    .into(image3)
+                    .load(imageUrl)
+                    .into(images[index])
             }
 
             if (item.member.imageUrl.isNullOrEmpty()) {

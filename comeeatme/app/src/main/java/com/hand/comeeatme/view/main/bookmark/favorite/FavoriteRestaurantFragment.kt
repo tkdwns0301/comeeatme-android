@@ -4,42 +4,42 @@ import android.annotation.SuppressLint
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hand.comeeatme.data.response.favorite.FavoritePostContent
 import com.hand.comeeatme.databinding.LayoutBookmarkFavoriteBinding
-import com.hand.comeeatme.util.widget.adapter.bookmark.FavoritePostAdapter
+import com.hand.comeeatme.util.widget.adapter.bookmark.FavoriteRestaurantAdapter
 import com.hand.comeeatme.view.base.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class FavoritePostFragment: BaseFragment<FavoritePostViewModel, LayoutBookmarkFavoriteBinding>() {
+class FavoriteRestaurantFragment: BaseFragment<FavoriteRestaurantViewModel, LayoutBookmarkFavoriteBinding>() {
     companion object {
-        fun newInstance() = FavoritePostFragment()
-        const val TAG = "FavoritePostFragment"
+        fun newInstance() = FavoriteRestaurantFragment()
+        const val TAG = "FavoriteRestaurantFragment"
     }
 
-    override val viewModel by viewModel<FavoritePostViewModel>()
+    override val viewModel by viewModel<FavoriteRestaurantViewModel>()
     override fun getViewBinding(): LayoutBookmarkFavoriteBinding = LayoutBookmarkFavoriteBinding.inflate(layoutInflater)
 
     override fun observeData() {
         viewModel.favoritePostStateLiveData.observe(viewLifecycleOwner) {
             when (it) {
-                is FavoritePostState.Uninitialized -> {
+                is FavoriteRestaurantState.Uninitialized -> {
 
                 }
 
-                is FavoritePostState.Loading -> {
+                is FavoriteRestaurantState.Loading -> {
 
                 }
 
-                is FavoritePostState.Success -> {
+                is FavoriteRestaurantState.Success -> {
                     setAdapter(it.response.data.content)
                 }
 
-                is FavoritePostState.Error -> {
+                is FavoriteRestaurantState.Error -> {
 
                 }
             }
         }
     }
 
-    private lateinit var adapter: FavoritePostAdapter
+    private lateinit var adapter: FavoriteRestaurantAdapter
 
     override fun initView() {
         binding.rvStarList.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
@@ -51,7 +51,16 @@ class FavoritePostFragment: BaseFragment<FavoritePostViewModel, LayoutBookmarkFa
 
     @SuppressLint("NotifyDataSetChanged")
     private fun setAdapter(contents: List<FavoritePostContent>) {
-        adapter = FavoritePostAdapter(requireContext(), contents)
+        adapter = FavoriteRestaurantAdapter(
+            requireContext(),
+            contents,
+            favoriteRestaurant = {
+                viewModel.favoriteRestaurant(it)
+            },
+            unFavoriteRestaurant = {
+                viewModel.unFavoriteRestaurant(it)
+            }
+        )
         binding.rvStarList.adapter = adapter
         adapter.notifyDataSetChanged()
     }

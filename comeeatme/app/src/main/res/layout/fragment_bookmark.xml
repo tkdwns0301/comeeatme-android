@@ -13,48 +13,10 @@
         android:textColor="@color/basic"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/cl_Search"
+        app:layout_constraintBottom_toTopOf="@id/tl_Content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_Search"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_Title"
-        android:background="@drawable/background_searchview2"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        app:layout_constraintBottom_toTopOf="@id/tl_Content">
-
-        <EditText
-            android:id="@+id/et_Search"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/ib_Search"
-            android:background="@null"/>
-
-        <ImageButton
-            android:id="@+id/ib_Search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_search_24"
-            android:background="@null"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/et_Search"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tl_Content"
@@ -64,7 +26,7 @@
         app:tabTextColor="@color/nonCheck"
         app:tabSelectedTextColor="@color/basic"
         app:tabIndicatorColor="@color/basic"
-        app:layout_constraintTop_toBottomOf="@id/cl_Search"
+        app:layout_constraintTop_toBottomOf="@id/tv_Title"
         app:layout_constraintBottom_toTopOf="@id/vp_Bookmark"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

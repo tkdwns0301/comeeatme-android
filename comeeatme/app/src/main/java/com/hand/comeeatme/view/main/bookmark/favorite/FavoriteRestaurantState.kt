@@ -4,19 +4,19 @@ import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 import com.hand.comeeatme.data.response.favorite.FavoritePostResponse
 
-sealed class FavoritePostState {
-    object Uninitialized : FavoritePostState()
+sealed class FavoriteRestaurantState {
+    object Uninitialized : FavoriteRestaurantState()
 
     data class Success (
         val response: FavoritePostResponse
-    ): FavoritePostState()
+    ): FavoriteRestaurantState()
 
     @SuppressLint("SupportAnnotationUsage")
     data class Error(
         @StringRes val message: String,
-    ): FavoritePostState()
+    ): FavoriteRestaurantState()
 
-    object FavoritePostSuccess: FavoritePostState()
+    object FavoritePostSuccess: FavoriteRestaurantState()
 
-    object Loading: FavoritePostState()
+    object Loading: FavoriteRestaurantState()
 }

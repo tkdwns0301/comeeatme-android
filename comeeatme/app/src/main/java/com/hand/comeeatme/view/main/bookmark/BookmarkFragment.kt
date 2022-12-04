@@ -4,7 +4,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.hand.comeeatme.databinding.FragmentBookmarkBinding
 import com.hand.comeeatme.util.widget.adapter.BookmarkAdapter
 import com.hand.comeeatme.view.base.BaseFragment
-import com.hand.comeeatme.view.main.bookmark.favorite.FavoritePostFragment
+import com.hand.comeeatme.view.main.bookmark.favorite.FavoriteRestaurantFragment
 import com.hand.comeeatme.view.main.bookmark.post.BookmarkPostFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -45,7 +45,7 @@ class BookmarkFragment : BaseFragment<BookmarkViewModel, FragmentBookmarkBinding
 
         val adapter = BookmarkAdapter(requireActivity())
         adapter.addFragment(BookmarkPostFragment())
-        adapter.addFragment(FavoritePostFragment())
+        adapter.addFragment(FavoriteRestaurantFragment())
 
         binding.vpBookmark.adapter = adapter
 
