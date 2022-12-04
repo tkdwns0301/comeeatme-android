@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:padding="10dp"
     android:layout_marginTop="10dp"
     android:layout_marginStart="16dp"
@@ -21,14 +22,14 @@
 
         <include
             android:id="@+id/ic_Image1"
-            layout="@layout/layout_map_image"
+            layout="@layout/layout_image"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_columnWeight="1" />
 
         <include
             android:id="@+id/ic_Image2"
-            layout="@layout/layout_map_image"
+            layout="@layout/layout_image"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
@@ -36,7 +37,7 @@
 
         <include
             android:id="@+id/ic_Image3"
-            layout="@layout/layout_map_image"
+            layout="@layout/layout_image"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
@@ -57,7 +58,7 @@
             android:id="@+id/tv_Name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="장미닭발"
+            tools:text="장미닭발"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@id/tv_Keyword"
@@ -68,9 +69,11 @@
 
         <TextView
             android:id="@+id/tv_Keyword"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="닭발"
+            app:layout_constraintEnd_toStartOf="@id/tb_Favorite"
+            android:visibility="invisible"
             android:textSize="12sp"
             android:textColor="@color/nonCheck"
             app:layout_constraintStart_toEndOf="@id/tv_Name"
@@ -78,12 +81,13 @@
             app:layout_constraintBottom_toBottomOf="parent"/>
 
         <ToggleButton
-            android:id="@+id/tb_Bookmark"
+            android:id="@+id/tb_Favorite"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:background="@drawable/selector_star2"
             android:textOff=""
             android:textOn=""
+            app:layout_constraintStart_toEndOf="@id/tv_Keyword"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

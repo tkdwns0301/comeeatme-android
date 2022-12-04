@@ -20,7 +20,6 @@ import com.hand.comeeatme.util.event.MenuChangeEventBus
 import com.hand.comeeatme.view.main.bookmark.BookmarkFragment
 import com.hand.comeeatme.view.main.home.HomeFragment
 import com.hand.comeeatme.view.main.home.newpost.NewPostFragment
-import com.hand.comeeatme.view.main.map.MapFragment
 import com.hand.comeeatme.view.main.user.UserFragment
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
@@ -137,10 +136,10 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 setFragment(TAG_HOME, HomeFragment())
                 true
             }
-            R.id.fm_Map -> {
-                setFragment(TAG_MAP, MapFragment())
-                true
-            }
+//            R.id.fm_Map -> {
+//                setFragment(TAG_MAP, RankFragment())
+//                true
+//            }
             R.id.fm_Bookmark -> {
                 setFragment(TAG_BOOKMARK, BookmarkFragment())
                 true

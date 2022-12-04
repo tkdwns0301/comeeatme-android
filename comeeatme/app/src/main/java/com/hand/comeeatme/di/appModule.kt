@@ -22,7 +22,7 @@ import com.hand.comeeatme.data.repository.restaurant.RestaurantRepository
 import com.hand.comeeatme.util.event.MenuChangeEventBus
 import com.hand.comeeatme.view.login.LogInViewModel
 import com.hand.comeeatme.view.main.bookmark.BookmarkViewModel
-import com.hand.comeeatme.view.main.bookmark.favorite.FavoritePostViewModel
+import com.hand.comeeatme.view.main.bookmark.favorite.FavoriteRestaurantViewModel
 import com.hand.comeeatme.view.main.bookmark.post.BookmarkPostViewModel
 import com.hand.comeeatme.view.main.home.HomeViewModel
 import com.hand.comeeatme.view.main.home.newpost.NewPostViewModel
@@ -30,6 +30,7 @@ import com.hand.comeeatme.view.main.home.newpost.album.AlbumViewModel
 import com.hand.comeeatme.view.main.home.newpost.crop.CropViewModel
 import com.hand.comeeatme.view.main.home.post.DetailPostViewModel
 import com.hand.comeeatme.view.main.home.search.SearchViewModel
+import com.hand.comeeatme.view.main.rank.restaurant.DetailRestaurantViewModel
 import com.hand.comeeatme.view.main.user.UserViewModel
 import com.hand.comeeatme.view.main.user.edit.UserEditViewModel
 import com.hand.comeeatme.view.main.user.menu.heartreview.HeartReviewViewModel
@@ -50,17 +51,18 @@ val appModule = module {
     viewModel { NewPostViewModel(get(), get(), get(), get()) }
     viewModel { AlbumViewModel() }
     viewModel { CropViewModel() }
-    viewModel { DetailPostViewModel(get(), get(), get(), get(), get(), get()) }
+    viewModel { DetailPostViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { BookmarkViewModel(get()) }
     viewModel { BookmarkPostViewModel(get(), get()) }
-    viewModel { FavoritePostViewModel(get(), get()) }
+    viewModel { FavoriteRestaurantViewModel(get(), get()) }
     viewModel { UserViewModel(get(), get(), get(), get(), get()) }
     viewModel { UserEditViewModel(get(), get(), get()) }
-    viewModel { MyReviewViewModel(get(), get())}
-    viewModel { MyCommentViewModel(get())}
-    viewModel { HeartReviewViewModel(get())}
-    viewModel { RecentReviewViewModel(get())}
-    viewModel { OtherPageViewModel(get(), get(), get(), get(), get())}
+    viewModel { MyReviewViewModel(get(), get()) }
+    viewModel { MyCommentViewModel(get()) }
+    viewModel { HeartReviewViewModel(get()) }
+    viewModel { RecentReviewViewModel(get()) }
+    viewModel { OtherPageViewModel(get(), get(), get(), get(), get()) }
+    viewModel { DetailRestaurantViewModel(get(), get(), get(), get(), get()) }
 
     // repository
     single<PostRepository> { DefaultPostRepository(get(), get()) }
@@ -71,7 +73,7 @@ val appModule = module {
     single<LikeRepository> { DefaultLikeRepository(get(), get()) }
     single<BookmarkRepository> { DefaultBookmarkRepository(get(), get()) }
     single<FavoriteRepository> { DefaultFavoriteRepository(get(), get()) }
-    single<CommentRepository> { DefaultCommentRepository(get(), get())}
+    single<CommentRepository> { DefaultCommentRepository(get(), get()) }
 
     // provider
     single { provideApiRetrofit(get(), get(), get()) }

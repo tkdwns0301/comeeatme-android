@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.hand.comeeatme.data.preference.AppPreferenceManager
 import com.hand.comeeatme.data.repository.bookmark.BookmarkRepository
 import com.hand.comeeatme.data.repository.comment.CommentRepository
+import com.hand.comeeatme.data.repository.image.ImageRepository
 import com.hand.comeeatme.data.repository.like.LikeRepository
 import com.hand.comeeatme.data.repository.post.PostRepository
 import com.hand.comeeatme.data.request.comment.ModifyCommentRequest
@@ -19,6 +20,7 @@ class DetailPostViewModel(
     private val likeRepository: LikeRepository,
     private val bookmarkRepository: BookmarkRepository,
     private val commentRepository: CommentRepository,
+    private val imageRepository: ImageRepository,
 ) : BaseViewModel() {
     val detailPostStateLiveData = MutableLiveData<DetailPostState>(DetailPostState.Uninitialized)
 
@@ -42,6 +44,13 @@ class DetailPostViewModel(
     )
 
     private var postWriterMemberId: Long? = null
+    private var restaurantId: Long? = null
+
+    fun setRestaurantId(restaurantId: Long) {
+        this.restaurantId = restaurantId
+    }
+
+    fun getRestaurantId() = restaurantId
 
     fun getHashTagEngToKor(): HashMap<String, String> {
         return hashTagEngToKor
@@ -205,6 +214,25 @@ class DetailPostViewModel(
         }?: run {
             detailPostStateLiveData.value = DetailPostState.Error(
                 "댓글을 불러오는 도중 오류가 발생했습니다."
+            )
+        }
+    }
+
+    fun getRestaurantImage(restaurantId: Long)  = viewModelScope.launch {
+        detailPostStateLiveData.value = DetailPostState.Loading
+
+        val response = imageRepository.getRestaurantImage(
+            "${appPreferenceManager.getAccessToken()}",
+            restaurantId
+        )
+
+        response?.let {
+            detailPostStateLiveData.value = DetailPostState.RestaurantImageSuccess(
+                response = it
+            )
+        }?:run {
+            detailPostStateLiveData.value = DetailPostState.Error(
+                "음식점 사진을 불러오는 도중 오류가 발생했습니다."
             )
         }
     }

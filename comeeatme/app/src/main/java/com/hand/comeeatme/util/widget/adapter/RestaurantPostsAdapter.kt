@@ -1,4 +1,4 @@
-package com.hand.comeeatme.util.widget.adapter.bookmark
+package com.hand.comeeatme.util.widget.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -11,24 +11,20 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.hand.comeeatme.R
-import com.hand.comeeatme.data.response.bookmark.BookmarkPostContent
-import com.hand.comeeatme.databinding.LayoutBookmarkPostItemBinding
+import com.hand.comeeatme.data.response.post.RestaurantPostContent
+import com.hand.comeeatme.databinding.LayoutRestaurantDetailItemBinding
 import com.hand.comeeatme.view.main.home.post.DetailPostFragment
 
-class BookmarkPostAdapter(
+class RestaurantPostsAdapter(
     private val context: Context,
-    private val items: List<BookmarkPostContent>,
-    val bookmarkPost: (postId: Long) -> Unit,
-    val unBookmarkPost: (postId: Long) -> Unit,
-) : RecyclerView.Adapter<BookmarkPostAdapter.ViewHolder>() {
+    private val items: List<RestaurantPostContent>,
+):RecyclerView.Adapter<RestaurantPostsAdapter.ViewHolder>() {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = LayoutBookmarkPostItemBinding.inflate(LayoutInflater.from(parent.context),
-            parent,
-            false)
+        val binding = LayoutRestaurantDetailItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
-    @SuppressLint("UseCompatLoadingForDrawables")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
         holder.bind(context, item)
@@ -36,8 +32,7 @@ class BookmarkPostAdapter(
 
     override fun getItemCount(): Int = items.size
 
-
-    class ViewHolder(binding: LayoutBookmarkPostItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(binding:LayoutRestaurantDetailItemBinding) : RecyclerView.ViewHolder(binding.root) {
         private val imageContainers = arrayListOf(
             binding.icImage1.cvImage, binding.icImage2.cvImage, binding.icImage3.cvImage
         )
@@ -45,21 +40,21 @@ class BookmarkPostAdapter(
             binding.icImage1.ivImage, binding.icImage2.ivImage, binding.icImage3.ivImage
         )
 
-        private val profile = binding.clImage
-        private val nickname = binding.tvName
-        private val bookmark = binding.tbBookmark
+        private val profile = binding.civProfile
+        private val nickname = binding.tvNickname
+        private val date = binding.tvDate
         private val content = binding.tvContent
 
         @SuppressLint("UseCompatLoadingForDrawables")
-        fun bind(context: Context, item: BookmarkPostContent) {
-            item.imageUrls.forEachIndexed {index, imageUrl ->
+        fun bind(context: Context, item: RestaurantPostContent) {
+            item.imageUrls.forEachIndexed { index, imageUrl ->
                 imageContainers[index].isVisible = true
                 Glide.with(context)
                     .load(imageUrl)
                     .into(images[index])
             }
 
-            if (item.member.imageUrl.isNullOrEmpty()) {
+            if(item.member.imageUrl.isNullOrEmpty()) {
                 profile.setImageDrawable(context.getDrawable(R.drawable.food1))
             } else {
                 Glide.with(context)
@@ -68,7 +63,7 @@ class BookmarkPostAdapter(
             }
 
             nickname.text = item.member.nickname
-            bookmark.isChecked = item.bookmarked
+            date.text = item.createAt
             content.text = item.content
 
             itemView.setOnClickListener {
@@ -80,6 +75,4 @@ class BookmarkPostAdapter(
             }
         }
     }
-
-
 }

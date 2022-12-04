@@ -37,6 +37,7 @@ import com.hand.comeeatme.view.dialog.MyPostDialog
 import com.hand.comeeatme.view.dialog.OtherPostDialog
 import com.hand.comeeatme.view.main.MainActivity
 import com.hand.comeeatme.view.main.home.newpost.NewPostFragment
+import com.hand.comeeatme.view.main.rank.restaurant.DetailRestaurantFragment
 import com.hand.comeeatme.view.main.user.other.OtherPageFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -92,7 +93,16 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
                 is DetailPostState.Success -> {
                     binding.clLoading.isGone = true
                     viewModel.setPostWriterMemberId(it.response!!.data.member.id)
-                    setView(it.response!!.data)
+                    viewModel.setRestaurantId(it.response.data.restaurant.id)
+                    viewModel.getRestaurantImage(it.response.data.restaurant.id)
+                    setView(it.response.data)
+                }
+
+                is DetailPostState.RestaurantImageSuccess -> {
+                    binding.clLoading.isGone = true
+                    Glide.with(requireContext())
+                        .load(it.response!!.data.content[0].imageUrl)
+                        .into(binding.ivRestaurantImage)
                 }
 
                 is DetailPostState.CommentListSuccess -> {
@@ -239,6 +249,15 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
 
         })
 
+        clStoreImageAndNameAndLocation.setOnClickListener {
+            val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
+            val ft: FragmentTransaction = manager.beginTransaction()
+
+            ft.add(R.id.fg_MainContainer,
+                DetailRestaurantFragment.newInstance(viewModel.getRestaurantId()!!),
+                DetailRestaurantFragment.TAG)
+            ft.commitAllowingStateLoss()
+        }
 
     }
 

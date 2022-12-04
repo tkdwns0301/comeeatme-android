@@ -11,6 +11,7 @@ import com.hand.comeeatme.data.response.post.Content
 import com.hand.comeeatme.databinding.FragmentHomeBinding
 import com.hand.comeeatme.util.widget.adapter.home.CommunityAdapter
 import com.hand.comeeatme.view.base.BaseFragment
+import com.hand.comeeatme.view.dialog.RegionDialog
 import com.hand.comeeatme.view.main.home.hashtag.HashTagActivity
 import com.hand.comeeatme.view.main.home.search.SearchActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -94,6 +95,10 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
         ibSearch.setOnClickListener {
             val intent = Intent(requireContext(), SearchActivity::class.java)
             startActivity(intent)
+        }
+
+        ibNotification.setOnClickListener {
+            RegionDialog(requireContext(), "서울", "강남구").show()
         }
 
     }

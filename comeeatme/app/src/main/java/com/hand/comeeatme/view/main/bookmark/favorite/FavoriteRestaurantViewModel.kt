@@ -7,38 +7,38 @@ import com.hand.comeeatme.data.repository.favorite.FavoriteRepository
 import com.hand.comeeatme.view.base.BaseViewModel
 import kotlinx.coroutines.launch
 
-class FavoritePostViewModel(
+class FavoriteRestaurantViewModel(
     private val appPreferenceManager: AppPreferenceManager,
     private val favoriteRepository: FavoriteRepository,
 ) : BaseViewModel() {
     val favoritePostStateLiveData =
-        MutableLiveData<FavoritePostState>(FavoritePostState.Uninitialized)
+        MutableLiveData<FavoriteRestaurantState>(FavoriteRestaurantState.Uninitialized)
 
-    fun favoritePost(
+    fun favoriteRestaurant(
         restaurantId: Long,
     ) = viewModelScope.launch {
-        val response = favoriteRepository.favoritePost("${appPreferenceManager.getAccessToken()}",
+        val response = favoriteRepository.favoriteRestaurant("${appPreferenceManager.getAccessToken()}",
             restaurantId)
 
         response?.let {
-            favoritePostStateLiveData.value = FavoritePostState.FavoritePostSuccess
+            favoritePostStateLiveData.value = FavoriteRestaurantState.FavoritePostSuccess
         } ?: run {
-            favoritePostStateLiveData.value = FavoritePostState.Error(
+            favoritePostStateLiveData.value = FavoriteRestaurantState.Error(
                 "즐겨찾기 실패"
             )
         }
     }
 
-    fun unFavoritePost(
+    fun unFavoriteRestaurant(
         restaurantId: Long,
     ) = viewModelScope.launch {
-        val response = favoriteRepository.unFavoritePost("${appPreferenceManager.getAccessToken()}",
+        val response = favoriteRepository.unFavoriteRestaurant("${appPreferenceManager.getAccessToken()}",
             restaurantId)
 
         response?.let {
-            favoritePostStateLiveData.value = FavoritePostState.FavoritePostSuccess
+            favoritePostStateLiveData.value = FavoriteRestaurantState.FavoritePostSuccess
         } ?: run {
-            favoritePostStateLiveData.value = FavoritePostState.Error(
+            favoritePostStateLiveData.value = FavoriteRestaurantState.Error(
                 "즐겨찾기 취소 실패"
             )
         }
@@ -49,7 +49,7 @@ class FavoritePostViewModel(
         size: Long?,
         sort: Boolean?,
     ) = viewModelScope.launch {
-        favoritePostStateLiveData.value = FavoritePostState.Loading
+        favoritePostStateLiveData.value = FavoriteRestaurantState.Loading
 
         val response = favoriteRepository.getAllFavorite(
             "${appPreferenceManager.getAccessToken()}",
@@ -61,16 +61,16 @@ class FavoritePostViewModel(
 
         response?.let {
             if (it.data.content.isEmpty()) {
-                favoritePostStateLiveData.value = FavoritePostState.Error(
+                favoritePostStateLiveData.value = FavoriteRestaurantState.Error(
                     "즐겨찾기 목록이 없어요,,,"
                 )
             } else {
-                favoritePostStateLiveData.value = FavoritePostState.Success(
+                favoritePostStateLiveData.value = FavoriteRestaurantState.Success(
                     response = it
                 )
             }
         } ?: run {
-            favoritePostStateLiveData.value = FavoritePostState.Error(
+            favoritePostStateLiveData.value = FavoriteRestaurantState.Error(
                 "즐겨찾기 목록을 불러오는 도중 오류가 발생했습니다."
             )
         }
