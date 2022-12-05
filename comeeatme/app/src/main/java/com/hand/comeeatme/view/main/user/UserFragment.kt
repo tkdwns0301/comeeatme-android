@@ -21,6 +21,7 @@ import com.hand.comeeatme.view.main.user.menu.heartreview.HeartReviewFragment
 import com.hand.comeeatme.view.main.user.menu.mycomment.MyCommentFragment
 import com.hand.comeeatme.view.main.user.menu.myreview.MyReviewFragment
 import com.hand.comeeatme.view.main.user.menu.recentreview.RecentReviewFragment
+import com.hand.comeeatme.view.main.user.setting.SettingActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
@@ -65,6 +66,10 @@ class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
     private lateinit var adapterGrid: UserGridAdapter
 
     override fun initView() = with(binding) {
+        ibSetting.setOnClickListener {
+            startActivity(SettingActivity.newIntent(requireContext()))
+        }
+
         rgListAndGrid.setOnCheckedChangeListener { _, checkId ->
             when (checkId) {
                 R.id.rb_Grid -> {

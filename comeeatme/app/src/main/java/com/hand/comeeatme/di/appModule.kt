@@ -39,6 +39,7 @@ import com.hand.comeeatme.view.main.user.menu.mycomment.MyCommentViewModel
 import com.hand.comeeatme.view.main.user.menu.myreview.MyReviewViewModel
 import com.hand.comeeatme.view.main.user.menu.recentreview.RecentReviewViewModel
 import com.hand.comeeatme.view.main.user.other.OtherPageViewModel
+import com.hand.comeeatme.view.main.user.setting.SettingViewModel
 import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -65,6 +66,7 @@ val appModule = module {
     viewModel { OtherPageViewModel(get(), get(), get(), get(), get()) }
     viewModel { DetailRestaurantViewModel(get(), get(), get(), get(), get()) }
     viewModel { TermViewModel() }
+    viewModel { SettingViewModel(get())}
 
     // repository
     single<PostRepository> { DefaultPostRepository(get(), get()) }
