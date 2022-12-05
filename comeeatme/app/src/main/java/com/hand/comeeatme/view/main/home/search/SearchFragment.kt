@@ -6,53 +6,61 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hand.comeeatme.data.response.member.MemberSearchContent
 import com.hand.comeeatme.data.response.restaurant.SimpleRestaurantContent
-import com.hand.comeeatme.databinding.ActivitySearchBinding
+import com.hand.comeeatme.databinding.FragmentSearchBinding
 import com.hand.comeeatme.util.widget.adapter.home.SearchRestaurantAdapter
 import com.hand.comeeatme.util.widget.adapter.home.SearchUserAdapter
-import com.hand.comeeatme.view.base.BaseActivity
+import com.hand.comeeatme.view.base.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
+class SearchFragment : BaseFragment<SearchViewModel, FragmentSearchBinding>() {
+    companion object {
+        const val TAG = "SearchFragment"
+
+        fun newInstance() = SearchFragment()
+    }
 
     override val viewModel by viewModel<SearchViewModel>()
-    override fun getViewBinding(): ActivitySearchBinding = ActivitySearchBinding.inflate(layoutInflater)
+    override fun getViewBinding(): FragmentSearchBinding = FragmentSearchBinding.inflate(layoutInflater)
 
     private lateinit var userAdapter: SearchUserAdapter
     private lateinit var restaurantAdapter: SearchRestaurantAdapter
 
-    override fun observeData() = viewModel.searchStateLiveData.observe(this) {
-        when(it) {
-            is SearchState.Uninitialized -> {
-                binding.clLoading.isGone = true
-            }
+    override fun observeData() {
+        viewModel.searchStateLiveData.observe(viewLifecycleOwner) {
+            when (it) {
+                is SearchState.Uninitialized -> {
+                    binding.clLoading.isGone = true
+                }
 
-            is SearchState.Loading -> {
-                binding.clLoading.isVisible = true
-            }
+                is SearchState.Loading -> {
+                    binding.clLoading.isVisible = true
+                }
 
-            is SearchState.SearchUserSuccess -> {
-                binding.clLoading.isGone = true
-                setUserAdapter(it.response!!.data.content)
-            }
+                is SearchState.SearchUserSuccess -> {
+                    binding.clLoading.isGone = true
+                    setUserAdapter(it.response!!.data.content)
+                }
 
-            is SearchState.SearchRestaurantSuccess -> {
-                binding.clLoading.isGone = true
-                setRestaurantAdapter(it.response!!.data.content)
-            }
+                is SearchState.SearchRestaurantSuccess -> {
+                    binding.clLoading.isGone = true
+                    setRestaurantAdapter(it.response!!.data.content)
+                }
 
-            is SearchState.Error -> {
-                binding.clLoading.isGone = true
+                is SearchState.Error -> {
+                    binding.clLoading.isGone = true
+                }
             }
         }
-
     }
 
 
     override fun initView() = with(binding){
-        rvSearchList.layoutManager =LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
+        rvSearchList.layoutManager =LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
         ibPrev.setOnClickListener {
             finish()
@@ -93,7 +101,7 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     private fun setUserAdapter(contents: List<MemberSearchContent>) {
         userAdapter = SearchUserAdapter(
             contents,
-            applicationContext
+            requireContext()
         )
         binding.rvSearchList.adapter = userAdapter
         userAdapter.notifyDataSetChanged()
@@ -102,13 +110,27 @@ class SearchActivity : BaseActivity<SearchViewModel, ActivitySearchBinding>() {
     @SuppressLint("NotifyDataSetChanged")
     private fun setRestaurantAdapter(contents: List<SimpleRestaurantContent>) {
         restaurantAdapter = SearchRestaurantAdapter(
-            applicationContext,
+            requireContext(),
             contents
         )
 
         binding.rvSearchList.adapter = restaurantAdapter
         restaurantAdapter.notifyDataSetChanged()
     }
+
+    private fun finish() {
+        val manager: FragmentManager? = activity?.supportFragmentManager
+        val ft: FragmentTransaction = manager!!.beginTransaction()
+
+        val fragment = manager.findFragmentByTag(TAG)
+
+        if (fragment != null) {
+            ft.remove(fragment)
+        }
+
+        ft.commitAllowingStateLoss()
+    }
+
 
 //    private fun setPreferences(context: Context) {
 //        val pref = PreferenceManager.getDefaultSharedPreferences(context)

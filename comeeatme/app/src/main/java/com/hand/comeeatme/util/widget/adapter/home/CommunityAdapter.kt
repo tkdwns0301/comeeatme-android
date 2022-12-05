@@ -137,25 +137,18 @@ class CommunityAdapter(
                 val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
                 val ft: FragmentTransaction = manager.beginTransaction()
 
-                ft.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_out, R.anim.fade_in)
-                    .add(R.id.fg_MainContainer, DetailPostFragment.newInstance(item.id), DetailPostFragment.TAG)
+
+                ft.add(R.id.fg_MainContainer, DetailPostFragment.newInstance(item.id), DetailPostFragment.TAG)
                 ft.addToBackStack(DetailPostFragment.TAG).commitAllowingStateLoss()
 
-//                ft.add(R.id.fg_MainContainer, DetailPostFragment.newInstance(item.id), DetailPostFragment.TAG)
-//                ft.commitAllowingStateLoss()
             }
 
             userContainer.setOnClickListener {
                 val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
                 val ft: FragmentTransaction = manager.beginTransaction()
 
-                ft.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
-                    .add(R.id.fg_MainContainer, OtherPageFragment.newInstance(item.member.id), OtherPageFragment.TAG)
-
+                ft.add(R.id.fg_MainContainer, OtherPageFragment.newInstance(item.member.id), OtherPageFragment.TAG)
                 ft.addToBackStack(OtherPageFragment.TAG).commitAllowingStateLoss()
-
-//                ft.add(R.id.fg_MainContainer, OtherPageFragment.newInstance(item.member.id), OtherPageFragment.TAG)
-//                ft.commitAllowingStateLoss()
             }
 
         }

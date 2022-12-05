@@ -110,25 +110,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     }
 
-    interface onBackPressedListener {
-        fun onBackPressed()
-    }
-
-    override fun onBackPressed() {
-        val fragmentList = supportFragmentManager.fragments
-
-        if (fragmentList.size != 1) {
-            for (fragment in fragmentList) {
-                if (fragment is onBackPressedListener) {
-                    (fragment as onBackPressedListener).onBackPressed()
-                    return
-                }
-            }
-        } else {
-            super.onBackPressed()
-        }
-
-    }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {

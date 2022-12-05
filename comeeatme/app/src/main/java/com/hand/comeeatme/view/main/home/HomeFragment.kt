@@ -6,14 +6,17 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.hand.comeeatme.R
 import com.hand.comeeatme.data.response.post.Content
 import com.hand.comeeatme.databinding.FragmentHomeBinding
 import com.hand.comeeatme.util.widget.adapter.home.CommunityAdapter
 import com.hand.comeeatme.view.base.BaseFragment
 import com.hand.comeeatme.view.dialog.RegionDialog
 import com.hand.comeeatme.view.main.home.hashtag.HashTagActivity
-import com.hand.comeeatme.view.main.home.search.SearchActivity
+import com.hand.comeeatme.view.main.home.search.SearchFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -93,8 +96,12 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
         }
 
         ibSearch.setOnClickListener {
-            val intent = Intent(requireContext(), SearchActivity::class.java)
-            startActivity(intent)
+            val manager: FragmentManager = (requireContext() as AppCompatActivity).supportFragmentManager
+            val ft: FragmentTransaction = manager.beginTransaction()
+
+            ft.add(R.id.fg_MainContainer, SearchFragment.newInstance(), SearchFragment.TAG)
+            ft.addToBackStack(SearchFragment.TAG)
+            ft.commitAllowingStateLoss()
         }
 
         ibNotification.setOnClickListener {
