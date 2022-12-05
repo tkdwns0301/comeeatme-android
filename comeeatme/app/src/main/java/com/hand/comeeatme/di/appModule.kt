@@ -21,6 +21,7 @@ import com.hand.comeeatme.data.repository.restaurant.DefaultRestaurantRepository
 import com.hand.comeeatme.data.repository.restaurant.RestaurantRepository
 import com.hand.comeeatme.util.event.MenuChangeEventBus
 import com.hand.comeeatme.view.login.LogInViewModel
+import com.hand.comeeatme.view.login.term.TermViewModel
 import com.hand.comeeatme.view.main.bookmark.BookmarkViewModel
 import com.hand.comeeatme.view.main.bookmark.favorite.FavoriteRestaurantViewModel
 import com.hand.comeeatme.view.main.bookmark.post.BookmarkPostViewModel
@@ -63,6 +64,7 @@ val appModule = module {
     viewModel { RecentReviewViewModel(get()) }
     viewModel { OtherPageViewModel(get(), get(), get(), get(), get()) }
     viewModel { DetailRestaurantViewModel(get(), get(), get(), get(), get()) }
+    viewModel { TermViewModel() }
 
     // repository
     single<PostRepository> { DefaultPostRepository(get(), get()) }

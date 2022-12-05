@@ -101,7 +101,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <include layout="@layout/layout_map_bottomsheet" />
+    <include layout="@layout/layout_term1_bottomsheet" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
