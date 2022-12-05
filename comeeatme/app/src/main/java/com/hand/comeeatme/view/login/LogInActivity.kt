@@ -6,7 +6,7 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.hand.comeeatme.databinding.ActivityLoginBinding
 import com.hand.comeeatme.view.base.BaseActivity
-import com.hand.comeeatme.view.main.MainActivity
+import com.hand.comeeatme.view.login.term.TermActivity
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.AuthErrorCause
 import com.kakao.sdk.user.UserApiClient
@@ -33,7 +33,8 @@ class LogInActivity : BaseActivity<LogInViewModel, ActivityLoginBinding>() {
             is LogInState.Success -> {
                 binding.pbLoading.isGone = true
                 startActivity(
-                    MainActivity.newIntent(applicationContext)
+                    //MainActivity.newIntent(applicationContext)
+                    TermActivity.newIntent(applicationContext)
                 )
                 finish()
             }
@@ -82,7 +83,7 @@ class LogInActivity : BaseActivity<LogInViewModel, ActivityLoginBinding>() {
             }
         }
 
-        btnLogIn.setOnClickListener {
+        clLogIn.setOnClickListener {
             UserApiClient.instance.loginWithKakaoAccount(applicationContext,
                 callback = callback)
 
