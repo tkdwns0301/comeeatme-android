@@ -144,7 +144,18 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
         rvCommentList.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
-        clProfileNameFollow.setOnClickListener {
+        civProfile.setOnClickListener {
+            val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
+            val ft: FragmentTransaction = manager.beginTransaction()
+
+            ft.add(R.id.fg_MainContainer,
+                OtherPageFragment.newInstance(viewModel.getMemberId()),
+                OtherPageFragment.TAG)
+            ft.addToBackStack(OtherPageFragment.TAG)
+            ft.commitAllowingStateLoss()
+        }
+
+        tvNickName.setOnClickListener {
             val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
             val ft: FragmentTransaction = manager.beginTransaction()
 
@@ -201,7 +212,7 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
                             }
                         ).show()
                     } else {
-                        OtherPostDialog(requireContext()).show()
+                        OtherPostDialog(requireContext(), postId!!).show()
                     }
 
                     true
@@ -261,6 +272,7 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
             ft.add(R.id.fg_MainContainer,
                 DetailRestaurantFragment.newInstance(viewModel.getRestaurantId()!!),
                 DetailRestaurantFragment.TAG)
+            ft.addToBackStack(DetailRestaurantFragment.TAG)
             ft.commitAllowingStateLoss()
         }
 
@@ -336,11 +348,11 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
 
 
         if (data.member.imageUrl.isNullOrEmpty()) {
-            cvProfile.setImageDrawable(requireContext().getDrawable(R.drawable.food1))
+            civProfile.setImageDrawable(requireContext().getDrawable(R.drawable.food1))
         } else {
             Glide.with(requireContext())
                 .load(data.member.imageUrl)
-                .into(cvProfile)
+                .into(civProfile)
         }
 
         tvNickName.text = data.member.nickname

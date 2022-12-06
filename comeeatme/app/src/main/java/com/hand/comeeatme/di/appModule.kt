@@ -17,6 +17,8 @@ import com.hand.comeeatme.data.repository.member.DefaultMemberRepository
 import com.hand.comeeatme.data.repository.member.MemberRepository
 import com.hand.comeeatme.data.repository.post.DefaultPostRepository
 import com.hand.comeeatme.data.repository.post.PostRepository
+import com.hand.comeeatme.data.repository.report.DefaultReportRepository
+import com.hand.comeeatme.data.repository.report.ReportRepository
 import com.hand.comeeatme.data.repository.restaurant.DefaultRestaurantRepository
 import com.hand.comeeatme.data.repository.restaurant.RestaurantRepository
 import com.hand.comeeatme.util.event.MenuChangeEventBus
@@ -30,6 +32,7 @@ import com.hand.comeeatme.view.main.home.newpost.NewPostViewModel
 import com.hand.comeeatme.view.main.home.newpost.album.AlbumViewModel
 import com.hand.comeeatme.view.main.home.newpost.crop.CropViewModel
 import com.hand.comeeatme.view.main.home.post.DetailPostViewModel
+import com.hand.comeeatme.view.main.home.post.report.ReportViewModel
 import com.hand.comeeatme.view.main.home.search.SearchViewModel
 import com.hand.comeeatme.view.main.rank.restaurant.DetailRestaurantViewModel
 import com.hand.comeeatme.view.main.user.UserViewModel
@@ -66,7 +69,8 @@ val appModule = module {
     viewModel { OtherPageViewModel(get(), get(), get(), get(), get()) }
     viewModel { DetailRestaurantViewModel(get(), get(), get(), get(), get()) }
     viewModel { TermViewModel() }
-    viewModel { SettingViewModel(get())}
+    viewModel { SettingViewModel(get()) }
+    viewModel { ReportViewModel(get(), get()) }
 
     // repository
     single<PostRepository> { DefaultPostRepository(get(), get()) }
@@ -78,6 +82,7 @@ val appModule = module {
     single<BookmarkRepository> { DefaultBookmarkRepository(get(), get()) }
     single<FavoriteRepository> { DefaultFavoriteRepository(get(), get()) }
     single<CommentRepository> { DefaultCommentRepository(get(), get()) }
+    single<ReportRepository> { DefaultReportRepository(get(), get()) }
 
     // provider
     single { provideApiRetrofit(get(), get(), get()) }
@@ -90,6 +95,7 @@ val appModule = module {
     single { provideBookmarkService(get()) }
     single { provideFavoriteService(get()) }
     single { provideCommentService(get()) }
+    single { provideReportService(get()) }
 
     single { provideGson() }
     single { provideGsonConverterFactory(get()) }
