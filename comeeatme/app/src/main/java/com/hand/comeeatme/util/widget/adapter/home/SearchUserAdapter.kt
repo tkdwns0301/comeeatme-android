@@ -54,9 +54,8 @@ class SearchUserAdapter(
                 val ft: FragmentTransaction = manager.beginTransaction()
 
                 ft.add(R.id.fg_MainContainer, OtherPageFragment.newInstance(item.id), OtherPageFragment.TAG)
+                ft.addToBackStack(OtherPageFragment.TAG)
                 ft.commitAllowingStateLoss()
-
-
             }
         }
     }

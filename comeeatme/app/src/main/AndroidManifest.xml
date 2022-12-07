@@ -50,12 +50,13 @@
         <activity android:name=".view.main.home.newpost.album.AlbumActivity" />
         <activity android:name=".view.main.home.newpost.crop.CropActivity" />
         <activity android:name=".view.main.home.hashtag.HashTagActivity" />
-        <activity android:name=".view.main.home.search.SearchActivity" />
         <activity android:name=".view.main.user.FollowActivity"/>
         <activity android:name=".view.login.term.TermActivity"/>
         <activity android:name=".view.login.term.Term1Activity"/>
         <activity android:name=".view.login.term.Term2Activity"/>
         <activity android:name=".view.main.user.setting.SettingActivity"/>
         <activity android:name=".view.main.user.setting.MailActivity"/>
+        <activity android:name=".view.main.home.post.report.ReportActivity"/>
+        <activity android:name=".view.main.home.post.report.ReportFinishActivity"/>
     </application>
 </manifest>

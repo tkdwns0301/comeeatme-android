@@ -69,6 +69,7 @@ class FavoriteRestaurantAdapter(
                 val ft: FragmentTransaction = manager.beginTransaction()
 
                 ft.add(R.id.fg_MainContainer, DetailRestaurantFragment.newInstance(item.id), DetailRestaurantFragment.TAG)
+                ft.addToBackStack(DetailRestaurantFragment.TAG)
                 ft.commitAllowingStateLoss()
             }
         }

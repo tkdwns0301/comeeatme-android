@@ -89,6 +89,7 @@ class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
             val ft: FragmentTransaction = manager.beginTransaction()
 
             ft.add(R.id.fg_MainContainer, UserEditFragment.newInstance(viewModel.getProfile(), viewModel.getNickname(), viewModel.getIntroduction()), UserEditFragment.TAG)
+            ft.addToBackStack(UserEditFragment.TAG)
             ft.commitAllowingStateLoss()
         }
 

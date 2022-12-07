@@ -35,7 +35,6 @@ import com.hand.comeeatme.util.widget.adapter.home.ViewPagerAdapter
 import com.hand.comeeatme.view.base.BaseFragment
 import com.hand.comeeatme.view.dialog.MyPostDialog
 import com.hand.comeeatme.view.dialog.OtherPostDialog
-import com.hand.comeeatme.view.main.MainActivity
 import com.hand.comeeatme.view.main.home.newpost.NewPostFragment
 import com.hand.comeeatme.view.main.rank.restaurant.DetailRestaurantFragment
 import com.hand.comeeatme.view.main.user.other.OtherPageFragment
@@ -45,8 +44,7 @@ import kotlin.math.abs
 import kotlin.math.roundToInt
 
 
-class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostBinding>(),
-    MainActivity.onBackPressedListener {
+class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostBinding>() {
     companion object {
         const val POST_ID = "postId"
         const val TAG = "DetailFragment"
@@ -136,7 +134,7 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
         keyboardVisibilityUtil = KeyboardVisibilityUtil(requireActivity().window, onShowKeyboard = {
             Log.e("keyboard", "open")
         }, onHideKeyboard = {
-            if(etComment.text.isEmpty()) {
+            if (etComment.text.isEmpty()) {
                 etComment.hint = "댓글을 입력해주세요."
                 parentId = null
             }
@@ -146,11 +144,25 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
         rvCommentList.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
-        clProfileNameFollow.setOnClickListener {
+        civProfile.setOnClickListener {
             val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
             val ft: FragmentTransaction = manager.beginTransaction()
 
-            ft.add(R.id.fg_MainContainer, OtherPageFragment.newInstance(viewModel.getMemberId()), OtherPageFragment.TAG)
+            ft.add(R.id.fg_MainContainer,
+                OtherPageFragment.newInstance(viewModel.getMemberId()),
+                OtherPageFragment.TAG)
+            ft.addToBackStack(OtherPageFragment.TAG)
+            ft.commitAllowingStateLoss()
+        }
+
+        tvNickName.setOnClickListener {
+            val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
+            val ft: FragmentTransaction = manager.beginTransaction()
+
+            ft.add(R.id.fg_MainContainer,
+                OtherPageFragment.newInstance(viewModel.getMemberId()),
+                OtherPageFragment.TAG)
+            ft.addToBackStack(OtherPageFragment.TAG)
             ft.commitAllowingStateLoss()
         }
 
@@ -181,15 +193,18 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
         toolbarPost.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.toolbar_Menu -> {
-                    if(viewModel.getPostWriterMemberId() == viewModel.getMemberId()) {
+                    if (viewModel.getPostWriterMemberId() == viewModel.getMemberId()) {
                         MyPostDialog(
                             requireContext(),
                             modifyPost = {
                                 // TODO 정보도 같이 넘겨주기 (사진은 안바뀌게)
-                                val manager: FragmentManager = requireActivity().supportFragmentManager
+                                val manager: FragmentManager =
+                                    requireActivity().supportFragmentManager
                                 val ft: FragmentTransaction = manager.beginTransaction()
 
-                                ft.add(R.id.fg_MainContainer, NewPostFragment.newInstance(true, postId), NewPostFragment.TAG)
+                                ft.add(R.id.fg_MainContainer,
+                                    NewPostFragment.newInstance(true, postId),
+                                    NewPostFragment.TAG)
                                 ft.commitAllowingStateLoss()
                             },
                             deletePost = {
@@ -197,7 +212,7 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
                             }
                         ).show()
                     } else {
-                        OtherPostDialog(requireContext()).show()
+                        OtherPostDialog(requireContext(), postId!!).show()
                     }
 
                     true
@@ -220,7 +235,8 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
                 parentId = null
                 etComment.hint = "댓글을 입력해 주세요."
 
-                val inputMethodManager = requireActivity().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                val inputMethodManager =
+                    requireActivity().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                 inputMethodManager.hideSoftInputFromWindow(etComment.windowToken, 0)
             }
         }
@@ -230,13 +246,13 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
             svPost.isRefreshing = false
         }
 
-        etComment.addTextChangedListener(object: TextWatcher{
+        etComment.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if(etComment.text.isEmpty()) {
+                if (etComment.text.isEmpty()) {
                     ibComment.setImageResource(R.drawable.ic_comment_send_unchecked_32)
                 } else {
                     ibComment.setImageResource(R.drawable.ic_comment_send_checked_32)
@@ -256,6 +272,7 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
             ft.add(R.id.fg_MainContainer,
                 DetailRestaurantFragment.newInstance(viewModel.getRestaurantId()!!),
                 DetailRestaurantFragment.TAG)
+            ft.addToBackStack(DetailRestaurantFragment.TAG)
             ft.commitAllowingStateLoss()
         }
 
@@ -274,7 +291,8 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
 
                 binding.slPost.scrollToView(binding.etComment)
 
-                val inputMethodManager = requireActivity().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                val inputMethodManager =
+                    requireActivity().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                 inputMethodManager.showSoftInput(binding.etComment, 0)
             },
             modifyComment = {
@@ -330,11 +348,11 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
 
 
         if (data.member.imageUrl.isNullOrEmpty()) {
-            cvProfile.setImageDrawable(requireContext().getDrawable(R.drawable.food1))
+            civProfile.setImageDrawable(requireContext().getDrawable(R.drawable.food1))
         } else {
             Glide.with(requireContext())
                 .load(data.member.imageUrl)
-                .into(cvProfile)
+                .into(civProfile)
         }
 
         tvNickName.text = data.member.nickname
@@ -452,10 +470,6 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
         )
             .roundToInt()
 
-
-    override fun onBackPressed() {
-        requireActivity().supportFragmentManager.beginTransaction().remove(this).commit()
-    }
 
     override fun onDestroy() {
         keyboardVisibilityUtil.detachKeyboardListeners()

@@ -7,9 +7,11 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.WindowManager
 import com.hand.comeeatme.databinding.DialogOtherPostBinding
+import com.hand.comeeatme.view.main.home.post.report.ReportActivity
 
 class OtherPostDialog(
-    context: Context
+    context: Context,
+    private val postId: Long,
 ): Dialog(context) {
     private lateinit var binding: DialogOtherPostBinding
 
@@ -44,7 +46,7 @@ class OtherPostDialog(
         }
 
         llReport.setOnClickListener {
-            // TODO 신고하기
+            context.startActivity(ReportActivity.newIntent(context, postId))
             dismiss()
         }
     }

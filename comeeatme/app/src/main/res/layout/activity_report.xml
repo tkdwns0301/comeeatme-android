@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/toolbar_Report"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        app:layout_constraintBottom_toTopOf="@id/tv_ReportReasons"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/ib_Prev"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@null"
+            android:src="@drawable/ic_prev_basic_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@id/tv_Title"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.1" />
+
+        <TextView
+            android:id="@+id/tv_Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="신고하기"
+            android:textColor="@color/basic"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tv_Finish"
+            app:layout_constraintStart_toEndOf="@id/ib_Prev"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_Finish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="완료"
+            android:textColor="@color/basic"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_Title"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/tv_ReportReasons"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="신고사유"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:textColor="@color/basic"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/sv_ReportReasons"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_Report" />
+
+    <ScrollView
+        android:id="@+id/sv_ReportReasons"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_ReportReasons">
+
+        <RadioGroup
+            android:id="@+id/rg_ReportReasons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:id="@+id/rb_Spam"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_report_radio_button"
+                android:button="@null"
+                android:drawableEnd="@drawable/selector_check"
+                android:paddingStart="32dp"
+                android:paddingEnd="16dp"
+                android:text="스팸/홍보글 입니다."
+                android:textColor="@color/basic"
+                android:textSize="15sp" />
+
+            <RadioButton
+                android:id="@+id/rb_HateSpeech"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_report_radio_button"
+                android:button="@null"
+                android:drawableEnd="@drawable/selector_check"
+                android:paddingStart="32dp"
+                android:paddingEnd="16dp"
+                android:text="혐오발언 또는 상징을 포함하고 있습니다."
+                android:textColor="@color/basic"
+                android:textSize="15sp" />
+            <RadioButton
+                android:id="@+id/rb_FalseInformation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_report_radio_button"
+                android:button="@null"
+                android:drawableEnd="@drawable/selector_check"
+                android:paddingStart="32dp"
+                android:paddingEnd="16dp"
+                android:text="거짓정보를 포함하고 있습니다."
+                android:textColor="@color/basic"
+                android:textSize="15sp" />
+            <RadioButton
+                android:id="@+id/rb_SwearWord"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_report_radio_button"
+                android:button="@null"
+                android:drawableEnd="@drawable/selector_check"
+                android:paddingStart="32dp"
+                android:paddingEnd="16dp"
+                android:text="욕설/인신공격을 포함하고 있습니다."
+                android:textColor="@color/basic"
+                android:textSize="15sp" />
+            <RadioButton
+                android:id="@+id/rb_Duplicate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_report_radio_button"
+                android:button="@null"
+                android:drawableEnd="@drawable/selector_check"
+                android:paddingStart="32dp"
+                android:paddingEnd="16dp"
+                android:text="같은 내용을 도배하고 있습니다."
+                android:textColor="@color/basic"
+                android:textSize="15sp" />
+            <RadioButton
+                android:id="@+id/rb_Obscene"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_report_radio_button"
+                android:button="@null"
+                android:drawableEnd="@drawable/selector_check"
+                android:paddingStart="32dp"
+                android:paddingEnd="16dp"
+                android:text="음란/선정적인 글 입니다."
+                android:textColor="@color/basic"
+                android:textSize="15sp" />
+
+
+        </RadioGroup>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

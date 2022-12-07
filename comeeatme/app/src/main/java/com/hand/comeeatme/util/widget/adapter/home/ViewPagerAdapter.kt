@@ -45,6 +45,7 @@ class ViewPagerAdapter(
                 val ft: FragmentTransaction = manager.beginTransaction()
 
                 ft.add(R.id.fg_MainContainer, DetailPostFragment.newInstance(postId), DetailPostFragment.TAG)
+                ft.addToBackStack(DetailPostFragment.TAG)
                 ft.commitAllowingStateLoss()
             }
         }

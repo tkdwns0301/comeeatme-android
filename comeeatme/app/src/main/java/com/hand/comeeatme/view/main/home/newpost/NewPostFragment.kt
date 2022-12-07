@@ -35,15 +35,12 @@ import com.hand.comeeatme.databinding.FragmentNewpostBinding
 import com.hand.comeeatme.util.widget.adapter.NewPostPhotosAdapter
 import com.hand.comeeatme.util.widget.adapter.SearchNewPostRestaurantAdapter
 import com.hand.comeeatme.view.base.BaseFragment
-import com.hand.comeeatme.view.main.MainActivity
 import com.hand.comeeatme.view.main.home.newpost.album.AlbumActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import kotlin.math.roundToInt
 
-class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>(),
-    MainActivity.onBackPressedListener {
-
+class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>() {
     companion object {
         const val IS_MODIFY = "isModify"
         const val POST_ID = "postId"
@@ -503,8 +500,5 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
         )
             .roundToInt()
 
-    override fun onBackPressed() {
-        requireActivity().supportFragmentManager.beginTransaction().remove(this).commit()
-    }
 }
 

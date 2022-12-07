@@ -44,6 +44,7 @@ class UserGridAdapter(
                 val ft: FragmentTransaction = manager.beginTransaction()
 
                 ft.add(R.id.fg_MainContainer, DetailPostFragment.newInstance(item.id), DetailPostFragment.TAG)
+                ft.addToBackStack(DetailPostFragment.TAG)
                 ft.commitAllowingStateLoss()
             }
         }

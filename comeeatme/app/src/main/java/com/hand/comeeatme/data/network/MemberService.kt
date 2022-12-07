@@ -30,6 +30,12 @@ interface MemberService {
         @Body modifyProfileRequest: MemberModifyProfileRequest
     ): Response<MemberModifyProfileResponse>
 
+    // 회원 이미지 삭제
+    @DELETE("/v1/member/image")
+    suspend fun deleteMemberProfile(
+        @Header("Authorization") Authorization: String,
+    ): Response<MemberModifyProfileResponse>
+
     // 회원 리스트 조회
     @GET("/v1/members")
     suspend fun getSearchNickname(

@@ -68,9 +68,8 @@ class CommunityAdapter(
         private val imageCount: ImageView = binding.ivNumber
         private val location: TextView = binding.tvLocation
 
-        private val name = binding.tvNickName
+        private val nickname = binding.tvNickName
         private val profile = binding.cvProfile
-        private val userContainer = binding.clProfileNameFollow
         private val content = binding.tvContent
         private val commentCount = binding.tvComment
         private val likeCount = binding.tvLike
@@ -116,7 +115,7 @@ class CommunityAdapter(
             }
 
             location.text = item.restaurant.name
-            name.text = item.member.nickname
+            nickname.text = item.member.nickname
 
             if (item.member.imageUrl.isNullOrEmpty()) {
                 profile.setImageDrawable(context.getDrawable(R.drawable.food1))
@@ -137,27 +136,28 @@ class CommunityAdapter(
                 val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
                 val ft: FragmentTransaction = manager.beginTransaction()
 
-                ft.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_out, R.anim.fade_in)
-                    .add(R.id.fg_MainContainer, DetailPostFragment.newInstance(item.id), DetailPostFragment.TAG)
+
+                ft.add(R.id.fg_MainContainer, DetailPostFragment.newInstance(item.id), DetailPostFragment.TAG)
                 ft.addToBackStack(DetailPostFragment.TAG).commitAllowingStateLoss()
 
-//                ft.add(R.id.fg_MainContainer, DetailPostFragment.newInstance(item.id), DetailPostFragment.TAG)
-//                ft.commitAllowingStateLoss()
             }
 
-            userContainer.setOnClickListener {
-                val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
-                val ft: FragmentTransaction = manager.beginTransaction()
-
-                ft.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
-                    .add(R.id.fg_MainContainer, OtherPageFragment.newInstance(item.member.id), OtherPageFragment.TAG)
-
-                ft.addToBackStack(OtherPageFragment.TAG).commitAllowingStateLoss()
-
-//                ft.add(R.id.fg_MainContainer, OtherPageFragment.newInstance(item.member.id), OtherPageFragment.TAG)
-//                ft.commitAllowingStateLoss()
+            nickname.setOnClickListener {
+                toOtherFragment(context, item)
             }
 
+            profile.setOnClickListener {
+                toOtherFragment(context, item)
+            }
+
+        }
+
+        private fun toOtherFragment(context: Context, item: Content) {
+            val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
+            val ft: FragmentTransaction = manager.beginTransaction()
+
+            ft.add(R.id.fg_MainContainer, OtherPageFragment.newInstance(item.member.id), OtherPageFragment.TAG)
+            ft.addToBackStack(OtherPageFragment.TAG).commitAllowingStateLoss()
         }
     }
 }
