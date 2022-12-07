@@ -2,6 +2,7 @@ package com.hand.comeeatme.view.main.rank
 
 import android.annotation.SuppressLint
 import androidx.annotation.StringRes
+import com.hand.comeeatme.data.request.code.AddressCodeResponse
 import com.hand.comeeatme.data.response.restaurant.RestaurantsRankResponse
 
 sealed class RankState {
@@ -17,6 +18,11 @@ sealed class RankState {
         val depth2: String,
         val addressCode: String,
     ) : RankState()
+
+    data class AddressCodeSuccess(
+        val response: AddressCodeResponse
+    ): RankState()
+
 
     @SuppressLint("SupportAnnotationUsage")
     data class Error(

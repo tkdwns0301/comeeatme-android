@@ -3,6 +3,8 @@ package com.hand.comeeatme.di
 import com.hand.comeeatme.data.preference.AppPreferenceManager
 import com.hand.comeeatme.data.repository.bookmark.BookmarkRepository
 import com.hand.comeeatme.data.repository.bookmark.DefaultBookmarkRepository
+import com.hand.comeeatme.data.repository.code.CodeRepository
+import com.hand.comeeatme.data.repository.code.DefaultCodeRepository
 import com.hand.comeeatme.data.repository.comment.CommentRepository
 import com.hand.comeeatme.data.repository.comment.DefaultCommentRepository
 import com.hand.comeeatme.data.repository.favorite.DefaultFavoriteRepository
@@ -24,6 +26,7 @@ import com.hand.comeeatme.data.repository.report.ReportRepository
 import com.hand.comeeatme.data.repository.restaurant.DefaultRestaurantRepository
 import com.hand.comeeatme.data.repository.restaurant.RestaurantRepository
 import com.hand.comeeatme.util.event.MenuChangeEventBus
+import com.hand.comeeatme.view.main.rank.region.RegionViewModel
 import com.hand.comeeatme.view.login.LogInViewModel
 import com.hand.comeeatme.view.login.term.TermViewModel
 import com.hand.comeeatme.view.main.bookmark.BookmarkViewModel
@@ -75,7 +78,8 @@ val appModule = module {
     viewModel { TermViewModel() }
     viewModel { SettingViewModel(get()) }
     viewModel { ReportViewModel(get(), get()) }
-    viewModel { RankViewModel(get(), get(), get()) }
+    viewModel { RankViewModel(get(), get(), get(), get(), get()) }
+    viewModel { RegionViewModel(get(), get()) }
 
     // repository
     single<PostRepository> { DefaultPostRepository(get(), get()) }
@@ -89,25 +93,27 @@ val appModule = module {
     single<CommentRepository> { DefaultCommentRepository(get(), get()) }
     single<ReportRepository> { DefaultReportRepository(get(), get()) }
     single<KakaoRepository> { DefaultKakaoRepository(get(), get()) }
+    single<CodeRepository> { DefaultCodeRepository(get(), get())}
 
     // provider
     single(named("comeeatme")) { provideApiRetrofit(get(), get(), get()) }
     single(named("kakao")) { provideKakaoApiRetrofit(get(), get(), get()) }
 
     // ComeEatMe
-    single { provideOAuthApiService(get(qualifier= named("comeeatme"))) }
-    single { providePostApiService(get(qualifier= named("comeeatme"))) }
-    single { provideRestaurantService(get(qualifier= named("comeeatme"))) }
-    single { provideMemberService(get(qualifier= named("comeeatme"))) }
-    single { provideImageService(get(qualifier= named("comeeatme"))) }
-    single { provideLikeService(get(qualifier= named("comeeatme"))) }
-    single { provideBookmarkService(get(qualifier= named("comeeatme"))) }
-    single { provideFavoriteService(get(qualifier= named("comeeatme"))) }
-    single { provideCommentService(get(qualifier= named("comeeatme"))) }
-    single { provideReportService(get(qualifier= named("comeeatme"))) }
+    single { provideOAuthApiService(get(qualifier = named("comeeatme"))) }
+    single { providePostApiService(get(qualifier = named("comeeatme"))) }
+    single { provideRestaurantService(get(qualifier = named("comeeatme"))) }
+    single { provideMemberService(get(qualifier = named("comeeatme"))) }
+    single { provideImageService(get(qualifier = named("comeeatme"))) }
+    single { provideLikeService(get(qualifier = named("comeeatme"))) }
+    single { provideBookmarkService(get(qualifier = named("comeeatme"))) }
+    single { provideFavoriteService(get(qualifier = named("comeeatme"))) }
+    single { provideCommentService(get(qualifier = named("comeeatme"))) }
+    single { provideReportService(get(qualifier = named("comeeatme"))) }
+    single { provideCodeService(get(qualifier = named("comeeatme"))) }
 
     // Kakao
-    single { provideKakaoService(get(qualifier= named("kakao"))) }
+    single { provideKakaoService(get(qualifier = named("kakao"))) }
 
     single { provideGson() }
     single { provideGsonConverterFactory(get()) }

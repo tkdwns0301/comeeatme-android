@@ -3,18 +3,21 @@ package com.hand.comeeatme.view.main.rank
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
 import android.os.Looper
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.*
 import com.hand.comeeatme.data.response.restaurant.RestaurantsRankContent
 import com.hand.comeeatme.databinding.FragmentRankBinding
 import com.hand.comeeatme.util.widget.adapter.rank.RestaurantsRankAdapter
 import com.hand.comeeatme.view.base.BaseFragment
+import com.hand.comeeatme.view.main.rank.region.RegionActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -74,6 +77,11 @@ class RankFragment : BaseFragment<RankViewModel, FragmentRankBinding>() {
             refresh()
         }
 
+        tvLocation.setOnClickListener {
+            Log.e("Inform", "${viewModel.getDepth1()} ${viewModel.getDepth2()}")
+            startActivityForResult(RegionActivity.newIntent(requireContext(), viewModel.getDepth1(), viewModel.getDepth2(), viewModel.getAddCode()), 100)
+        }
+
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -85,7 +93,7 @@ class RankFragment : BaseFragment<RankViewModel, FragmentRankBinding>() {
                 viewModel.favoriteRestaurants(it)
             },
             unFavoriteRestaurant = {
-                viewModel.unFavoriteRestuarants(it)
+                viewModel.unFavoriteRestaurants(it)
             },
             viewModel.getDepth1(),
             viewModel.getDepth2(),
@@ -171,6 +179,14 @@ class RankFragment : BaseFragment<RankViewModel, FragmentRankBinding>() {
                 Toast.makeText(requireContext(), "권한이 없어 해당 기능을 실행할 수 없습니다.", Toast.LENGTH_SHORT)
                     .show()
             }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(resultCode == AppCompatActivity.RESULT_OK && requestCode == 100) {
+            viewModel.setDepth1Depth2AddressCode(data!!.getStringExtra(RegionActivity.DEPTH1) as String, data!!.getStringExtra(RegionActivity.DEPTH2) as String, data!!.getStringExtra(RegionActivity.ADDRESS_CODE) as String)
         }
     }
 

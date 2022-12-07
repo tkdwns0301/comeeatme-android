@@ -58,5 +58,6 @@
         <activity android:name=".view.main.user.setting.MailActivity"/>
         <activity android:name=".view.main.home.post.report.ReportActivity"/>
         <activity android:name=".view.main.home.post.report.ReportFinishActivity"/>
+        <activity android:name=".view.main.rank.region.RegionActivity"/>
     </application>
 </manifest>

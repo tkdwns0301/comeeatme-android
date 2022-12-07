@@ -51,6 +51,10 @@ fun provideReportService(retrofit: Retrofit): ReportService {
     return retrofit.create(ReportService::class.java)
 }
 
+fun provideCodeService(retrofit: Retrofit): CodeService {
+    return retrofit.create(CodeService::class.java)
+}
+
 fun provideKakaoService(retrofit: Retrofit): KakaoService {
     return retrofit.create(KakaoService::class.java)
 }

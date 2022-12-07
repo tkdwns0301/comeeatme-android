@@ -3,47 +3,54 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="20dp"
     android:background="@drawable/background_dialog">
 
-    <TextView
-        android:id="@+id/tv_Title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="지역 선택"
-        android:textColor="@color/basic"
-        android:textSize="16sp"
-        android:textStyle="bold"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_Region"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/cl_Content"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:navigationIcon="@drawable/ic_prev_basic_24">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="지역선택"
+            android:textSize="20sp"
+            android:textColor="@color/basic"
+            android:textStyle="bold"
+            android:layout_gravity="center"/>
+    </androidx.appcompat.widget.Toolbar>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_Content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="10dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_Title">
+        app:layout_constraintTop_toBottomOf="@id/toolbar_Region">
 
 
         <ScrollView
-            android:id="@+id/sv_Sido"
+            android:id="@+id/sv_Depth1"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/sv_Goo"
+            app:layout_constraintEnd_toStartOf="@id/sv_Depth2"
+            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.4"
-            app:layout_constraintHorizontal_chainStyle="packed">
+            app:layout_constraintWidth_percent="0.3">
 
             <RadioGroup
-                android:id="@+id/rg_Sido"
+                android:id="@+id/rg_Depth1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -52,17 +59,18 @@
         </ScrollView>
 
         <ScrollView
-            android:id="@+id/sv_Goo"
+            android:layout_marginStart="5dp"
+            android:id="@+id/sv_Depth2"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintWidth_percent="0.4"
-            app:layout_constraintStart_toEndOf="@id/sv_Sido"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/sv_Depth1"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintWidth_percent="0.5">
 
             <RadioGroup
-                android:id="@+id/rg_Goo"
+                android:id="@+id/rg_Depth2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
