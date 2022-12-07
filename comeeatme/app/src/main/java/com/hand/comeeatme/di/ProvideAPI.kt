@@ -51,6 +51,9 @@ fun provideReportService(retrofit: Retrofit): ReportService {
     return retrofit.create(ReportService::class.java)
 }
 
+fun provideKakaoService(retrofit: Retrofit): KakaoService {
+    return retrofit.create(KakaoService::class.java)
+}
 
 fun provideApiRetrofit(
     okHttpClient: OkHttpClient,
@@ -60,6 +63,20 @@ fun provideApiRetrofit(
 
     return Retrofit.Builder()
         .baseUrl(BuildConfig.BASE_URL)
+        .addConverterFactory(scalarsConverterFactory)
+        .addConverterFactory(gsonConverterFactory)
+        .client(okHttpClient)
+        .build()
+}
+
+fun provideKakaoApiRetrofit(
+    okHttpClient: OkHttpClient,
+    gsonConverterFactory: GsonConverterFactory,
+    scalarsConverterFactory: ScalarsConverterFactory,
+): Retrofit {
+
+    return Retrofit.Builder()
+        .baseUrl(BuildConfig.KAKAO_URL)
         .addConverterFactory(scalarsConverterFactory)
         .addConverterFactory(gsonConverterFactory)
         .client(okHttpClient)

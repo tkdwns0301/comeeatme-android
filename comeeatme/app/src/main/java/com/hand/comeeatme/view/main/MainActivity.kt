@@ -20,17 +20,10 @@ import com.hand.comeeatme.util.event.MenuChangeEventBus
 import com.hand.comeeatme.view.main.bookmark.BookmarkFragment
 import com.hand.comeeatme.view.main.home.HomeFragment
 import com.hand.comeeatme.view.main.home.newpost.NewPostFragment
+import com.hand.comeeatme.view.main.rank.RankFragment
 import com.hand.comeeatme.view.main.user.UserFragment
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
-
-
-private const val TAG_HOME = "fm_Home"
-private const val TAG_MAP = "fm_Map"
-private const val TAG_POST = "fm_Post"
-private const val TAG_NEWPOST = "fm_NewPost"
-private const val TAG_BOOKMARK = "fm_Bookmark"
-private const val TAG_USER = "fm_User"
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
     companion object {
@@ -114,19 +107,19 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.fm_Home -> {
-                setFragment(TAG_HOME, HomeFragment())
+                setFragment(HomeFragment.TAG, HomeFragment.newInstance())
                 true
             }
-//            R.id.fm_Map -> {
-//                setFragment(TAG_MAP, RankFragment())
-//                true
-//            }
+            R.id.fm_Map -> {
+                setFragment(RankFragment.TAG, RankFragment.newInstance())
+                true
+            }
             R.id.fm_Bookmark -> {
-                setFragment(TAG_BOOKMARK, BookmarkFragment())
+                setFragment(BookmarkFragment.TAG, BookmarkFragment.newInstance())
                 true
             }
             R.id.fm_User -> {
-                setFragment(TAG_USER, UserFragment())
+                setFragment(UserFragment.TAG, UserFragment.newInstance())
                 true
             }
             else -> true

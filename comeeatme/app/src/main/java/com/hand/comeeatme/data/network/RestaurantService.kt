@@ -1,6 +1,7 @@
 package com.hand.comeeatme.data.network
 
 import com.hand.comeeatme.data.response.restaurant.DetailRestaurantResponse
+import com.hand.comeeatme.data.response.restaurant.RestaurantsRankResponse
 import com.hand.comeeatme.data.response.restaurant.SimpleRestaurantResponse
 import retrofit2.Response
 import retrofit2.http.GET
@@ -20,6 +21,17 @@ interface RestaurantService {
     ): Response<SimpleRestaurantResponse>
 
     // 음식점 리스트 조회 (좌표)
+
+    // 음식점 정렬된 리스트 조회 (랭킹)
+    @GET("/v1/restaurants/order")
+    suspend fun getRestaurantsRank(
+        @Header("Authorization") Authorization: String,
+        @Query("page") page: Long?,
+        @Query("size") size: Long?,
+        @Query("addressCode") addressCode: String,
+        @Query("perImageNum") perImageNum: Long,
+        @Query("sort") sort: String,
+    ): Response<RestaurantsRankResponse>
 
     // 음식점 상세 조회
     @GET("/v1/restaurants/{restaurantId}")

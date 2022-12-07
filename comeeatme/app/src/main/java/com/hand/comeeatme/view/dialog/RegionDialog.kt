@@ -354,6 +354,9 @@ class RegionDialog(
 
         radioButton.apply {
             text = region
+            if(region == s) {
+                isChecked = true
+            }
 
             if (isSido) {
                 setOnCheckedChangeListener {_, isChecked ->

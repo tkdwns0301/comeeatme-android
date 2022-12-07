@@ -73,12 +73,13 @@
                 android:textColor="@color/basic"/>
 
             <TextView
-                android:id="@+id/tv_Location"
+                android:id="@+id/tv_Address"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/tv_RestaurantName"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/tv_Review"
                 tools:text="서울 송파구"
                 android:textSize="14sp"
                 android:textColor="@color/basic"
@@ -88,7 +89,7 @@
                 android:id="@+id/tv_Review"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/tv_Location"
+                app:layout_constraintTop_toBottomOf="@id/tv_Address"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:text="리뷰 365개"
@@ -116,7 +117,7 @@
             app:layout_constraintEnd_toEndOf="parent">
 
             <ToggleButton
-                android:id="@+id/tb_Star"
+                android:id="@+id/tb_Favorite"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:background="@drawable/selector_star"

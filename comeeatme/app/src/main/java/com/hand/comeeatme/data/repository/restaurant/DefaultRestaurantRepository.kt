@@ -2,6 +2,7 @@ package com.hand.comeeatme.data.repository.restaurant
 
 import com.hand.comeeatme.data.network.RestaurantService
 import com.hand.comeeatme.data.response.restaurant.DetailRestaurantResponse
+import com.hand.comeeatme.data.response.restaurant.RestaurantsRankResponse
 import com.hand.comeeatme.data.response.restaurant.SimpleRestaurantResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -27,6 +28,34 @@ class DefaultRestaurantRepository(
 
         if (response.isSuccessful) {
             response.body()!!
+        } else {
+            null
+        }
+    }
+
+    override suspend fun getRestaurantsRank(
+        accessToken: String,
+        page: Long?,
+        size: Long?,
+        addressCode: String,
+        perImageNum: Long,
+        sort: String
+    ): RestaurantsRankResponse? = withContext(ioDispatcher) {
+        val response = restaurantService.getRestaurantsRank(
+            Authorization = "Bearer $accessToken",
+            page = page,
+            size = size,
+            addressCode = addressCode,
+            perImageNum = perImageNum,
+            sort = sort,
+        )
+
+        if(response.isSuccessful) {
+            if(!response.body()!!.success) {
+                null
+            } else {
+                response.body()!!
+            }
         } else {
             null
         }
