@@ -37,6 +37,7 @@ class RankFragment : BaseFragment<RankViewModel, FragmentRankBinding>() {
 
     private lateinit var adapter: RestaurantsRankAdapter
 
+    @SuppressLint("SetTextI18n")
     override fun observeData() {
         viewModel.rankStateLiveDate.observe(viewLifecycleOwner) {
             when (it) {
@@ -56,7 +57,8 @@ class RankFragment : BaseFragment<RankViewModel, FragmentRankBinding>() {
 
                 is RankState.CurrentAddressSuccess -> {
                     val address = it.depth1 + " " + it.depth2
-                    binding.tvLocation.text = address
+                    binding.tvDepth1.text = it.depth1
+                    binding.tvDepth2.text = "${it.depth2} "
 
                     viewModel.getRestaurantsRank(0, 10, it.addressCode, 1, "postCount,desc")
                 }
@@ -77,8 +79,7 @@ class RankFragment : BaseFragment<RankViewModel, FragmentRankBinding>() {
             refresh()
         }
 
-        tvLocation.setOnClickListener {
-            Log.e("Inform", "${viewModel.getDepth1()} ${viewModel.getDepth2()}")
+        clLocation.setOnClickListener {
             startActivityForResult(RegionActivity.newIntent(requireContext(), viewModel.getDepth1(), viewModel.getDepth2(), viewModel.getAddCode()), 100)
         }
 

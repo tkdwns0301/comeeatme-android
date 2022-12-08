@@ -3,6 +3,7 @@ package com.hand.comeeatme.view.main.rank.restaurant
 import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 import com.hand.comeeatme.data.response.image.RestaurantImageResponse
+import com.hand.comeeatme.data.response.kakao.KakaoCoordResponse
 import com.hand.comeeatme.data.response.post.RestaurantPostResponse
 import com.hand.comeeatme.data.response.restaurant.DetailRestaurantResponse
 
@@ -25,6 +26,10 @@ sealed class DetailRestaurantState {
 
     object FavoriteSuccess: DetailRestaurantState()
     object UnFavoriteSuccess: DetailRestaurantState()
+
+    data class CoordSuccess(
+        val response: KakaoCoordResponse
+    ): DetailRestaurantState()
 
     @SuppressLint("SupportAnnotationUsage")
     data class Error(

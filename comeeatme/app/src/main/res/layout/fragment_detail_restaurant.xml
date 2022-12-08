@@ -31,7 +31,10 @@
             android:id="@+id/sl_Content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:fillViewport="true"
+            android:orientation="vertical"
+            android:paddingBottom="80dp"
+            android:clipToPadding="true">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -52,159 +55,221 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:scaleType="centerCrop"
-                    tools:src="@drawable/food1"
-                    app:layout_constraintBottom_toTopOf="@id/cl_Information"
-                    app:layout_constraintDimensionRatio="379:242"
+                    app:layout_constraintBottom_toTopOf="@id/cl_Content"
+                    app:layout_constraintDimensionRatio="375:232"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/view" />
+                    app:layout_constraintTop_toBottomOf="@id/view"
+                    tools:src="@drawable/default_image" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_Information"
+                    android:id="@+id/cl_Content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingStart="16dp"
                     android:paddingTop="10dp"
-                    android:paddingEnd="16dp"
-                    app:layout_constraintBottom_toTopOf="@id/divider"
+                    app:layout_constraintBottom_toTopOf="@id/fl_Tag"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/iv_Image">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/cl_NameAndBookmark"
-                        android:layout_width="match_parent"
+                        android:id="@+id/cl_InformAndAddress"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        app:layout_constraintBottom_toTopOf="@id/tv_Location"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        android:paddingEnd="10dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/tb_Favorite"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
 
-                        <TextView
-                            android:id="@+id/tv_Name"
-                            android:layout_width="wrap_content"
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/cl_Inform"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            tools:text="장미닭발"
-                            android:textColor="@color/basic"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@id/tv_Keyword"
+                            android:paddingStart="16dp"
+                            app:layout_constraintBottom_toTopOf="@id/cl_Address"
+                            app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toTopOf="parent">
 
-                        <TextView
-                            android:visibility="gone"
-                            android:id="@+id/tv_Keyword"
-                            android:layout_width="wrap_content"
+                            <TextView
+                                android:id="@+id/tv_RestaurantName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/basic"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toStartOf="@id/iv_Favorite"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                tools:text="장미닭발" />
+
+                            <ImageView
+                                android:id="@+id/iv_Favorite"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:layout_marginStart="10dp"
+                                android:background="@null"
+                                android:src="@drawable/ic_star_13"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintEnd_toStartOf="@id/tv_FavoriteCnt"
+                                app:layout_constraintStart_toEndOf="@id/tv_RestaurantName"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintWidth_percent="0.05" />
+
+                            <TextView
+                                android:id="@+id/tv_FavoriteCnt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="5dp"
+                                android:textColor="@color/basic"
+                                android:textSize="14sp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toStartOf="@id/view4"
+                                app:layout_constraintStart_toEndOf="@id/iv_Favorite"
+                                app:layout_constraintTop_toTopOf="parent"
+                                tools:text="23" />
+
+                            <View
+                                android:id="@+id/view4"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toEndOf="@id/tv_FavoriteCnt"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/cl_Address"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="5dp"
-                            tools:text="닭발"
-                            android:textColor="#686868"
-                            android:textSize="12sp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@id/iv_Bookmark"
-                            app:layout_constraintStart_toEndOf="@id/tv_Name"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <ImageView
-                            android:id="@+id/iv_Bookmark"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:background="@null"
-                            android:src="@drawable/ic_star_13"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@id/tv_FavoriteCnt"
-                            app:layout_constraintStart_toEndOf="@id/tv_Keyword"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <TextView
-                            android:id="@+id/tv_FavoriteCnt"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="5dp"
-                            tools:text="23"
-                            android:textColor="@color/basic"
-                            android:textSize="13sp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@id/tv_Sales"
-                            app:layout_constraintStart_toEndOf="@id/iv_Bookmark"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <TextView
-                            android:id="@+id/tv_Sales"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="5dp"
-                            tools:text="영업중"
-                            app:layout_constraintEnd_toStartOf="@id/tv_FavoriteCnt"
-                            android:visibility="gone"
-                            android:textColor="#E84646"
-                            android:textSize="13sp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toEndOf="@id/tv_FavoriteCnt"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <ToggleButton
-                            android:id="@+id/tb_Favorite"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            app:layout_constraintStart_toEndOf="@id/tv_Sales"
-                            android:background="@drawable/selector_star"
-                            android:textOff=""
-                            android:textOn=""
+                            android:layout_marginTop="12dp"
+                            android:paddingStart="16dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/cl_Inform">
+
+                            <ImageView
+                                android:id="@+id/iv_Location"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:background="@null"
+                                android:src="@drawable/ic_location_24"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintEnd_toStartOf="@id/tv_Location"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintWidth_percent="0.07" />
+
+                            <TextView
+                                android:id="@+id/tv_Location"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="3dp"
+                                android:breakStrategy="simple"
+                                android:gravity="center_vertical"
+                                android:textColor="@color/basic"
+                                android:textSize="13sp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toStartOf="@id/iv_Copy"
+                                app:layout_constraintStart_toEndOf="@id/iv_Location"
+                                app:layout_constraintTop_toTopOf="parent"
+                                tools:text="동해물과백두산이마르고닳도록하느님이보우하사우리나라만세무궁화삼천리화려강산대한사람" />
+
+                            <ImageView
+                                android:id="@+id/iv_Copy"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:layout_marginStart="4dp"
+                                android:background="@null"
+                                android:src="@drawable/ic_copy_16"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintStart_toEndOf="@id/tv_Location"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintWidth_percent="0.06" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <TextView
-                        android:id="@+id/tv_Location"
+                    <ToggleButton
+                        android:id="@+id/tb_Favorite"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        tools:text="서울시 강동구 가나다라마사"
-                        android:textColor="@color/basic"
-                        android:textSize="13sp"
-                        app:drawableStartCompat="@drawable/ic_location_24"
-                        app:layout_constraintBottom_toTopOf="@id/tv_Comment"
+                        android:layout_height="0dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@drawable/selector_star"
+                        android:textOff=""
+                        android:textOn=""
+                        app:layout_constraintDimensionRatio="1:1"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/cl_NameAndBookmark" />
+                        app:layout_constraintStart_toEndOf="@id/cl_InformAndAddress"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintWidth_percent="0.1" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <com.google.android.flexbox.FlexboxLayout
+                    android:id="@+id/fl_Tag"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:layout_marginTop="17dp"
+                    app:layout_constraintBottom_toTopOf="@id/KakaoMapView"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/cl_Content" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/KakaoMapView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="16dp"
+                    android:nestedScrollingEnabled="true"
+                    app:layout_constraintBottom_toTopOf="@id/cl_OpenKakaoMap"
+                    app:layout_constraintDimensionRatio="375:207"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/fl_Tag" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_OpenKakaoMap"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/background_open_map"
+                    android:paddingTop="13dp"
+                    android:paddingBottom="13dp"
+                    app:layout_constraintBottom_toTopOf="@id/divider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/KakaoMapView">
 
                     <TextView
-                        android:visibility="gone"
-                        android:id="@+id/tv_Comment"
-                        android:layout_width="0dp"
+                        android:id="@+id/tv_OpenKakaoMap"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        tools:text="성동구 유일무이한 닭발 맛집"
+                        android:text="지도 앱 열기"
                         android:textColor="@color/basic"
-                        android:textSize="13sp"
-                        app:drawableStartCompat="@drawable/ic_comment_rounding_24"
-                        app:layout_constraintBottom_toTopOf="@id/fl_Tag"
+                        android:textSize="16sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tv_Location" />
-
-                    <com.google.android.flexbox.FlexboxLayout
-                        android:id="@+id/fl_Tag"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tv_Comment" />
+                        app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <View
                     android:id="@+id/divider"
                     style="@style/Divider.Horizontal"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="20dp"
                     app:layout_constraintBottom_toTopOf="@id/cl_IncludingPost"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/cl_Information" />
+                    app:layout_constraintTop_toBottomOf="@id/cl_OpenKakaoMap" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cl_IncludingPost"
@@ -217,10 +282,10 @@
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/cl_TitleAndSort"
-                        android:paddingStart="16dp"
-                        android:paddingEnd="16dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
                         app:layout_constraintBottom_toTopOf="@id/rv_IncludingContent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -282,10 +347,7 @@
                         app:layout_constraintTop_toBottomOf="@id/cl_TitleAndSort"
                         tools:listitem="@layout/layout_restaurant_detail_item" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

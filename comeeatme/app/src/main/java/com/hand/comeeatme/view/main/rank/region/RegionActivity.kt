@@ -92,8 +92,14 @@ class RegionActivity: BaseActivity<RegionViewModel, ActivityRegionBinding>() {
     }
 
     private fun RadioGroup.addItem(region: String, addressCode: String, isDepth1: Boolean) {
-        val radioButton: RadioButton = LayoutInflater.from(context)
-            .inflate(R.layout.layout_radio_button_custom, null) as RadioButton
+
+        val radioButton = if(isDepth1) {
+            LayoutInflater.from(context)
+                .inflate(R.layout.layout_radio_button_custom, null) as RadioButton
+        } else {
+            LayoutInflater.from(context)
+                .inflate(R.layout.layout_radio_button_custom2, null) as RadioButton
+        }
 
         radioButton.apply {
             text = region

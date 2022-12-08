@@ -26,7 +26,6 @@ import com.hand.comeeatme.data.repository.report.ReportRepository
 import com.hand.comeeatme.data.repository.restaurant.DefaultRestaurantRepository
 import com.hand.comeeatme.data.repository.restaurant.RestaurantRepository
 import com.hand.comeeatme.util.event.MenuChangeEventBus
-import com.hand.comeeatme.view.main.rank.region.RegionViewModel
 import com.hand.comeeatme.view.login.LogInViewModel
 import com.hand.comeeatme.view.login.term.TermViewModel
 import com.hand.comeeatme.view.main.bookmark.BookmarkViewModel
@@ -40,6 +39,7 @@ import com.hand.comeeatme.view.main.home.post.DetailPostViewModel
 import com.hand.comeeatme.view.main.home.post.report.ReportViewModel
 import com.hand.comeeatme.view.main.home.search.SearchViewModel
 import com.hand.comeeatme.view.main.rank.RankViewModel
+import com.hand.comeeatme.view.main.rank.region.RegionViewModel
 import com.hand.comeeatme.view.main.rank.restaurant.DetailRestaurantViewModel
 import com.hand.comeeatme.view.main.user.UserViewModel
 import com.hand.comeeatme.view.main.user.edit.UserEditViewModel
@@ -74,7 +74,7 @@ val appModule = module {
     viewModel { HeartReviewViewModel(get()) }
     viewModel { RecentReviewViewModel(get()) }
     viewModel { OtherPageViewModel(get(), get(), get(), get(), get()) }
-    viewModel { DetailRestaurantViewModel(get(), get(), get(), get(), get()) }
+    viewModel { DetailRestaurantViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { TermViewModel() }
     viewModel { SettingViewModel(get()) }
     viewModel { ReportViewModel(get(), get()) }
@@ -93,7 +93,7 @@ val appModule = module {
     single<CommentRepository> { DefaultCommentRepository(get(), get()) }
     single<ReportRepository> { DefaultReportRepository(get(), get()) }
     single<KakaoRepository> { DefaultKakaoRepository(get(), get()) }
-    single<CodeRepository> { DefaultCodeRepository(get(), get())}
+    single<CodeRepository> { DefaultCodeRepository(get(), get()) }
 
     // provider
     single(named("comeeatme")) { provideApiRetrofit(get(), get(), get()) }

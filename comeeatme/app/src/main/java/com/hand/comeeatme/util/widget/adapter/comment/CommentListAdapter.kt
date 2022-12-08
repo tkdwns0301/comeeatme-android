@@ -74,6 +74,8 @@ class CommentListAdapter(
         @SuppressLint("UseCompatLoadingForDrawables")
         fun bind(item: CommentListContent, context: Context) {
             if(item.deleted) {
+                profile.setImageDrawable(context.getDrawable(R.drawable.default_image))
+                nickname.text = "알수없음"
                 comment.text = "사용자의 요청으로 삭제된 댓글입니다."
 
                 if (item.parentId == null) {
