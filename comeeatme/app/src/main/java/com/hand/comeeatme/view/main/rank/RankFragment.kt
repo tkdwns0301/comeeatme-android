@@ -12,11 +12,15 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.google.android.gms.location.*
+import com.hand.comeeatme.R
 import com.hand.comeeatme.data.response.restaurant.RestaurantsRankContent
 import com.hand.comeeatme.databinding.FragmentRankBinding
 import com.hand.comeeatme.util.widget.adapter.rank.RestaurantsRankAdapter
 import com.hand.comeeatme.view.base.BaseFragment
+import com.hand.comeeatme.view.main.home.search.SearchFragment
 import com.hand.comeeatme.view.main.rank.region.RegionActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -81,6 +85,15 @@ class RankFragment : BaseFragment<RankViewModel, FragmentRankBinding>() {
 
         clLocation.setOnClickListener {
             startActivityForResult(RegionActivity.newIntent(requireContext(), viewModel.getDepth1(), viewModel.getDepth2(), viewModel.getAddCode()), 100)
+        }
+
+        ibSearch.setOnClickListener {
+            val manager: FragmentManager = (requireContext() as AppCompatActivity).supportFragmentManager
+            val ft: FragmentTransaction = manager.beginTransaction()
+
+            ft.add(R.id.fg_MainContainer, SearchFragment.newInstance(), SearchFragment.TAG)
+            ft.addToBackStack(SearchFragment.TAG)
+            ft.commitAllowingStateLoss()
         }
 
     }
