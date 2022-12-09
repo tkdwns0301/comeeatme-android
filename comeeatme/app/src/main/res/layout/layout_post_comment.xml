@@ -19,6 +19,7 @@
         android:id="@+id/civ_Profile"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="5dp"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintWidth_percent="0.07"
         app:layout_constraintEnd_toStartOf="@id/cl_NicknameAndCommentAndDate"

@@ -1,133 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:paddingStart="16dp"
-    android:paddingEnd="16dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:paddingEnd="16dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_Content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/divider"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toTopOf="parent">
+
         <TextView
             android:id="@+id/tv_Ranking"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="1"
-            android:textSize="17sp"
-            app:layout_constraintEnd_toStartOf="@id/cv_RestaurantImage"
             android:textColor="@color/basic"
+            android:textSize="17sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintEnd_toStartOf="@id/cv_RestaurantImage"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="1" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cv_RestaurantImage"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="10dp"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintWidth_percent="0.2"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.3"
             app:cardCornerRadius="6dp"
-            app:layout_constraintEnd_toStartOf="@id/cl_Information"
+            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_Ranking">
+            app:layout_constraintEnd_toStartOf="@id/cl_Information"
+            app:layout_constraintStart_toEndOf="@id/tv_Ranking"
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:id="@+id/iv_RestaurantImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
-                tools:src="@drawable/food1"/>
+                tools:src="@drawable/food1" />
         </androidx.cardview.widget.CardView>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_Information"
             android:layout_width="0dp"
-            android:layout_marginStart="10dp"
-            app:layout_constraintEnd_toStartOf="@id/cl_Star"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/cv_RestaurantImage">
+            app:layout_constraintEnd_toStartOf="@id/tb_Favorite"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/cv_RestaurantImage"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/tv_RestaurantName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:gravity="start"
-                tools:text="마라고메"
+                android:textColor="@color/basic"
                 android:textSize="17sp"
                 android:textStyle="bold"
-                android:textColor="@color/basic"/>
+                app:layout_constraintBottom_toTopOf="@id/tv_Address"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="마라고메" />
 
             <TextView
-                android:id="@+id/tv_Location"
+                android:id="@+id/tv_Address"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/tv_RestaurantName"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:text="서울 송파구"
-                android:textSize="14sp"
+                android:gravity="start"
                 android:textColor="@color/basic"
-                android:gravity="start"/>
+                android:textSize="14sp"
+                android:layout_marginTop="6dp"
+                app:layout_constraintBottom_toTopOf="@id/tv_Review"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_RestaurantName"
+                tools:text="서울 송파구" />
 
             <TextView
                 android:id="@+id/tv_Review"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/tv_Location"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:text="리뷰 365개"
                 android:textColor="@color/nonCheck"
-                android:textSize="11sp"/>
+                android:textSize="11sp"
+                android:layout_marginTop="6dp"
+                app:layout_constraintBottom_toTopOf="@id/fl_HashTag"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_Address"
+                tools:text="리뷰 365개" />
 
             <com.google.android.flexbox.FlexboxLayout
                 android:id="@+id/fl_HashTag"
                 android:layout_width="0dp"
+                android:layout_marginTop="6dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/tv_Review"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_Review" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_Star"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            app:layout_constraintTop_toTopOf="parent"
+        <ToggleButton
+            android:id="@+id/tb_Favorite"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/selector_star"
+            android:textOff=""
+            android:textOn=""
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintWidth_percent="0.1"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/cl_Information"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <ToggleButton
-                android:id="@+id/tb_Star"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:background="@drawable/selector_star"
-                android:textOff=""
-                android:textOn=""
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -138,11 +138,11 @@
         android:layout_height="1dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        app:layout_constraintTop_toBottomOf="@id/cl_Content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/divider"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@color/divider"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cl_Content" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

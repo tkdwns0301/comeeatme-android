@@ -8,6 +8,7 @@ plugins {
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 def kakao_api_key= properties.get('kakao_api_key')
+
 android {
     compileSdkVersion 31
 
@@ -23,6 +24,8 @@ android {
 
         buildConfigField "String", "kakao_api_key", "\"${kakao_api_key}\""
         buildConfigField "String", "BASE_URL", "\"${properties['BASE_URL']}\""
+        buildConfigField "String", "KAKAO_URL", "\"${properties['KAKAO_URL']}\""
+        buildConfigField "String", "kakao_rest_api_key", "\"${properties['kakao_rest_api_key']}\""
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -121,4 +124,7 @@ dependencies {
 
     // Fragment-ktx
     implementation "androidx.fragment:fragment-ktx:1.5.4"
+
+    // location
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
 }

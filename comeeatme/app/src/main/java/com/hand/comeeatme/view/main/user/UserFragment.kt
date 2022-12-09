@@ -153,7 +153,7 @@ class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
     @SuppressLint("UseCompatLoadingForDrawables")
     private fun setUserInformation(data: MemberDetailData) = with(binding) {
         if (data.imageUrl.isNullOrEmpty()) {
-            clProfile.setImageDrawable(requireContext().getDrawable(R.drawable.food1))
+            clProfile.setImageDrawable(requireContext().getDrawable(R.drawable.default_profile))
         } else {
             Glide.with(requireContext())
                 .load(data.imageUrl)

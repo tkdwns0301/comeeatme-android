@@ -3,12 +3,16 @@ package com.hand.comeeatme.di
 import com.hand.comeeatme.data.preference.AppPreferenceManager
 import com.hand.comeeatme.data.repository.bookmark.BookmarkRepository
 import com.hand.comeeatme.data.repository.bookmark.DefaultBookmarkRepository
+import com.hand.comeeatme.data.repository.code.CodeRepository
+import com.hand.comeeatme.data.repository.code.DefaultCodeRepository
 import com.hand.comeeatme.data.repository.comment.CommentRepository
 import com.hand.comeeatme.data.repository.comment.DefaultCommentRepository
 import com.hand.comeeatme.data.repository.favorite.DefaultFavoriteRepository
 import com.hand.comeeatme.data.repository.favorite.FavoriteRepository
 import com.hand.comeeatme.data.repository.image.DefaultImageRepository
 import com.hand.comeeatme.data.repository.image.ImageRepository
+import com.hand.comeeatme.data.repository.kakao.DefaultKakaoRepository
+import com.hand.comeeatme.data.repository.kakao.KakaoRepository
 import com.hand.comeeatme.data.repository.like.DefaultLikeRepository
 import com.hand.comeeatme.data.repository.like.LikeRepository
 import com.hand.comeeatme.data.repository.logIn.DefaultLogInRepository
@@ -34,6 +38,8 @@ import com.hand.comeeatme.view.main.home.newpost.crop.CropViewModel
 import com.hand.comeeatme.view.main.home.post.DetailPostViewModel
 import com.hand.comeeatme.view.main.home.post.report.ReportViewModel
 import com.hand.comeeatme.view.main.home.search.SearchViewModel
+import com.hand.comeeatme.view.main.rank.RankViewModel
+import com.hand.comeeatme.view.main.rank.region.RegionViewModel
 import com.hand.comeeatme.view.main.rank.restaurant.DetailRestaurantViewModel
 import com.hand.comeeatme.view.main.user.UserViewModel
 import com.hand.comeeatme.view.main.user.edit.UserEditViewModel
@@ -46,6 +52,7 @@ import com.hand.comeeatme.view.main.user.setting.SettingViewModel
 import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val appModule = module {
@@ -67,10 +74,12 @@ val appModule = module {
     viewModel { HeartReviewViewModel(get()) }
     viewModel { RecentReviewViewModel(get()) }
     viewModel { OtherPageViewModel(get(), get(), get(), get(), get()) }
-    viewModel { DetailRestaurantViewModel(get(), get(), get(), get(), get()) }
+    viewModel { DetailRestaurantViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { TermViewModel() }
     viewModel { SettingViewModel(get()) }
     viewModel { ReportViewModel(get(), get()) }
+    viewModel { RankViewModel(get(), get(), get(), get(), get()) }
+    viewModel { RegionViewModel(get(), get()) }
 
     // repository
     single<PostRepository> { DefaultPostRepository(get(), get()) }
@@ -83,19 +92,28 @@ val appModule = module {
     single<FavoriteRepository> { DefaultFavoriteRepository(get(), get()) }
     single<CommentRepository> { DefaultCommentRepository(get(), get()) }
     single<ReportRepository> { DefaultReportRepository(get(), get()) }
+    single<KakaoRepository> { DefaultKakaoRepository(get(), get()) }
+    single<CodeRepository> { DefaultCodeRepository(get(), get()) }
 
     // provider
-    single { provideApiRetrofit(get(), get(), get()) }
-    single { provideOAuthApiService(get()) }
-    single { providePostApiService(get()) }
-    single { provideRestaurantService(get()) }
-    single { provideMemberService(get()) }
-    single { provideImageService(get()) }
-    single { provideLikeService(get()) }
-    single { provideBookmarkService(get()) }
-    single { provideFavoriteService(get()) }
-    single { provideCommentService(get()) }
-    single { provideReportService(get()) }
+    single(named("comeeatme")) { provideApiRetrofit(get(), get(), get()) }
+    single(named("kakao")) { provideKakaoApiRetrofit(get(), get(), get()) }
+
+    // ComeEatMe
+    single { provideOAuthApiService(get(qualifier = named("comeeatme"))) }
+    single { providePostApiService(get(qualifier = named("comeeatme"))) }
+    single { provideRestaurantService(get(qualifier = named("comeeatme"))) }
+    single { provideMemberService(get(qualifier = named("comeeatme"))) }
+    single { provideImageService(get(qualifier = named("comeeatme"))) }
+    single { provideLikeService(get(qualifier = named("comeeatme"))) }
+    single { provideBookmarkService(get(qualifier = named("comeeatme"))) }
+    single { provideFavoriteService(get(qualifier = named("comeeatme"))) }
+    single { provideCommentService(get(qualifier = named("comeeatme"))) }
+    single { provideReportService(get(qualifier = named("comeeatme"))) }
+    single { provideCodeService(get(qualifier = named("comeeatme"))) }
+
+    // Kakao
+    single { provideKakaoService(get(qualifier = named("kakao"))) }
 
     single { provideGson() }
     single { provideGsonConverterFactory(get()) }

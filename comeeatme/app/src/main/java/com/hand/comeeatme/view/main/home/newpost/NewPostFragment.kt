@@ -262,7 +262,6 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
         }
 
         icLocation.ibSearch.setOnClickListener {
-            // TODO 검색처리
             val search: String = icLocation.etSearch.text.toString()
             Log.e("search", "$search")
             viewModel.searchRestaurants(null, null, null, search)
@@ -270,7 +269,6 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
 
         icLocation.etSearch.setOnKeyListener { p0, p1, p2 ->
             when (p1) {
-                //TODO 검색처리
                 KeyEvent.KEYCODE_ENTER -> {
                     val search: String = icLocation.etSearch.text.toString()
                     viewModel.searchRestaurants(null, null, null, search)
@@ -311,8 +309,6 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
         clImageSelect.isGone = true
 
         viewModel.getChipList().forEach { chip ->
-            Log.e("chip text:", viewModel.hashTagKorToEng(chip.text.toString()))
-
             if (data.hashtags.contains(viewModel.hashTagKorToEng("${chip.text}"))) {
                 chip.isChecked = true
             }
@@ -353,13 +349,13 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
 
         chip.apply {
             text = "$tag"
-            textSize = 14f
             textAlignment = View.TEXT_ALIGNMENT_CENTER
             isChecked = false
             checkedIcon = null
 
 
             if (!isSelected) {
+                textSize = 16f
                 val nonClickBackground = ContextCompat.getColor(context, R.color.whiteF)
                 val clickBackground = ContextCompat.getColor(context, R.color.basic)
 
@@ -388,6 +384,7 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
                 isCheckable = true
 
             } else {
+                textSize = 14f
                 val nonClickBackground = ContextCompat.getColor(context, R.color.white)
                 val clickBackground = ContextCompat.getColor(context, R.color.basic)
 
