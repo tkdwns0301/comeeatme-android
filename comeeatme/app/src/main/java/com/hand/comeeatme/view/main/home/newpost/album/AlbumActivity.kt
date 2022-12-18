@@ -1,6 +1,5 @@
 package com.hand.comeeatme.view.main.home.newpost.album
 
-import com.hand.comeeatme.util.widget.adapter.AlbumAdapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -14,7 +13,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.hand.comeeatme.R
 import com.hand.comeeatme.data.Thumbnail
+import com.hand.comeeatme.data.Thumbnail2
 import com.hand.comeeatme.databinding.ActivityAlbumBinding
+import com.hand.comeeatme.util.widget.adapter.AlbumAdapter
 import com.hand.comeeatme.view.base.BaseActivity
 import com.hand.comeeatme.view.main.home.newpost.NewPostFragment
 import com.hand.comeeatme.view.main.home.newpost.NewPostViewModel
@@ -43,6 +44,15 @@ class AlbumActivity : BaseActivity<AlbumViewModel, ActivityAlbumBinding>() {
 
     override fun observeData() = viewModel.albumStateLiveData.observe(this) {
         when (it) {
+            is AlbumState.Loading -> {
+
+            }
+
+            is AlbumState.Success -> {
+
+                setAdapter(it.photoList)
+            }
+
             is AlbumState.PhotoUnReady -> {
                 binding.tvNext.setTextColor(ContextCompat.getColor(applicationContext,
                     R.color.nonCheck))
@@ -54,7 +64,7 @@ class AlbumActivity : BaseActivity<AlbumViewModel, ActivityAlbumBinding>() {
             }
 
             is AlbumState.Initialized -> {
-                setAdapter(viewModel.getThumbnailList())
+                //setAdapter(viewModel.getThumbnailList())
             }
         }
 
@@ -75,6 +85,7 @@ class AlbumActivity : BaseActivity<AlbumViewModel, ActivityAlbumBinding>() {
     }
 
     override fun initView() = with(binding) {
+
         tvNext.setOnClickListener {
             if (tvNext.currentTextColor == ContextCompat.getColor(applicationContext,
                     R.color.nonCheck)
@@ -100,14 +111,17 @@ class AlbumActivity : BaseActivity<AlbumViewModel, ActivityAlbumBinding>() {
 //            setResult(RESULT_OK, intent)
 //        }
 
-        getImage()
+        //getImage()
     }
 
 
     private fun getImage() {
         val projection = arrayOf(
-            MediaStore.Images.ImageColumns._ID,
-            MediaStore.Images.ImageColumns.DATA
+            MediaStore.Images.ImageColumns.DISPLAY_NAME,
+            MediaStore.Images.ImageColumns.SIZE,
+            MediaStore.Images.ImageColumns.DATE_TAKEN,
+            MediaStore.Images.ImageColumns.DATE_ADDED,
+            MediaStore.Images.ImageColumns._ID
         )
 
         val cursor = contentResolver.query(
@@ -115,14 +129,14 @@ class AlbumActivity : BaseActivity<AlbumViewModel, ActivityAlbumBinding>() {
             projection,
             null,
             null,
-            MediaStore.Images.ImageColumns.DATE_TAKEN + " ASC"
+            MediaStore.Images.ImageColumns.DATE_ADDED + "DESC"
         )
 
         val thumbnailList = ArrayList<Thumbnail>()
 
-        for (i in cursor!!.count - 1 downTo 0) {
-            cursor!!.moveToPosition(i)
-            val id = cursor!!.getLong(0)
+        for (i in 0 until cursor!!.count) {
+            cursor.moveToPosition(i)
+            val id = cursor.getLong(0)
 
             val thumbnail = getThumbnail(id)
             val path =
@@ -131,7 +145,7 @@ class AlbumActivity : BaseActivity<AlbumViewModel, ActivityAlbumBinding>() {
                 Uri.fromFile(File(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA))))
 
 
-            val sampleImage = Thumbnail(cursor!!.count - 1 - i, thumbnail, uri, path, null, false)
+            val sampleImage = Thumbnail(cursor.count - 1 - i, thumbnail, uri, path, null, false)
 
             thumbnailList.add(sampleImage)
         }
@@ -141,8 +155,9 @@ class AlbumActivity : BaseActivity<AlbumViewModel, ActivityAlbumBinding>() {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun setAdapter(thumbnails: ArrayList<Thumbnail>) {
+    private fun setAdapter(thumbnails: List<Thumbnail2>) {
         adapter = AlbumAdapter(
+            applicationContext,
             thumbnails,
             onClickImage = {
                 addCheckedImage(it)
@@ -152,18 +167,25 @@ class AlbumActivity : BaseActivity<AlbumViewModel, ActivityAlbumBinding>() {
             }
         )
         binding.rvPhoto.adapter = adapter
+        binding.rvPhoto.addItemDecoration(
+            GridDividerDecoration(
+                this@AlbumActivity,
+                R.drawable.background_album
+            )
+        )
         adapter.notifyDataSetChanged()
     }
 
-    private fun addCheckedImage(photo: Thumbnail) {
+    @SuppressLint("NotifyDataSetChanged")
+    private fun addCheckedImage(photo: Thumbnail2) {
         if (isProfile) {
             viewModel.removeAllCheckedPhoto()
             viewModel.addCheckedPhotoItem(photo.path)
             startActivityForResult(CropActivity.newIntent(applicationContext,
                 viewModel.getCheckedPhotoList()), 100)
         } else {
-            if (viewModel.getCheckedPhotoList().size < 10) {
-                viewModel.getThumbnailList()[photo.position].isChecked = true
+            if (viewModel.getCheckedPhotoList().size < 11) {
+                photo.isChecked = true
                 viewModel.addCheckedPhotoItem(photo.path)
                 adapter.notifyDataSetChanged()
             } else {
@@ -174,8 +196,8 @@ class AlbumActivity : BaseActivity<AlbumViewModel, ActivityAlbumBinding>() {
 
     }
 
-    private fun removeCheckedImage(photo: Thumbnail) {
-        viewModel.getThumbnailList()[photo.position].isChecked = false
+    private fun removeCheckedImage(photo: Thumbnail2) {
+        photo.isChecked = false
         viewModel.removeCheckedPhotoItem(photo.path)
         adapter.notifyDataSetChanged()
     }

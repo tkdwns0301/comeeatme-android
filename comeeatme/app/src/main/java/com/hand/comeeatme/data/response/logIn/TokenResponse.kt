@@ -8,5 +8,5 @@ data class TokenResponse(
     @Expose
     var refreshToken: String,
     @Expose
-    val memberId: Long,
+    val memberId: Long?,
 )

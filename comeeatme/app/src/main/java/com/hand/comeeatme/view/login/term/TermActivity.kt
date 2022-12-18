@@ -3,7 +3,6 @@ package com.hand.comeeatme.view.login.term
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.widget.Toast
 import com.hand.comeeatme.R
 import com.hand.comeeatme.databinding.ActivityTermBinding
@@ -80,10 +79,8 @@ class TermActivity: BaseActivity<TermViewModel, ActivityTermBinding>() {
         }
 
         clNext.setOnClickListener {
-            Log.e("next", "click1")
             if(tvNext.currentTextColor == applicationContext.getColor(R.color.white)) {
-                Log.e("next", "click2")
-                viewModel.agreeAllTerm()
+                viewModel.setTermsAgree()
             }
         }
 

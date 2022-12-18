@@ -43,14 +43,13 @@ class DefaultFavoriteRepository(
         memberId: Long,
         page: Long?,
         size: Long?,
-        sort: Boolean?,
     ): FavoritePostResponse?  = withContext(ioDispatcher) {
         val response = favoriteService.getAllFavorite(
             Authorization = "Bearer $accessToken",
             memberId = memberId,
             page = page!!,
             size = size!!,
-            sort = sort!!,
+            perImageNum = 3
         )
 
         if(response.isSuccessful) {

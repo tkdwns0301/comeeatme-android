@@ -47,7 +47,6 @@ class FavoriteRestaurantViewModel(
     fun getAllFavorite(
         page: Long?,
         size: Long?,
-        sort: Boolean?,
     ) = viewModelScope.launch {
         favoritePostStateLiveData.value = FavoriteRestaurantState.Loading
 
@@ -56,7 +55,6 @@ class FavoriteRestaurantViewModel(
             appPreferenceManager.getMemberId(),
             page,
             size,
-            sort,
         )
 
         response?.let {

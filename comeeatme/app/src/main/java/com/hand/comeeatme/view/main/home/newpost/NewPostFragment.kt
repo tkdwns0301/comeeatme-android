@@ -11,10 +11,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.util.TypedValue
-import android.view.KeyEvent
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -27,6 +24,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.chip.Chip
 import com.hand.comeeatme.R
@@ -39,6 +37,7 @@ import com.hand.comeeatme.view.main.home.newpost.album.AlbumActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import kotlin.math.roundToInt
+
 
 class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>() {
     companion object {
@@ -103,9 +102,14 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
                 }
 
                 is NewPostState.Loading -> {
+                    binding.clLoading.isVisible = true
+                    activity?.window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 }
 
                 is NewPostState.Success -> {
+                    binding.clLoading.isGone = true
+                    activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+
                     finish()
                 }
 
@@ -155,6 +159,10 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
     }
 
     override fun initView() = with(binding) {
+        Glide.with(requireContext())
+            .load(R.drawable.loading)
+            .into(ivLoading)
+
         rvSelectedImages.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         icLocation.rvLocationResult.layoutManager =
@@ -188,6 +196,16 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
                 selectPhotoLauncher.launch(
                     AlbumActivity.newIntent(requireContext(), false)
                 )
+
+
+//                val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+//                    type = "image/*"
+//                    putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+//                    type = android.provider.MediaStore.Images.Media.CONTENT_TYPE;
+//                }
+//
+//                startActivityForResult(Intent.createChooser(intent, "Chooser Title"), 100)
+
             }
         }
 
@@ -331,17 +349,15 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
             imagePositionList = data!!.getIntegerArrayListExtra("imagePosition") as ArrayList<Int>
             cropImageList = data!!.getStringArrayListExtra("cropImages") as ArrayList<String>
 
-            Log.e("cropImageList", "$cropImageList")
-
             images = ArrayList()
 
             cropImageList!!.forEach {
                 images.add(Uri.fromFile(File(it)))
             }
 
-            //setAdapter()
         }
     }
+
 
     private fun FlexboxLayout.addItem(tag: String, isSelected: Boolean) {
 

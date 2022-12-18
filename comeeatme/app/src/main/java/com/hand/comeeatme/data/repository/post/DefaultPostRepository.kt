@@ -1,5 +1,6 @@
 package com.hand.comeeatme.data.repository.post
 
+import android.util.Log
 import com.hand.comeeatme.data.network.PostService
 import com.hand.comeeatme.data.request.post.ModifyPostRequest
 import com.hand.comeeatme.data.request.post.NewPostRequest
@@ -9,11 +10,13 @@ import com.hand.comeeatme.data.response.post.PostResponse
 import com.hand.comeeatme.data.response.post.RestaurantPostResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 
 class DefaultPostRepository(
     private val postService: PostService,
     private val ioDispatcher: CoroutineDispatcher,
 ) : PostRepository {
+
     override suspend fun getPosts(
         accessToken: String,
         page: Int?,
@@ -27,9 +30,23 @@ class DefaultPostRepository(
             sort = sort!!,
             hashtags = hashTags)
 
+
         if (response.isSuccessful) {
             response.body()!!
-        } else {
+        } else if(response.code() == 401) {
+            var jsonObject: JSONObject? = null
+            var errorResponse: PostResponse? = null
+
+            try {
+                jsonObject = JSONObject(response.errorBody()!!.string())
+                errorResponse = PostResponse(success = jsonObject.getBoolean("success"), data = null, error = null)
+            } catch (e: Exception) {
+                Log.e("error", "${e.printStackTrace()}")
+            }
+            errorResponse
+        }
+
+        else {
             null
         }
     }

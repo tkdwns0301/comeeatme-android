@@ -1,16 +1,19 @@
 package com.hand.comeeatme.util.widget.adapter
+import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.hand.comeeatme.data.Thumbnail
+import com.bumptech.glide.Glide
+import com.hand.comeeatme.data.Thumbnail2
 import com.hand.comeeatme.databinding.LayoutAlbumImageBinding
 
 class AlbumAdapter(
-    private val images: ArrayList<Thumbnail>,
-    private val onClickImage: (image: Thumbnail) -> Unit,
-    private val onCheckedImage: (image: Thumbnail) -> Unit
+    private val context: Context,
+    private val images: List<Thumbnail2>,
+    private val onClickImage: (image: Thumbnail2) -> Unit,
+    private val onCheckedImage: (image: Thumbnail2) -> Unit
 ) : RecyclerView.Adapter<AlbumAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = LayoutAlbumImageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -27,7 +30,12 @@ class AlbumAdapter(
             holder.checked.visibility = View.GONE
         }
 
-        holder.image.setImageBitmap(image.thumbnail)
+        //holder.image.setImageURI(image.uri)
+
+        Glide.with(context)
+            .load(image.uri)
+            .into(holder.image)
+
         holder.image.setOnLongClickListener {
             Log.e("Image LongClick", "$position")
             return@setOnLongClickListener true

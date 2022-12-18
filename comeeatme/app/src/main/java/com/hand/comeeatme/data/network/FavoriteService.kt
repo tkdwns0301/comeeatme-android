@@ -27,7 +27,7 @@ interface FavoriteService {
         @Path("memberId") memberId: Long,
         @Query("page") page: Long,
         @Query("size") size: Long?,
-        @Query("sort") sort: Boolean?,
+        @Query("perImageNum") perImageNum: Long,
     ): Response<FavoritePostResponse>
 
 }

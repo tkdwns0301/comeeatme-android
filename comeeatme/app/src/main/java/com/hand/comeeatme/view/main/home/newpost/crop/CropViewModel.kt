@@ -1,5 +1,6 @@
 package com.hand.comeeatme.view.main.home.newpost.crop
 
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hand.comeeatme.util.FileUtil
@@ -34,17 +35,17 @@ class CropViewModel : BaseViewModel() {
         return compressPhotoMap
     }
 
-    fun compressPhoto() = viewModelScope.launch {
+    fun compressPhoto(context: Context) = viewModelScope.launch {
         cropStateLiveData.value = CropState.Loading
-        compressPhoto2()
+        compressPhoto2(context)
 
         cropStateLiveData.value = CropState.CompressFinish(
             compressPhotoPathList = compressPhotoList
         )
     }
 
-    private suspend fun compressPhoto2() = withContext(Dispatchers.IO) {
-        val compress = FileUtil.resizeBitmap(checkedPhotoList, compressPhotoMap).mapIndexed { index, path ->
+    private suspend fun compressPhoto2(context: Context) = withContext(Dispatchers.IO) {
+        val compress = FileUtil.resizeBitmap(context, checkedPhotoList, compressPhotoMap).mapIndexed { index, path ->
             viewModelScope.async {
                 try {
                     return@async compressPhotoList

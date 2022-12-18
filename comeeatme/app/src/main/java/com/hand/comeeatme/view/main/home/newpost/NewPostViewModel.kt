@@ -67,12 +67,25 @@ class NewPostViewModel(
 
     private var chipList: ArrayList<Chip> = arrayListOf()
     private var checkedChipList: ArrayList<Chip> = arrayListOf()
-    private var compressPhotoPathList: ArrayList<String> = arrayListOf()
+    private var compressImagePathList: ArrayList<String> = arrayListOf()
+    private var selectedImageList: ArrayList<String> = arrayListOf()
     private var hashTagList: ArrayList<String> = arrayListOf()
     private var restaurantId: Long? = null
     private var content: String? = null
 
     val newPostStateLiveData = MutableLiveData<NewPostState>(NewPostState.Uninitialized)
+
+    fun clearSelectedImageList() {
+        this.selectedImageList.clear()
+    }
+
+    fun addSelectedImageList(path: String) {
+        this.selectedImageList.add(path)
+    }
+
+    fun getSelectedImageList() : ArrayList<String> {
+        return this.selectedImageList
+    }
 
     fun addChip(chip: Chip) {
         chipList.add(chip)
@@ -115,15 +128,15 @@ class NewPostViewModel(
     }
 
     private fun isReady(): Boolean {
-        return restaurantId != null && hashTagList.isNotEmpty() && compressPhotoPathList.isNotEmpty() && content != null
+        return restaurantId != null && hashTagList.isNotEmpty() && compressImagePathList.isNotEmpty() && content != null
     }
 
 
-    fun setResultPhotoList(compressPhotos: ArrayList<String>) = viewModelScope.launch {
-        compressPhotoPathList = compressPhotos
+    fun setResultPhotoList(compressImages: ArrayList<String>) = viewModelScope.launch {
+        compressImagePathList = compressImages
 
         newPostStateLiveData.value = NewPostState.CompressPhotoFinish(
-            compressPhotoList = compressPhotos
+            compressPhotoList = compressImages
         )
     }
 
@@ -149,7 +162,8 @@ class NewPostViewModel(
         sort: Boolean?,
         keyword: String,
     ) = viewModelScope.launch {
-        newPostStateLiveData.value = NewPostState.Loading
+
+
         val response =
             restaurantRepository.getSearchRestaurants("${appPreferenceManager.getAccessToken()}",
                 page, size, sort, keyword
@@ -172,7 +186,7 @@ class NewPostViewModel(
 
         val images: ArrayList<MultipartBody.Part> = arrayListOf()
 
-        compressPhotoPathList.forEachIndexed { index, path ->
+        compressImagePathList.forEachIndexed { index, path ->
             val file = File(path)
             val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), file)
             images.add(MultipartBody.Part.createFormData("images", "test-image$index.webp", requestFile))

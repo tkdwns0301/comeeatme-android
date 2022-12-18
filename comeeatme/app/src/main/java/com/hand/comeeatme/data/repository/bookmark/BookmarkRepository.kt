@@ -11,6 +11,5 @@ interface BookmarkRepository {
         memberId: Long,
         page: Long?,
         size: Long?,
-        sort: Boolean?,
     ): BookmarkPostResponse?
 }

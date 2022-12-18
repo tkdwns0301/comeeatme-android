@@ -13,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
@@ -40,6 +41,8 @@ import com.hand.comeeatme.view.main.rank.restaurant.DetailRestaurantFragment
 import com.hand.comeeatme.view.main.user.other.OtherPageFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
+import java.text.SimpleDateFormat
+import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
@@ -80,6 +83,7 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
         viewModel.detailPostStateLiveData.observe(viewLifecycleOwner) {
             when (it) {
                 is DetailPostState.Uninitialized -> {
+                    binding.clLoading.isVisible = true
                     viewModel.getDetailPost()
                     viewModel.getCommentList(0, 10, false)
                 }
@@ -119,6 +123,7 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
 
                 is DetailPostState.Error -> {
                     binding.clLoading.isGone = true
+                    Toast.makeText(requireContext(), "$it", Toast.LENGTH_SHORT).show()
                 }
 
             }
@@ -129,6 +134,10 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
     private lateinit var adapter: CommentListAdapter
 
     override fun initView() = with(binding) {
+        Glide.with(requireContext())
+            .load(R.drawable.loading)
+            .into(ivLoading)
+
         etComment.requestFocus()
 
         keyboardVisibilityUtil = KeyboardVisibilityUtil(requireActivity().window, onShowKeyboard = {
@@ -174,16 +183,16 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
             }
         }
 
-        tbLike.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
+        tbLike.setOnClickListener {
+            if (tbLike.isChecked) {
                 viewModel.likePost(postId!!)
             } else {
                 viewModel.unLikePost(postId!!)
             }
         }
 
-        tbBookmark.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
+        tbBookmark.setOnClickListener {
+            if (tbBookmark.isChecked) {
                 viewModel.bookmarkPost(postId!!)
             } else {
                 viewModel.unBookmarkPost(postId!!)
@@ -307,7 +316,7 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
         adapter.notifyDataSetChanged()
     }
 
-    @SuppressLint("UseCompatLoadingForDrawables", "SetTextI18n")
+    @SuppressLint("UseCompatLoadingForDrawables", "SetTextI18n", "SimpleDateFormat")
     private fun setView(data: DetailPostData) = with(binding) {
         tvLocation.text = data.restaurant.name
 
@@ -348,7 +357,9 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
 
 
         if (data.member.imageUrl.isNullOrEmpty()) {
-            civProfile.setImageDrawable(requireContext().getDrawable(R.drawable.food1))
+            Glide.with(requireContext())
+                .load(R.drawable.default_profile)
+                .into(civProfile)
         } else {
             Glide.with(requireContext())
                 .load(data.member.imageUrl)
@@ -377,8 +388,37 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
         tvCommentCount.text = "(${data.commentCount})"
         tvLikeCount.text = "(${data.likeCount})"
 
-        // TODO 시간 처리
-        tvDate.text = data.createdAt
+        val sdf = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss")
+        val createdTime = sdf.parse(data.createdAt)
+        val createdMillis = createdTime.time
+
+        val currMillis = System.currentTimeMillis()
+
+        var diff = (currMillis - createdMillis)
+
+        when {
+            diff < 60000 -> {
+                tvDate.text = "방금 전"
+            }
+            diff < 3600000 -> {
+                tvDate.text = "${TimeUnit.MILLISECONDS.toMinutes(diff)}분 전"
+            }
+            diff < 86400000 -> {
+                tvDate.text = "${TimeUnit.MILLISECONDS.toHours(diff)}시간 전"
+            }
+            diff < 604800000 -> {
+                tvDate.text = "${TimeUnit.MILLISECONDS.toDays(diff)}일 전"
+            }
+            diff < 2419200000 -> {
+                tvDate.text = "${(TimeUnit.MILLISECONDS.toDays(diff)) / 7}주 전"
+            }
+            diff < 31556952000 -> {
+                tvDate.text = "${(TimeUnit.MILLISECONDS.toDays(diff)) / 30}개월 전"
+            }
+            else -> {
+                tvDate.text = "${(TimeUnit.MILLISECONDS.toDays(diff)) / 365}년 전"
+            }
+        }
     }
 
     private fun NestedScrollView.scrollToView(view: View) {

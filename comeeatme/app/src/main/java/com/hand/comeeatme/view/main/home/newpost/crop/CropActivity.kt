@@ -4,10 +4,20 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.ImageDecoder
+import android.graphics.Matrix
+import android.media.ExifInterface
 import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
 import android.util.Log
+import android.view.WindowManager
 import android.widget.Toast
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.hand.comeeatme.R
 import com.hand.comeeatme.databinding.ActivityCropBinding
 import com.hand.comeeatme.util.FileUtil
 import com.hand.comeeatme.util.widget.adapter.CropAdapter
@@ -36,7 +46,8 @@ class CropActivity : BaseActivity<CropViewModel, ActivityCropBinding>() {
     override fun observeData() = viewModel.cropStateLiveData.observe(this) {
         when(it) {
             is CropState.Loading -> {
-
+                binding.clLoading.isVisible = true
+                window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
             }
 
             is CropState.Initialized -> {
@@ -47,6 +58,9 @@ class CropActivity : BaseActivity<CropViewModel, ActivityCropBinding>() {
             }
 
             is CropState.CompressFinish -> {
+                binding.clLoading.isGone = true
+                window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+
                 intent.putExtra(NewPostViewModel.COMPRESSED_PHOTO_KEY, it.compressPhotoPathList)
                 setResult(RESULT_OK, intent)
                 finish()
@@ -55,6 +69,10 @@ class CropActivity : BaseActivity<CropViewModel, ActivityCropBinding>() {
     }
 
     override fun initView() = with(binding) {
+        Glide.with(applicationContext)
+            .load(R.drawable.loading)
+            .into(ivLoading)
+
         window.statusBarColor = Color.parseColor("#333333")
         rvCheckedImageList.layoutManager =
             LinearLayoutManager(applicationContext, LinearLayoutManager.HORIZONTAL, false)
@@ -67,7 +85,7 @@ class CropActivity : BaseActivity<CropViewModel, ActivityCropBinding>() {
         }
 
         tvFinish.setOnClickListener {
-            viewModel.compressPhoto()
+            viewModel.compressPhoto(applicationContext)
 
         }
 
@@ -95,8 +113,9 @@ class CropActivity : BaseActivity<CropViewModel, ActivityCropBinding>() {
     }
 
     private fun setAdapter() {
-        Log.e("checkedPhotoList", "${viewModel.getCheckedPhotoList()}")
-        adapter = CropAdapter(viewModel.getCheckedPhotoList(),
+        adapter = CropAdapter(
+            applicationContext,
+            viewModel.getCheckedPhotoList(),
             onClickImage = {
                 setCropImage(it)
             },
@@ -113,7 +132,50 @@ class CropActivity : BaseActivity<CropViewModel, ActivityCropBinding>() {
         adapter.notifyDataSetChanged()
 
         image = imagePath
-        binding.clCropImage.setUri(Uri.fromFile(File(imagePath)))
+
+        binding.clCropImage.setBitmap(rotateImageIfRequired(uriToBitmap(Uri.fromFile(File(imagePath)))!!, Uri.fromFile(File(imagePath)))!!)
+
+        //binding.clCropImage.setUri(Uri.fromFile(File(imagePath)))
+    }
+
+    private fun uriToBitmap(uri: Uri): Bitmap? {
+        var bitmap: Bitmap? = null
+
+        try {
+            bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver, uri))
+            } else {
+                MediaStore.Images.Media.getBitmap(contentResolver, uri)
+            }
+        } catch (e: Exception) {
+            Log.e("UriToBitmap Error",  "${e.printStackTrace()}")
+        }
+
+        return bitmap
+    }
+
+    private fun rotateImageIfRequired(bitmap: Bitmap, uri: Uri) : Bitmap? {
+        val input = applicationContext.contentResolver.openInputStream(uri)?: return null
+
+        val exif = if(Build.VERSION.SDK_INT > 23) {
+            ExifInterface(input)
+        } else {
+            ExifInterface(uri.path!!)
+        }
+
+        return when(exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)) {
+            ExifInterface.ORIENTATION_ROTATE_90 -> rotateImage(bitmap, 90)
+            ExifInterface.ORIENTATION_ROTATE_180 -> rotateImage(bitmap, 180)
+            ExifInterface.ORIENTATION_ROTATE_270 -> rotateImage(bitmap, 270)
+            else -> bitmap
+        }
+    }
+
+    private fun rotateImage(bitmap: Bitmap, degree: Int): Bitmap? {
+        val matrix = Matrix()
+
+        matrix.postRotate(degree.toFloat())
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
     }
 
 }

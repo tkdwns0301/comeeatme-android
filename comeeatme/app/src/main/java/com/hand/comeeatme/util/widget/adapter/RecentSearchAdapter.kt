@@ -19,6 +19,7 @@ class RecentSearchAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+
         holder.profile.setImageResource(R.drawable.food1)
 
         holder.name.text = items[position]

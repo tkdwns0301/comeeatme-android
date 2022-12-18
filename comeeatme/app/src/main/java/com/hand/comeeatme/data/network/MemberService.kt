@@ -2,6 +2,7 @@ package com.hand.comeeatme.data.network
 
 import com.hand.comeeatme.data.request.member.MemberModifyProfileRequest
 import com.hand.comeeatme.data.request.member.MemberModifyRequest
+import com.hand.comeeatme.data.request.member.MemberTermRequest
 import com.hand.comeeatme.data.response.member.*
 import retrofit2.Response
 import retrofit2.http.*
@@ -49,6 +50,20 @@ interface MemberService {
         @Header("Authorization") Authorization: String,
         @Path("memberId") memberId: Long,
     ): Response<MemberDetailResponse>
+
+    // 회원가입
+    @Headers("content-type: application/json")
+    @POST("/v1/signup")
+    suspend fun setTermsAgree(
+        @Header("Authorization") Authorization: String,
+        @Body agreeOrNot: MemberTermRequest
+    ): Response<MemberModifyResponse>
+
+    // 회원 탈퇴
+    @DELETE("/v1/member")
+    suspend fun withdrawalService(
+        @Header("Authorization") Authorization: String,
+    ): Response<MemberModifyResponse>
 
 
 }

@@ -3,6 +3,7 @@ package com.hand.comeeatme.data.repository.member
 import com.hand.comeeatme.data.network.MemberService
 import com.hand.comeeatme.data.request.member.MemberModifyProfileRequest
 import com.hand.comeeatme.data.request.member.MemberModifyRequest
+import com.hand.comeeatme.data.request.member.MemberTermRequest
 import com.hand.comeeatme.data.response.member.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -103,6 +104,36 @@ class DefaultMemberRepository(
         )
 
         if (response.isSuccessful) {
+            response.body()!!
+        } else {
+            null
+        }
+    }
+
+    override suspend fun setTermsAgree(
+        accessToken: String,
+        agreeOrNot: MemberTermRequest,
+    ): MemberModifyResponse? = withContext(ioDispatcher) {
+        val response = memberService.setTermsAgree(
+            Authorization = "Bearer $accessToken",
+            agreeOrNot = agreeOrNot,
+        )
+
+        if(response.isSuccessful) {
+            response.body()!!
+        } else {
+            null
+        }
+    }
+
+    override suspend fun withdrawalService(
+        accessToken: String
+    ): MemberModifyResponse? = withContext(ioDispatcher) {
+        val response = memberService.withdrawalService(
+            "Bearer $accessToken"
+        )
+
+        if(response.isSuccessful) {
             response.body()!!
         } else {
             null

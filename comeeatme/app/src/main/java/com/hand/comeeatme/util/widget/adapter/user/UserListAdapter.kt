@@ -117,7 +117,9 @@ class UserListAdapter(
             this.nickname.text = nickname
 
             if (profile.isNullOrEmpty()) {
-                this.profile.setImageDrawable(context.getDrawable(R.drawable.food1))
+                Glide.with(context)
+                    .load(R.drawable.default_profile)
+                    .into(this.profile)
             } else {
                 Glide.with(context)
                     .load(profile)

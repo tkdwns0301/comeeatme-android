@@ -82,7 +82,9 @@ class RestaurantsRankAdapter(
             ranking.text = "${position + 1}"
 
             if(item.imageUrls.isEmpty()) {
-                image.setImageDrawable(context.getDrawable(R.drawable.food1))
+                Glide.with(context)
+                    .load(R.drawable.default_image)
+                    .into(image)
             } else {
                 Glide.with(context)
                     .load(item.imageUrls[0])

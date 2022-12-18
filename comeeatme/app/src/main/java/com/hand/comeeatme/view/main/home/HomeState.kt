@@ -1,15 +1,13 @@
 package com.hand.comeeatme.view.main.home
 
-import android.annotation.SuppressLint
-import androidx.annotation.StringRes
-import com.hand.comeeatme.data.response.post.PostResponse
+import com.hand.comeeatme.data.response.post.Content
 
 sealed class HomeState {
     object Uninitialized: HomeState()
     object Loading: HomeState()
 
     data class Success(
-        val posts: PostResponse
+        val posts: ArrayList<Content>
     ): HomeState()
 
     object LikePostSuccess: HomeState()
@@ -18,9 +16,8 @@ sealed class HomeState {
     object BookmarkPostSuccess: HomeState()
     object UnBookmarkPostSuccess: HomeState()
 
-    @SuppressLint("SupportAnnotationUsage")
     data class Error(
-        @StringRes val message: String
+        val message: String
     ): HomeState()
 
 }

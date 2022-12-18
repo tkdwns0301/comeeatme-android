@@ -3,9 +3,14 @@ package com.hand.comeeatme.util.widget.adapter.home
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
+import com.hand.comeeatme.R
 import com.hand.comeeatme.data.response.restaurant.SimpleRestaurantContent
 import com.hand.comeeatme.databinding.LayoutSearchRestaurantBinding
+import com.hand.comeeatme.view.main.rank.restaurant.DetailRestaurantFragment
 
 class SearchRestaurantAdapter(
     private val context: Context,
@@ -27,7 +32,7 @@ class SearchRestaurantAdapter(
     override fun onBindViewHolder(holder: SearchRestaurantAdapter.ViewHolder, position: Int) {
         val item = items[position]
 
-        holder.bind(item)
+        holder.bind(context, item)
 
     }
 
@@ -40,12 +45,18 @@ class SearchRestaurantAdapter(
         private val name = binding.tvRestaurantName
         private val address = binding.tvAddress
 
-        fun bind(item: SimpleRestaurantContent) {
+        fun bind(context: Context, item: SimpleRestaurantContent) {
             name.text = item.name
             address.text = item.addressName
 
             itemView.setOnClickListener {
                 // TODO 식당 상세페이지
+                val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
+                val ft: FragmentTransaction = manager.beginTransaction()
+
+                ft.add(R.id.fg_MainContainer, DetailRestaurantFragment.newInstance(item.id), DetailRestaurantFragment.TAG)
+                ft.addToBackStack(DetailRestaurantFragment.TAG)
+                ft.commitAllowingStateLoss()
             }
         }
     }

@@ -17,6 +17,8 @@ import com.hand.comeeatme.data.response.post.Content
 import com.hand.comeeatme.databinding.LayoutHomeItemBinding
 import com.hand.comeeatme.view.main.home.post.DetailPostFragment
 import com.hand.comeeatme.view.main.user.other.OtherPageFragment
+import java.text.SimpleDateFormat
+import java.util.concurrent.TimeUnit
 
 class CommunityAdapter(
     private val items: List<Content>,
@@ -39,16 +41,16 @@ class CommunityAdapter(
 
         holder.bind(context, item)
 
-        holder.like.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
+        holder.like.setOnClickListener {
+            if (holder.like.isChecked) {
                 likePost.invoke(item.id)
             } else {
                 unLikePost.invoke(item.id)
             }
         }
 
-        holder.bookmark.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
+        holder.bookmark.setOnClickListener {
+            if (holder.bookmark.isChecked) {
                 bookmarkPost.invoke(item.id)
             } else {
                 unBookmarkPost.invoke(item.id)
@@ -73,44 +75,66 @@ class CommunityAdapter(
         private val content = binding.tvContent
         private val commentCount = binding.tvComment
         private val likeCount = binding.tvLike
+        private val createdAt = binding.tvDate
+
         val like = binding.tbLike
         val bookmark = binding.tbBookmark
 
-        @SuppressLint("UseCompatLoadingForDrawables", "SetTextI18n")
+        @SuppressLint("UseCompatLoadingForDrawables", "SetTextI18n", "SimpleDateFormat")
         fun bind(context: Context, item: Content) {
             viewPager.adapter = ViewPagerAdapter(item.id, item.imageUrls, context, false)
             viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
 
             when (item.imageUrls.size) {
                 1 -> {
-                    imageCount.setImageResource(R.drawable.ic_image1_24)
+                    Glide.with(context)
+                        .load(R.drawable.ic_image1_24)
+                        .into(imageCount)
                 }
                 2 -> {
-                    imageCount.setImageResource(R.drawable.ic_image2_24)
+                    Glide.with(context)
+                        .load(R.drawable.ic_image2_24)
+                        .into(imageCount)
                 }
                 3 -> {
-                    imageCount.setImageResource(R.drawable.ic_image3_24)
+                    Glide.with(context)
+                        .load(R.drawable.ic_image3_24)
+                        .into(imageCount)
                 }
                 4 -> {
-                    imageCount.setImageResource(R.drawable.ic_image4_24)
+                    Glide.with(context)
+                        .load(R.drawable.ic_image4_24)
+                        .into(imageCount)
                 }
                 5 -> {
-                    imageCount.setImageResource(R.drawable.ic_image5_24)
+                    Glide.with(context)
+                        .load(R.drawable.ic_image5_24)
+                        .into(imageCount)
                 }
                 6 -> {
-                    imageCount.setImageResource(R.drawable.ic_image6_24)
+                    Glide.with(context)
+                        .load(R.drawable.ic_image6_24)
+                        .into(imageCount)
                 }
                 7 -> {
-                    imageCount.setImageResource(R.drawable.ic_image7_24)
+                    Glide.with(context)
+                        .load(R.drawable.ic_image7_24)
+                        .into(imageCount)
                 }
                 8 -> {
-                    imageCount.setImageResource(R.drawable.ic_image8_24)
+                    Glide.with(context)
+                        .load(R.drawable.ic_image8_24)
+                        .into(imageCount)
                 }
                 9 -> {
-                    imageCount.setImageResource(R.drawable.ic_image9_24)
+                    Glide.with(context)
+                        .load(R.drawable.ic_image9_24)
+                        .into(imageCount)
                 }
                 10 -> {
-                    imageCount.setImageResource(R.drawable.ic_image10_24)
+                    Glide.with(context)
+                        .load(R.drawable.ic_image10_24)
+                        .into(imageCount)
                 }
             }
 
@@ -118,7 +142,9 @@ class CommunityAdapter(
             nickname.text = item.member.nickname
 
             if (item.member.imageUrl.isNullOrEmpty()) {
-                profile.setImageDrawable(context.getDrawable(R.drawable.food1))
+                Glide.with(context)
+                    .load(R.drawable.default_profile)
+                    .into(profile)
             } else {
                 Glide.with(context)
                     .load(item.member.imageUrl)
@@ -132,12 +158,47 @@ class CommunityAdapter(
             like.isChecked = item.liked
             bookmark.isChecked = item.bookmarked
 
+
+            val sdf = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss")
+            val createdTime = sdf.parse(item.createdAt)
+            val createdMillis = createdTime.time
+
+            val currMillis = System.currentTimeMillis()
+
+            var diff = (currMillis - createdMillis)
+
+            when {
+                diff < 60000 -> {
+                    createdAt.text = "방금 전"
+                }
+                diff < 3600000 -> {
+                    createdAt.text = "${TimeUnit.MILLISECONDS.toMinutes(diff)}분 전"
+                }
+                diff < 86400000 -> {
+                    createdAt.text = "${TimeUnit.MILLISECONDS.toHours(diff)}시간 전"
+                }
+                diff < 604800000 -> {
+                    createdAt.text = "${TimeUnit.MILLISECONDS.toDays(diff)}일 전"
+                }
+                diff < 2419200000 -> {
+                    createdAt.text = "${(TimeUnit.MILLISECONDS.toDays(diff)) / 7}주 전"
+                }
+                diff < 31556952000 -> {
+                    createdAt.text = "${(TimeUnit.MILLISECONDS.toDays(diff)) / 30}개월 전"
+                }
+                else -> {
+                    createdAt.text = "${(TimeUnit.MILLISECONDS.toDays(diff)) / 365}년 전"
+                }
+            }
+
             itemView.setOnClickListener {
                 val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
                 val ft: FragmentTransaction = manager.beginTransaction()
 
 
-                ft.add(R.id.fg_MainContainer, DetailPostFragment.newInstance(item.id), DetailPostFragment.TAG)
+                ft.add(R.id.fg_MainContainer,
+                    DetailPostFragment.newInstance(item.id),
+                    DetailPostFragment.TAG)
                 ft.addToBackStack(DetailPostFragment.TAG).commitAllowingStateLoss()
 
             }
@@ -156,7 +217,9 @@ class CommunityAdapter(
             val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
             val ft: FragmentTransaction = manager.beginTransaction()
 
-            ft.add(R.id.fg_MainContainer, OtherPageFragment.newInstance(item.member.id), OtherPageFragment.TAG)
+            ft.add(R.id.fg_MainContainer,
+                OtherPageFragment.newInstance(item.member.id),
+                OtherPageFragment.TAG)
             ft.addToBackStack(OtherPageFragment.TAG).commitAllowingStateLoss()
         }
     }

@@ -62,7 +62,7 @@ class OtherPageFragment : BaseFragment<OtherPageViewModel, FragmentOtherPageBind
                 }
 
                 is OtherPageState.MemberPostSuccess -> {
-                    setMemberPost(it.response.data.content)
+                    setMemberPost(it.response.data!!.content)
                 }
 
                 is OtherPageState.Error -> {
@@ -97,7 +97,9 @@ class OtherPageFragment : BaseFragment<OtherPageViewModel, FragmentOtherPageBind
     @SuppressLint("UseCompatLoadingForDrawables")
     private fun setUserInformation(data: MemberDetailData) = with(binding) {
         if (data.imageUrl.isNullOrEmpty()) {
-            civProfile.setImageDrawable(requireContext().getDrawable(R.drawable.food1))
+            Glide.with(requireContext())
+                .load(R.drawable.default_profile)
+                .into(civProfile)
         } else {
             Glide.with(requireContext())
                 .load(data.imageUrl)

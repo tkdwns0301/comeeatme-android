@@ -110,7 +110,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 setFragment(HomeFragment.TAG, HomeFragment.newInstance())
                 true
             }
-            R.id.fm_Map -> {
+            R.id.fm_Rank -> {
                 setFragment(RankFragment.TAG, RankFragment.newInstance())
                 true
             }
@@ -128,5 +128,5 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 }
 
 enum class MainTabMenu(@IdRes val menuId: Int) {
-    HOME(R.id.fm_Home), MAP(R.id.fm_Map), BOOKMARK(R.id.fm_Bookmark), USER(R.id.fm_User)
+    HOME(R.id.fm_Home), MAP(R.id.fm_Rank), BOOKMARK(R.id.fm_Bookmark), USER(R.id.fm_User)
 }

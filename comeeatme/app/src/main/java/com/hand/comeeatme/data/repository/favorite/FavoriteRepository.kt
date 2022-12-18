@@ -11,6 +11,5 @@ interface FavoriteRepository {
         memberId: Long,
         page: Long?,
         size: Long?,
-        sort: Boolean?,
     ): FavoritePostResponse?
 }

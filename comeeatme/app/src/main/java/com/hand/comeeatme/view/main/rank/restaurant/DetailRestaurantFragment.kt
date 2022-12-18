@@ -15,6 +15,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.os.bundleOf
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -66,13 +68,14 @@ class DetailRestaurantFragment :
         viewModel.detailRestaurantStateLiveData.observe(viewLifecycleOwner) {
             when (it) {
                 is DetailRestaurantState.Uninitialized -> {
+                    binding.clLoading.isVisible = true
                     viewModel.getDetailRestaurant(restaurantId!!)
                     viewModel.getRestaurantImage(restaurantId!!)
                     viewModel.getRestaurantPosts(restaurantId!!)
                 }
 
                 is DetailRestaurantState.Loading -> {
-
+                    binding.clLoading.isVisible = true
                 }
 
                 is DetailRestaurantState.Success -> {
@@ -99,6 +102,7 @@ class DetailRestaurantFragment :
                 }
 
                 is DetailRestaurantState.CoordSuccess -> {
+                    binding.clLoading.isGone = true
                     viewModel.setLongitude(it.response.documents[0].x)
                     viewModel.setLatitude(it.response.documents[0].y)
                     setKakaoMap(it.response.documents[0].x, it.response.documents[0].y)
@@ -113,15 +117,17 @@ class DetailRestaurantFragment :
 
     @SuppressLint("ClickableViewAccessibility")
     override fun initView() = with(binding) {
+        Glide.with(requireContext())
+            .load(R.drawable.loading)
+            .into(ivLoading)
+
         rvIncludingContent.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
         mapView = MapView(requireContext())
         KakaoMapView.addView(mapView)
 
-        KakaoMapView.setOnTouchListener(OnTouchListener { view, motionEvent ->
-            val action = motionEvent.action
-
-            when (action) {
+        KakaoMapView.setOnTouchListener(OnTouchListener { _, motionEvent ->
+            when (motionEvent.action) {
                 MotionEvent.ACTION_DOWN -> slContent.requestDisallowInterceptTouchEvent(true)
                 MotionEvent.ACTION_UP -> slContent.requestDisallowInterceptTouchEvent(true)
                 MotionEvent.ACTION_MOVE -> slContent.requestDisallowInterceptTouchEvent(true)
@@ -176,7 +182,9 @@ class DetailRestaurantFragment :
     @SuppressLint("UseCompatLoadingForDrawables")
     private fun setRestaurantImage(contents: List<RestaurantImageContent>) = with(binding) {
         if (contents.isEmpty()) {
-            ivImage.setImageDrawable(requireContext().getDrawable(R.drawable.food1))
+            Glide.with(requireContext())
+                .load(R.drawable.default_image)
+                .into(ivImage)
         } else {
             Glide.with(requireContext())
                 .load(contents[0].imageUrl)

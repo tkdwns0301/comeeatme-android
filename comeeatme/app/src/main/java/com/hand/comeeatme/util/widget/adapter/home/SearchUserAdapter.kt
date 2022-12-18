@@ -40,7 +40,9 @@ class SearchUserAdapter(
         @SuppressLint("UseCompatLoadingForDrawables")
         fun bind(context: Context, item: MemberSearchContent) {
             if(item.imageUrl.isNullOrEmpty()) {
-                profile.setImageDrawable(context.getDrawable(R.drawable.food1))
+                Glide.with(context)
+                    .load(R.drawable.default_profile)
+                    .into(profile)
             } else {
                 Glide.with(context)
                     .load(item.imageUrl)

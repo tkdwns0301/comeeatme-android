@@ -6,10 +6,10 @@ import com.hand.comeeatme.data.response.logIn.TokenResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
-class DefaultLogInRepository(
+class DefaultOAuthRepository(
     private val oAuthService: OAuthService,
     private val ioDispatcher: CoroutineDispatcher,
-) : LogInRepository {
+) : OAuthRepository {
     override suspend fun getToken(
         tokenRequest: TokenRequest,
     ): TokenResponse? = withContext(ioDispatcher) {
@@ -23,6 +23,19 @@ class DefaultLogInRepository(
         } else {
             null
         }
+    }
 
+    override suspend fun reissueToken(
+        refreshToken: String
+    ): TokenResponse? = withContext(ioDispatcher) {
+        val response = oAuthService.reissueToken(
+            Authorization = "Bearer $refreshToken"
+        )
+
+        if(response.isSuccessful) {
+            response.body()!!
+        } else {
+            null
+        }
     }
 }

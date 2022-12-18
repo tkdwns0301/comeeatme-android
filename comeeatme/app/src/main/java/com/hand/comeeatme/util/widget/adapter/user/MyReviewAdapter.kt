@@ -13,6 +13,8 @@ import com.hand.comeeatme.R
 import com.hand.comeeatme.data.response.post.Content
 import com.hand.comeeatme.databinding.LayoutUserMyreviewBinding
 import com.hand.comeeatme.view.main.home.post.DetailPostFragment
+import java.text.SimpleDateFormat
+import java.util.concurrent.TimeUnit
 
 class MyReviewAdapter(
     private val items: List<Content>,
@@ -37,7 +39,7 @@ class MyReviewAdapter(
     class ViewHolder(binding: LayoutUserMyreviewBinding) : RecyclerView.ViewHolder(binding.root) {
         private val image = binding.ivImage
         private val content = binding.tvContent
-        private val date = binding.tvDate
+        private val createdAt = binding.tvDate
         private val view = binding.tvView
         private val commentCount = binding.tvCommentCnt
 
@@ -48,7 +50,39 @@ class MyReviewAdapter(
                 .into(image)
 
             content.text = item.content
-            date.text = item.createdAt
+
+            val sdf = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss")
+            val createdTime = sdf.parse(item.createdAt)
+            val createdMillis = createdTime.time
+
+            val currMillis = System.currentTimeMillis()
+
+            var diff = (currMillis - createdMillis)
+
+            when {
+                diff < 60000 -> {
+                    createdAt.text = "방금 전"
+                }
+                diff < 3600000 -> {
+                    createdAt.text = "${TimeUnit.MILLISECONDS.toMinutes(diff)}분 전"
+                }
+                diff < 86400000 -> {
+                    createdAt.text = "${TimeUnit.MILLISECONDS.toHours(diff)}시간 전"
+                }
+                diff < 604800000 -> {
+                    createdAt.text = "${TimeUnit.MILLISECONDS.toDays(diff)}일 전"
+                }
+                diff < 2419200000 -> {
+                    createdAt.text = "${(TimeUnit.MILLISECONDS.toDays(diff)) / 7}주 전"
+                }
+                diff < 31556952000 -> {
+                    createdAt.text = "${(TimeUnit.MILLISECONDS.toDays(diff)) / 30}개월 전"
+                }
+                else -> {
+                    createdAt.text = "${(TimeUnit.MILLISECONDS.toDays(diff)) / 365}년 전"
+                }
+            }
+
             commentCount.text = "${item.commentCount}"
 
             itemView.setOnClickListener {

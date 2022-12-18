@@ -15,8 +15,8 @@ import com.hand.comeeatme.data.repository.kakao.DefaultKakaoRepository
 import com.hand.comeeatme.data.repository.kakao.KakaoRepository
 import com.hand.comeeatme.data.repository.like.DefaultLikeRepository
 import com.hand.comeeatme.data.repository.like.LikeRepository
-import com.hand.comeeatme.data.repository.logIn.DefaultLogInRepository
-import com.hand.comeeatme.data.repository.logIn.LogInRepository
+import com.hand.comeeatme.data.repository.logIn.DefaultOAuthRepository
+import com.hand.comeeatme.data.repository.logIn.OAuthRepository
 import com.hand.comeeatme.data.repository.member.DefaultMemberRepository
 import com.hand.comeeatme.data.repository.member.MemberRepository
 import com.hand.comeeatme.data.repository.post.DefaultPostRepository
@@ -58,13 +58,13 @@ import org.koin.dsl.module
 val appModule = module {
     // viewModel
     viewModel { LogInViewModel(get(), get()) }
-    viewModel { HomeViewModel(get(), get(), get(), get()) }
+    viewModel { HomeViewModel(get(), get(), get(), get(), get()) }
     viewModel { SearchViewModel(get(), get(), get()) }
     viewModel { NewPostViewModel(get(), get(), get(), get()) }
     viewModel { AlbumViewModel() }
     viewModel { CropViewModel() }
     viewModel { DetailPostViewModel(get(), get(), get(), get(), get(), get(), get()) }
-    viewModel { BookmarkViewModel(get()) }
+    viewModel { BookmarkViewModel() }
     viewModel { BookmarkPostViewModel(get(), get()) }
     viewModel { FavoriteRestaurantViewModel(get(), get()) }
     viewModel { UserViewModel(get(), get(), get(), get(), get()) }
@@ -75,15 +75,15 @@ val appModule = module {
     viewModel { RecentReviewViewModel(get()) }
     viewModel { OtherPageViewModel(get(), get(), get(), get(), get()) }
     viewModel { DetailRestaurantViewModel(get(), get(), get(), get(), get(), get()) }
-    viewModel { TermViewModel() }
-    viewModel { SettingViewModel(get()) }
+    viewModel { TermViewModel(get(), get()) }
+    viewModel { SettingViewModel(get(), get()) }
     viewModel { ReportViewModel(get(), get()) }
     viewModel { RankViewModel(get(), get(), get(), get(), get()) }
     viewModel { RegionViewModel(get(), get()) }
 
     // repository
     single<PostRepository> { DefaultPostRepository(get(), get()) }
-    single<LogInRepository> { DefaultLogInRepository(get(), get()) }
+    single<OAuthRepository> { DefaultOAuthRepository(get(), get()) }
     single<MemberRepository> { DefaultMemberRepository(get(), get()) }
     single<RestaurantRepository> { DefaultRestaurantRepository(get(), get()) }
     single<ImageRepository> { DefaultImageRepository(get(), get()) }

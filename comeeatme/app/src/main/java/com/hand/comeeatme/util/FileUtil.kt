@@ -1,7 +1,10 @@
 package com.hand.comeeatme.util
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
+import android.graphics.Matrix
+import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
@@ -15,18 +18,17 @@ import java.io.FileOutputStream
 
 object FileUtil {
 
-
-    suspend fun resizeBitmap(photoPathList: ArrayList<String>, compressPhotoPathMap: HashMap<Int, String>): MutableList<String> {
+    suspend fun resizeBitmap(
+        context: Context,
+        photoPathList: ArrayList<String>,
+        compressPhotoPathMap: HashMap<Int, String>,
+    ): MutableList<String> {
 
         CoroutineScope(Dispatchers.IO).launch {
-            Log.e("1", "1")
             photoPathList.forEachIndexed { index, photoPath ->
-                Log.e("2", "$index, $photoPath")
                 if (!compressPhotoPathMap.containsKey(index)) {
-                    Log.e("3", "3")
                     launch {
-                        Log.e("resize", "$index, $photoPath")
-                        cropBitmap(photoPath, index)?.let {
+                        cropBitmap(context, photoPath, index)?.let {
                             compressPhotoPathMap[index] = it
                         }
                     }
@@ -34,29 +36,31 @@ object FileUtil {
             }
         }.join()
 
-        Log.e("asdasd", "asdasd")
-
         return compressPhotoPathMap.values.toMutableList()
     }
 
-    private fun cropBitmap(imagePath: String, position: Int): String? {
+    private fun cropBitmap(context: Context, imagePath: String, position: Int): String? {
         var bitmap: Bitmap? = null
 
         try {
-            bitmap = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                ImageDecoder.decodeBitmap(ImageDecoder.createSource(appContext!!.contentResolver, Uri.fromFile(File(imagePath))))
+            bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                ImageDecoder.decodeBitmap(ImageDecoder.createSource(appContext!!.contentResolver,
+                    Uri.fromFile(File(imagePath))))
             } else {
-                MediaStore.Images.Media.getBitmap(appContext!!.contentResolver, Uri.fromFile(File(imagePath)))
+                MediaStore.Images.Media.getBitmap(appContext!!.contentResolver,
+                    Uri.fromFile(File(imagePath)))
             }
         } catch (e: Exception) {
             Log.e("GetBitMap Error", "${e.printStackTrace()}")
         }
 
+        bitmap = rotateImageIfRequired(context, bitmap!!, Uri.fromFile(File(imagePath)))
+
         val width = bitmap!!.width
         val height = bitmap!!.height
 
-        var cropBitmap: Bitmap = if(width > height) {
-            val x = (width - height) /2
+        var cropBitmap: Bitmap = if (width > height) {
+            val x = (width - height) / 2
             val y = 0
             Bitmap.createBitmap(bitmap, x, y, height, height)
         } else {
@@ -92,6 +96,32 @@ object FileUtil {
         }
 
         return null
+    }
+
+    private fun rotateImageIfRequired(context: Context, bitmap: Bitmap, uri: Uri): Bitmap? {
+        val input = context.contentResolver.openInputStream(uri) ?: return null
+
+        val exif = if (Build.VERSION.SDK_INT > 23) {
+            ExifInterface(input)
+        } else {
+            ExifInterface(uri.path!!)
+        }
+
+        val orientation =
+            exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
+
+        return when (orientation) {
+            ExifInterface.ORIENTATION_ROTATE_90 -> rotateImage(bitmap, 90)
+            ExifInterface.ORIENTATION_ROTATE_180 -> rotateImage(bitmap, 180)
+            ExifInterface.ORIENTATION_ROTATE_270 -> rotateImage(bitmap, 270)
+            else -> bitmap
+        }
+    }
+
+    private fun rotateImage(bitmap: Bitmap, degree: Int): Bitmap? {
+        val matrix = Matrix()
+        matrix.postRotate(degree.toFloat())
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
     }
 
 }

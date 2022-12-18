@@ -12,8 +12,11 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import com.bumptech.glide.Glide
 import com.google.android.gms.location.*
 import com.hand.comeeatme.R
 import com.hand.comeeatme.data.response.restaurant.RestaurantsRankContent
@@ -46,21 +49,22 @@ class RankFragment : BaseFragment<RankViewModel, FragmentRankBinding>() {
         viewModel.rankStateLiveDate.observe(viewLifecycleOwner) {
             when (it) {
                 is RankState.Uninitialized -> {
+                    binding.clLoading.isVisible = true
                     if (checkPermissionForLocation(requireContext())) {
                         getCurrentLocation()
                     }
                 }
 
                 is RankState.Loading -> {
-
+                    binding.clLoading.isVisible = true
                 }
 
                 is RankState.Success -> {
+                    binding.clLoading.isGone = true
                     setAdapter(it.response.data.content)
                 }
 
                 is RankState.CurrentAddressSuccess -> {
-                    val address = it.depth1 + " " + it.depth2
                     binding.tvDepth1.text = it.depth1
                     binding.tvDepth2.text = "${it.depth2} "
 
@@ -75,6 +79,10 @@ class RankFragment : BaseFragment<RankViewModel, FragmentRankBinding>() {
     }
 
     override fun initView() = with(binding) {
+        Glide.with(requireContext())
+            .load(R.drawable.loading)
+            .into(ivLoading)
+
         mLocationRequest = LocationRequest.create().apply {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }

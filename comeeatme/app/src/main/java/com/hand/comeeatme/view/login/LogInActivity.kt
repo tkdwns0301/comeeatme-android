@@ -4,9 +4,13 @@ import android.util.Log
 import android.widget.Toast
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import com.bumptech.glide.Glide
+import com.hand.comeeatme.R
 import com.hand.comeeatme.databinding.ActivityLoginBinding
 import com.hand.comeeatme.view.base.BaseActivity
 import com.hand.comeeatme.view.login.term.TermActivity
+import com.hand.comeeatme.view.main.MainActivity
+import com.kakao.sdk.auth.AuthApiClient
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.AuthErrorCause
 import com.kakao.sdk.user.UserApiClient
@@ -23,19 +27,26 @@ class LogInActivity : BaseActivity<LogInViewModel, ActivityLoginBinding>() {
     override fun observeData() = viewModel.loginStateLiveData.observe(this) {
         when (it) {
             is LogInState.Uninitialized -> {
-                binding.pbLoading.isGone = true
+
             }
 
             is LogInState.Loading -> {
-                binding.pbLoading.isVisible = true
+                binding.clLoading.isVisible = true
             }
 
             is LogInState.Success -> {
-                binding.pbLoading.isGone = true
-                startActivity(
-                    //MainActivity.newIntent(applicationContext)
-                    TermActivity.newIntent(applicationContext)
-                )
+                binding.clLoading.isGone = true
+
+                viewModel.saveToken(it.token)
+
+                if(it.token.memberId == null) {
+                    startActivity(
+                        TermActivity.newIntent(applicationContext)
+                    )
+                } else {
+                    startActivity(MainActivity.newIntent(applicationContext))
+                }
+
                 finish()
             }
 
@@ -47,6 +58,19 @@ class LogInActivity : BaseActivity<LogInViewModel, ActivityLoginBinding>() {
 
 
     override fun initView() = with(binding) {
+        Glide.with(applicationContext)
+            .load(R.drawable.loading)
+            .into(ivLoading)
+
+        UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
+            if(error != null) {
+                clLogIn.isVisible = true
+            } else if(tokenInfo != null) {
+                viewModel.getToken(AuthApiClient.instance.tokenManagerProvider.manager.getToken()!!.accessToken)
+            }
+        }
+
+
         callback = { token, error ->
             if (error != null) {
                 when {

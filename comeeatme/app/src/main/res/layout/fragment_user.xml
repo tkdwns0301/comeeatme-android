@@ -71,7 +71,7 @@
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/cl_Profile"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         tools:src="@drawable/food1"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintDimensionRatio="1:1"

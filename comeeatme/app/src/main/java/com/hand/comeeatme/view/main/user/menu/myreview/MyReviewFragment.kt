@@ -33,7 +33,7 @@ class MyReviewFragment: BaseFragment<MyReviewViewModel, FragmentMyreviewBinding>
                 }
 
                 is MyReviewState.Success -> {
-                    setAdapter(it.response.data.content)
+                    setAdapter(it.response.data!!.content)
                 }
 
                 is MyReviewState.Error -> {

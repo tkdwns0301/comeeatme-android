@@ -1,6 +1,7 @@
 package com.hand.comeeatme.data.response.bookmark
 
 import com.google.gson.annotations.Expose
+import com.hand.comeeatme.data.response.ErrorResponse
 import com.hand.comeeatme.data.response.post.Member
 import com.hand.comeeatme.data.response.post.Pageable
 import com.hand.comeeatme.data.response.post.Restaurant
@@ -10,7 +11,9 @@ data class BookmarkPostResponse(
     @Expose
     val success: Boolean,
     @Expose
-    val data: BookmarkPostData,
+    val data: BookmarkPostData?,
+    @Expose
+    val error: ErrorResponse?,
 )
 
 data class BookmarkPostData(

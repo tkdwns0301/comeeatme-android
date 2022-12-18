@@ -1,12 +1,17 @@
 package com.hand.comeeatme.data.response.post
 
+import androidx.annotation.Keep
 import com.google.gson.annotations.Expose
+import com.hand.comeeatme.data.response.ErrorResponse
 
+@Keep
 data class PostResponse(
     @Expose
     val success: Boolean,
     @Expose
-    val data: PostData,
+    val data: PostData?,
+    @Expose
+    val error: ErrorResponse?
 )
 
 data class PostData(

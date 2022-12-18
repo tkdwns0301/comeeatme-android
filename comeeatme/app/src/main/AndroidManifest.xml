@@ -23,7 +23,8 @@
         <activity
             android:name=".view.login.LogInActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -46,7 +47,8 @@
         </activity>
         <activity android:name=".view.main.MainActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"/>
         <activity android:name=".view.main.home.newpost.album.AlbumActivity" />
         <activity android:name=".view.main.home.newpost.crop.CropActivity" />
         <activity android:name=".view.main.home.hashtag.HashTagActivity" />
@@ -59,5 +61,6 @@
         <activity android:name=".view.main.home.post.report.ReportActivity"/>
         <activity android:name=".view.main.home.post.report.ReportFinishActivity"/>
         <activity android:name=".view.main.rank.region.RegionActivity"/>
+        <activity android:name=".view.login.onboarding.OnBoardingActivity"/>
     </application>
 </manifest>

@@ -39,4 +39,8 @@ data class FavoritePostContent(
     val name: String,
     @Expose
     val favorited: Boolean,
+    @Expose
+    val hashtags: List<String>,
+    @Expose
+    val imageUrls: List<String>?,
 )

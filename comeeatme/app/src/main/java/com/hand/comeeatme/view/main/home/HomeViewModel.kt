@@ -5,15 +5,22 @@ import androidx.lifecycle.viewModelScope
 import com.hand.comeeatme.data.preference.AppPreferenceManager
 import com.hand.comeeatme.data.repository.bookmark.BookmarkRepository
 import com.hand.comeeatme.data.repository.like.LikeRepository
+import com.hand.comeeatme.data.repository.logIn.OAuthRepository
 import com.hand.comeeatme.data.repository.post.PostRepository
+import com.hand.comeeatme.data.response.logIn.TokenResponse
+import com.hand.comeeatme.data.response.post.Content
 import com.hand.comeeatme.view.base.BaseViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HomeViewModel(
     private val appPreferenceManager: AppPreferenceManager,
     private val postRepository: PostRepository,
     private val likeRepository: LikeRepository,
     private val bookmarkRepository: BookmarkRepository,
+    private val oauthRepository: OAuthRepository,
 ) : BaseViewModel() {
     companion object {
         const val COMMUNITY_KEY = "Community"
@@ -38,13 +45,22 @@ class HomeViewModel(
         "24시간" to "AROUND_CLOCK"
     )
 
+    private var page: Int = 0
+    private var contents = arrayListOf<Content>()
+
     val homeStateLiveData = MutableLiveData<HomeState>(HomeState.Uninitialized)
+
+    override fun fetchData(): Job = viewModelScope.launch {
+        loadPost()
+    }
 
     private var checkedChipList: ArrayList<String> = arrayListOf()
 
     fun setCheckedChipList(checkedChipList: ArrayList<String>) {
         this.checkedChipList = checkedChipList
     }
+
+    fun getCheckedChipList(): ArrayList<String> = checkedChipList
 
     fun likePost(
         postId: Long,
@@ -55,7 +71,7 @@ class HomeViewModel(
             homeStateLiveData.value = HomeState.LikePostSuccess
         } ?: run {
             homeStateLiveData.value = HomeState.Error(
-                "좋아요 실패"
+                "좋아요를 하는 도중 오류가 발생했습니다."
             )
         }
     }
@@ -69,7 +85,7 @@ class HomeViewModel(
             homeStateLiveData.value = HomeState.UnLikePostSuccess
         } ?: run {
             homeStateLiveData.value = HomeState.Error(
-                "좋아요 취소 실패"
+                "좋아요를 취소하는 도중 오류가 발생했습니다."
             )
         }
     }
@@ -81,10 +97,14 @@ class HomeViewModel(
             bookmarkRepository.bookmarkPost("${appPreferenceManager.getAccessToken()}", postId)
 
         response?.let {
-            homeStateLiveData.value = HomeState.BookmarkPostSuccess
+            if(it.success) {
+                homeStateLiveData.value = HomeState.BookmarkPostSuccess
+            } else {
+                reissueToken()
+            }
         } ?: run {
             homeStateLiveData.value = HomeState.Error(
-                "북마크 실패"
+                "북마크를 하는 도중 오류가 발생했습니다."
             )
         }
     }
@@ -96,26 +116,26 @@ class HomeViewModel(
             bookmarkRepository.unBookmarkPost("${appPreferenceManager.getAccessToken()}", postId)
 
         response?.let {
-            homeStateLiveData.value = HomeState.BookmarkPostSuccess
+            if(it.success) {
+                homeStateLiveData.value = HomeState.UnBookmarkPostSuccess
+            } else {
+                reissueToken()
+            }
         } ?: run {
             homeStateLiveData.value = HomeState.Error(
-                "북마크 취소 실패"
+                "북마크를 취소하는 도중 오류가 발생했습니다."
             )
         }
     }
 
     fun loadPost(
-        page: Int?,
-        size: Int?,
-        sort: Boolean?,
-        hashTags: List<String>?,
     ) = viewModelScope.launch {
         homeStateLiveData.value = HomeState.Loading
 
-        var hashTagsEng : ArrayList<String>? = arrayListOf<String>()
+        var hashTagsEng: ArrayList<String>? = arrayListOf<String>()
 
-        if(!hashTags.isNullOrEmpty()) {
-            hashTags.forEach { hashTag ->
+        if (!checkedChipList.isNullOrEmpty()) {
+            checkedChipList.forEach { hashTag ->
                 hashTagsEng!!.add(hashTagKorToEng[hashTag]!!)
             }
         } else {
@@ -123,17 +143,59 @@ class HomeViewModel(
         }
 
         val posts = postRepository.getPosts("${appPreferenceManager.getAccessToken()}",
-            page,
-            size,
-            sort,
+            page++,
+            10,
+            false,
             hashTagsEng)
 
-        posts?.let { post ->
-            homeStateLiveData.value = HomeState.Success(
-                posts = post
-            )
+        posts?.let {
+            if(!it.success) {
+                reissueToken()
+            } else {
+                if(!it.data!!.content.isNullOrEmpty()) {
+                    contents.addAll(it.data!!.content)
+
+                    homeStateLiveData.value = HomeState.Success(
+                        posts = contents
+                    )
+                } else {
+                    homeStateLiveData.value = HomeState.LikePostSuccess
+                }
+
+            }
+
         } ?: run {
-            homeStateLiveData.value = HomeState.Error("데이터 없음")
+            homeStateLiveData.value = HomeState.Error(
+                "글을 불러오는 도중 오류가 발생했습니다."
+            )
+        }
+    }
+
+    private fun reissueToken() = viewModelScope.launch {
+        val response = oauthRepository.reissueToken(
+            "${appPreferenceManager.getRefreshToken()}"
+        )
+
+        response?.let {
+            saveToken(it)
+
+            homeStateLiveData.value = HomeState.Error(
+                "다시 시도해주세요"
+            )
+
+        } ?: run {
+            homeStateLiveData.value = HomeState.Error(
+                "정보를 요청하는 도중 오류가 발생했습니다."
+            )
+        }
+    }
+
+    private fun saveToken(token: TokenResponse) = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            appPreferenceManager.putAccessToken(token.accessToken)
+            appPreferenceManager.putRefreshToken(token.refreshToken)
+            appPreferenceManager.putMemberId(token.memberId!!)
+            fetchData()
         }
     }
 

@@ -32,7 +32,7 @@ class DefaultKakaoRepository(
         val response = kakaoService.getAddressToCoord(
             Authorization = "KakaoAK $restApiKey",
             query = query,
-            analyze_type = "exact"
+            analyze_type = "similar"
         )
 
         if(response.isSuccessful) {

@@ -52,7 +52,7 @@ class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
                 }
 
                 is UserState.UserPostSuccess -> {
-                    setUserPost(it.response.data.content)
+                    setUserPost(it.response.data!!.content)
                 }
 
                 is UserState.Error -> {
@@ -153,7 +153,9 @@ class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
     @SuppressLint("UseCompatLoadingForDrawables")
     private fun setUserInformation(data: MemberDetailData) = with(binding) {
         if (data.imageUrl.isNullOrEmpty()) {
-            clProfile.setImageDrawable(requireContext().getDrawable(R.drawable.default_profile))
+            Glide.with(requireContext())
+                .load(R.drawable.default_profile)
+                .into(clProfile)
         } else {
             Glide.with(requireContext())
                 .load(data.imageUrl)

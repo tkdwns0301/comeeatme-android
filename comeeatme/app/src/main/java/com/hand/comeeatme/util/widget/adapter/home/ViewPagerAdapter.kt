@@ -32,7 +32,9 @@ class ViewPagerAdapter(
         val item = items[position]
 
         if (item.isEmpty()) {
-            holder.images.setImageDrawable(context.getDrawable(R.drawable.food1))
+            Glide.with(context)
+                .load(R.drawable.default_image)
+                .into(holder.images)
         } else {
             Glide.with(context)
                 .load(item)

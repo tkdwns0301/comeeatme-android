@@ -44,7 +44,6 @@ class BookmarkPostViewModel(
     fun getAllBookmarked(
         page: Long?,
         size: Long?,
-        sort: Boolean?,
     ) = viewModelScope.launch {
         bookmarkPostStateLiveData.value = BookmarkPostState.Loading
 
@@ -53,7 +52,6 @@ class BookmarkPostViewModel(
             appPreferenceManager.getMemberId(),
             page,
             size,
-            sort,
         )
 
         response?.let {

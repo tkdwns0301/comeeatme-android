@@ -53,14 +53,18 @@ class BookmarkPostAdapter(
         @SuppressLint("UseCompatLoadingForDrawables")
         fun bind(context: Context, item: BookmarkPostContent) {
             item.imageUrls.forEachIndexed {index, imageUrl ->
-                imageContainers[index].isVisible = true
-                Glide.with(context)
-                    .load(imageUrl)
-                    .into(images[index])
+                if(index < 3) {
+                    imageContainers[index].isVisible = true
+                    Glide.with(context)
+                        .load(imageUrl)
+                        .into(images[index])
+                }
             }
 
             if (item.member.imageUrl.isNullOrEmpty()) {
-                profile.setImageDrawable(context.getDrawable(R.drawable.food1))
+                Glide.with(context)
+                    .load(R.drawable.default_profile)
+                    .into(profile)
             } else {
                 Glide.with(context)
                     .load(item.member.imageUrl)

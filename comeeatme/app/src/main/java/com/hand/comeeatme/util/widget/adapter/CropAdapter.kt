@@ -1,14 +1,17 @@
 package com.hand.comeeatme.util.widget.adapter
 
+import android.content.Context
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.hand.comeeatme.databinding.LayoutCropImageBinding
 import java.io.File
 
 class CropAdapter(
+    private val context: Context,
     private val items: ArrayList<String>,
     private val onClickImage: (photoPath: String) -> Unit,
     private val visited: ArrayList<Boolean>,
@@ -26,7 +29,7 @@ class CropAdapter(
     override fun onBindViewHolder(holder: CropViewHolder, position: Int) {
         val photo = items[position]
 
-        holder.bind(photo)
+        holder.bind(photo, context)
 
         if(visited[position]) {
             holder.checked.visibility = View.VISIBLE
@@ -46,8 +49,10 @@ class CropAdapter(
         val imageView = binding.ivImage
         val checked = binding.viewChecked
 
-        fun bind(photoPath: String) {
-            imageView.setImageURI(Uri.fromFile(File(photoPath)))
+        fun bind(photoPath: String, context: Context) {
+            Glide.with(context)
+                .load(Uri.fromFile(File(photoPath)))
+                .into(imageView)
         }
     }
 

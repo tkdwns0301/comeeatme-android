@@ -3,7 +3,7 @@ package com.hand.comeeatme.view.login
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hand.comeeatme.data.preference.AppPreferenceManager
-import com.hand.comeeatme.data.repository.logIn.LogInRepository
+import com.hand.comeeatme.data.repository.logIn.OAuthRepository
 import com.hand.comeeatme.data.request.aouth.TokenRequest
 import com.hand.comeeatme.data.response.logIn.TokenResponse
 import com.hand.comeeatme.view.base.BaseViewModel
@@ -13,7 +13,7 @@ import kotlinx.coroutines.withContext
 
 class LogInViewModel(
     private val appPreferenceManager: AppPreferenceManager,
-    private val logInRepository: LogInRepository,
+    private val logInRepository: OAuthRepository,
 ) : BaseViewModel() {
     companion object {
         const val LOGIN_KEY = "LogIn"
@@ -28,8 +28,6 @@ class LogInViewModel(
             val comeEatMeToken = logInRepository.getToken(kakaoToken)
 
             comeEatMeToken?.let {
-                saveToken(it)
-
                 loginStateLiveData.value = LogInState.Success(
                     token = it
                 )
@@ -44,7 +42,11 @@ class LogInViewModel(
         withContext(Dispatchers.IO) {
             appPreferenceManager.putAccessToken(token.accessToken)
             appPreferenceManager.putRefreshToken(token.refreshToken)
-            appPreferenceManager.putMemberId(token.memberId)
+
+            if(token.memberId != null) {
+                appPreferenceManager.putMemberId(token.memberId)
+            }
+
             fetchData()
         }
     }

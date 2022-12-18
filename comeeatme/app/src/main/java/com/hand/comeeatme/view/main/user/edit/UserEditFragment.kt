@@ -71,7 +71,9 @@ class UserEditFragment : BaseFragment<UserEditViewModel, FragmentUserEditBinding
             when (it) {
                 is UserEditState.Uninitialized -> {
                     if (profile.isNullOrEmpty()) {
-                        binding.clProfile.setImageDrawable(requireContext().getDrawable(R.drawable.food1))
+                        Glide.with(requireContext())
+                            .load(R.drawable.default_image)
+                            .into(binding.clProfile)
                     } else {
                         Glide.with(requireContext())
                             .load(profile)
@@ -88,7 +90,9 @@ class UserEditFragment : BaseFragment<UserEditViewModel, FragmentUserEditBinding
 
                 is UserEditState.CompressPhotoFinish -> {
                     if(it.compressPhotoList[0].isNullOrEmpty()) {
-                        binding.clProfile.setImageDrawable(requireContext().getDrawable(R.drawable.food1))
+                        Glide.with(requireContext())
+                            .load(R.drawable.default_profile)
+                            .into(binding.clProfile)
                     } else {
                         Glide.with(requireContext())
                             .load(it.compressPhotoList[0])

@@ -24,6 +24,5 @@ interface BookmarkService {
         @Path("memberId") memberId: Long,
         @Query("page") page: Long,
         @Query("size") size: Long?,
-        @Query("sort") sort: Boolean?,
     ): Response<BookmarkPostResponse>
 }
