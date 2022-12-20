@@ -3,7 +3,7 @@ package com.hand.comeeatme.view.login
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hand.comeeatme.data.preference.AppPreferenceManager
-import com.hand.comeeatme.data.repository.logIn.OAuthRepository
+import com.hand.comeeatme.data.repository.oauth.OAuthRepository
 import com.hand.comeeatme.data.request.aouth.TokenRequest
 import com.hand.comeeatme.data.response.logIn.TokenResponse
 import com.hand.comeeatme.view.base.BaseViewModel

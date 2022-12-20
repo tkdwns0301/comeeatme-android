@@ -127,6 +127,17 @@ class HashTagActivity : AppCompatActivity() {
                 intArrayOf(nonClickBackground, clickBackground)
             )
 
+            val nonClickStroke = ContextCompat.getColor(context, R.color.basic68)
+            val clickStroke = ContextCompat.getColor(context, R.color.transparent)
+
+            chipStrokeColor = ColorStateList(
+                arrayOf(
+                    intArrayOf(-android.R.attr.state_checked),
+                    intArrayOf(android.R.attr.state_checked)
+                ),
+                intArrayOf(nonClickStroke, clickStroke)
+            )
+
             val nonCLickTextColor = ContextCompat.getColor(context, R.color.nonCheck)
             val clickTextColor = ContextCompat.getColor(context, R.color.white)
             //텍스트

@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/background_dialog"
     android:paddingTop="20dp"
+    android:clickable="true"
     android:paddingBottom="40dp">
 
     <TextView

@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.hand.comeeatme.data.preference.AppPreferenceManager
 import com.hand.comeeatme.data.repository.bookmark.BookmarkRepository
 import com.hand.comeeatme.data.repository.like.LikeRepository
-import com.hand.comeeatme.data.repository.logIn.OAuthRepository
+import com.hand.comeeatme.data.repository.oauth.OAuthRepository
 import com.hand.comeeatme.data.repository.post.PostRepository
 import com.hand.comeeatme.data.response.logIn.TokenResponse
 import com.hand.comeeatme.data.response.post.Content
@@ -47,14 +47,19 @@ class HomeViewModel(
 
     private var page: Int = 0
     private var contents = arrayListOf<Content>()
+    private var isLast: Boolean = false
+    private var checkedChipList: ArrayList<String> = arrayListOf()
 
     val homeStateLiveData = MutableLiveData<HomeState>(HomeState.Uninitialized)
 
     override fun fetchData(): Job = viewModelScope.launch {
-        loadPost()
+        loadPost(true)
     }
 
-    private var checkedChipList: ArrayList<String> = arrayListOf()
+    fun getIsLast(): Boolean = isLast
+    fun setIsLast(isLast: Boolean) {
+        this.isLast = isLast
+    }
 
     fun setCheckedChipList(checkedChipList: ArrayList<String>) {
         this.checkedChipList = checkedChipList
@@ -97,7 +102,7 @@ class HomeViewModel(
             bookmarkRepository.bookmarkPost("${appPreferenceManager.getAccessToken()}", postId)
 
         response?.let {
-            if(it.success) {
+            if (it.success) {
                 homeStateLiveData.value = HomeState.BookmarkPostSuccess
             } else {
                 reissueToken()
@@ -116,7 +121,7 @@ class HomeViewModel(
             bookmarkRepository.unBookmarkPost("${appPreferenceManager.getAccessToken()}", postId)
 
         response?.let {
-            if(it.success) {
+            if (it.success) {
                 homeStateLiveData.value = HomeState.UnBookmarkPostSuccess
             } else {
                 reissueToken()
@@ -129,8 +134,14 @@ class HomeViewModel(
     }
 
     fun loadPost(
+        isRefresh: Boolean,
     ) = viewModelScope.launch {
         homeStateLiveData.value = HomeState.Loading
+
+        if (isRefresh) {
+            contents = arrayListOf()
+            page = 0
+        }
 
         var hashTagsEng: ArrayList<String>? = arrayListOf<String>()
 
@@ -142,6 +153,7 @@ class HomeViewModel(
             hashTagsEng = null
         }
 
+
         val posts = postRepository.getPosts("${appPreferenceManager.getAccessToken()}",
             page++,
             10,
@@ -149,17 +161,20 @@ class HomeViewModel(
             hashTagsEng)
 
         posts?.let {
-            if(!it.success) {
+            if (!it.success) {
                 reissueToken()
             } else {
-                if(!it.data!!.content.isNullOrEmpty()) {
+                if(it.data!!.content.isNotEmpty()) {
                     contents.addAll(it.data!!.content)
-
                     homeStateLiveData.value = HomeState.Success(
                         posts = contents
                     )
+                    isLast = false
                 } else {
-                    homeStateLiveData.value = HomeState.LikePostSuccess
+                    isLast = true
+                    homeStateLiveData.value = HomeState.Success(
+                        posts = contents
+                    )
                 }
 
             }
@@ -169,6 +184,8 @@ class HomeViewModel(
                 "글을 불러오는 도중 오류가 발생했습니다."
             )
         }
+
+
     }
 
     private fun reissueToken() = viewModelScope.launch {

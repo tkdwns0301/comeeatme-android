@@ -3,7 +3,7 @@ package com.hand.comeeatme.view.main.user
 import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 import com.hand.comeeatme.data.response.member.MemberDetailResponse
-import com.hand.comeeatme.data.response.post.PostResponse
+import com.hand.comeeatme.data.response.post.Content
 
 sealed class UserState {
     object Uninitialized : UserState()
@@ -13,7 +13,7 @@ sealed class UserState {
     ) : UserState()
 
     data class UserPostSuccess(
-        val response: PostResponse,
+        val response: ArrayList<Content>,
     ) : UserState()
 
     object LikePostSuccess : UserState()

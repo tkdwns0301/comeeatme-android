@@ -57,7 +57,9 @@ class OtherPageViewModel(
     fun getMemberPost(memberId: Long) = viewModelScope.launch {
         val response = postRepository.getMemberPost(
             "${appPreferenceManager.getAccessToken()}",
-            memberId
+            memberId,
+            0,
+            10
         )
 
         response?.let {

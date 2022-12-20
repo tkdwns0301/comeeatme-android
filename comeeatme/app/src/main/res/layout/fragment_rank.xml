@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:clickable="true"
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -134,6 +135,7 @@
             android:id="@+id/ib_Notification"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:visibility="gone"
             android:background="@null"
             android:src="@drawable/ic_noti_32"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -153,66 +155,105 @@
         android:textColor="@color/basic"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/cl_Location"
+        app:layout_constraintBottom_toTopOf="@id/cl_Dialog"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar_Rank" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_Location"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        android:layout_width="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:id="@+id/cl_Dialog"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/tv_Title"
-        app:layout_constraintBottom_toTopOf="@id/srl_Rank"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:background="@drawable/background_rank_sort">
-
-        <TextView
-            android:id="@+id/tv_Depth1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/divider"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:text="서울시"
-            android:textSize="14sp"
-            android:textColor="@color/basic" />
+        android:paddingEnd="16dp"
+        app:layout_constraintBottom_toTopOf="@id/srl_Rank">
 
         <View
-            android:id="@+id/divider"
-            android:layout_width="1dp"
+            android:id="@+id/view2"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_Depth1"
-            app:layout_constraintEnd_toStartOf="@id/tv_Depth2"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"
-            android:background="@color/divider"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/cl_Location"/>
 
-
-        <TextView
-            android:id="@+id/tv_Depth2"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_Location"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
             android:layout_width="wrap_content"
+            android:layout_marginEnd="8dp"
             android:layout_height="wrap_content"
-            android:gravity="end|center_vertical"
-            android:textColor="@color/basic"
-            android:textSize="14sp"
-            app:layout_constraintStart_toEndOf="@id/divider"
-            app:drawableEndCompat="@drawable/ic_arrow_down_15"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/view2"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            tools:text="송파구 " />
+            app:layout_constraintEnd_toStartOf="@id/cl_Sort"
+            android:background="@drawable/background_rank_sort">
+
+            <TextView
+                android:id="@+id/tv_Depth1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/tv_Depth2"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="서울시"
+                android:textSize="14sp"
+                android:textColor="@color/basic" />
+
+
+            <TextView
+                android:id="@+id/tv_Depth2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end|center_vertical"
+                android:textColor="@color/basic"
+                android:textSize="14sp"
+                android:layout_marginStart="4dp"
+                app:layout_constraintStart_toEndOf="@id/tv_Depth1"
+                app:drawableEndCompat="@drawable/ic_arrow_down_15"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:text="송파구 " />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_Sort"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/cl_Location"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@drawable/background_rank_sort">
+
+            <TextView
+                android:id="@+id/tv_Sort"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end|center_vertical"
+                android:textColor="@color/basic"
+                android:textSize="14sp"
+                android:layout_marginStart="4dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:drawableEndCompat="@drawable/ic_arrow_down_15"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:text="게시글순 " />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 
 
@@ -224,7 +265,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cl_Location">
+        app:layout_constraintTop_toBottomOf="@id/cl_Dialog">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_Rank"

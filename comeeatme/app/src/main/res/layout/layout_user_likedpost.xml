@@ -3,15 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:paddingStart="16dp"
     android:paddingEnd="16dp"
+    android:clickable="true"
+
     android:paddingTop="10dp"
     android:paddingBottom="10dp">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_Image"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintWidth_percent="0.15"
         app:cardCornerRadius="4dp"
         app:layout_constraintEnd_toStartOf="@id/cl_ContentAndDateAndView"
         app:layout_constraintTop_toTopOf="parent"
@@ -22,7 +27,7 @@
             android:id="@+id/iv_Image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/food1"
+            tools:src="@drawable/food1"
             android:scaleType="fitCenter"/>
     </androidx.cardview.widget.CardView>
 
@@ -48,7 +53,7 @@
             android:maxLines="2"
             android:ellipsize="end"
             android:maxLength="47"
-            android:text="동해물과백두산이마르고닳도록하느님이보우하사우리나라만세동해물과백두산이마르고닳도록"
+            tools:text="동해물과백두산이마르고닳도록하느님이보우하사우리나라만세동해물과백두산이마르고닳도록"
             android:textSize="14sp"
             android:textColor="@color/basic"
             app:layout_constraintVertical_chainStyle="spread_inside"/>
@@ -69,7 +74,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:text="2022.09.30"
+                tools:text="2022.09.30"
                 app:layout_constraintEnd_toStartOf="@id/tv_View"
                 android:textSize="12sp"
                 android:textColor="@color/nonCheck"/>
@@ -81,7 +86,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tv_Date"
-                android:text="조회 0"
+                tools:text="조회 0"
                 android:layout_marginStart="10dp"
                 android:textSize="12sp"
                 android:textColor="@color/nonCheck"/>

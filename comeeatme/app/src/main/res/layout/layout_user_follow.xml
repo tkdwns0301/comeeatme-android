@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingStart="16dp"
+    android:clickable="true"
     android:paddingEnd="16dp"
     android:paddingTop="5dp"
     android:paddingBottom="5dp">

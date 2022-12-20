@@ -16,6 +16,10 @@ sealed class HomeState {
     object BookmarkPostSuccess: HomeState()
     object UnBookmarkPostSuccess: HomeState()
 
+    data class MoreSuccess(
+        val posts: ArrayList<Content>
+    ): HomeState()
+
     data class Error(
         val message: String
     ): HomeState()

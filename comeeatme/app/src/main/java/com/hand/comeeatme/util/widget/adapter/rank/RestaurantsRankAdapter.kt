@@ -96,8 +96,10 @@ class RestaurantsRankAdapter(
             review.text = "리뷰 ${item.postCount}개"
             favorite.isChecked = item.favorited
 
-            item.hashtags.forEach { hashtag ->
-                hashtags.addItem(hashtag)
+            item.hashtags.forEachIndexed {index,  hashtag ->
+                if(index<2) {
+                    hashtags.addItem(hashtag)
+                }
             }
 
             itemView.setOnClickListener {

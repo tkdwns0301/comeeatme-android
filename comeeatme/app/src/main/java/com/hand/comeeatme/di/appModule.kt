@@ -15,10 +15,10 @@ import com.hand.comeeatme.data.repository.kakao.DefaultKakaoRepository
 import com.hand.comeeatme.data.repository.kakao.KakaoRepository
 import com.hand.comeeatme.data.repository.like.DefaultLikeRepository
 import com.hand.comeeatme.data.repository.like.LikeRepository
-import com.hand.comeeatme.data.repository.logIn.DefaultOAuthRepository
-import com.hand.comeeatme.data.repository.logIn.OAuthRepository
 import com.hand.comeeatme.data.repository.member.DefaultMemberRepository
 import com.hand.comeeatme.data.repository.member.MemberRepository
+import com.hand.comeeatme.data.repository.oauth.DefaultOAuthRepository
+import com.hand.comeeatme.data.repository.oauth.OAuthRepository
 import com.hand.comeeatme.data.repository.post.DefaultPostRepository
 import com.hand.comeeatme.data.repository.post.PostRepository
 import com.hand.comeeatme.data.repository.report.DefaultReportRepository
@@ -43,7 +43,7 @@ import com.hand.comeeatme.view.main.rank.region.RegionViewModel
 import com.hand.comeeatme.view.main.rank.restaurant.DetailRestaurantViewModel
 import com.hand.comeeatme.view.main.user.UserViewModel
 import com.hand.comeeatme.view.main.user.edit.UserEditViewModel
-import com.hand.comeeatme.view.main.user.menu.heartreview.HeartReviewViewModel
+import com.hand.comeeatme.view.main.user.menu.likepost.LikedPostViewModel
 import com.hand.comeeatme.view.main.user.menu.mycomment.MyCommentViewModel
 import com.hand.comeeatme.view.main.user.menu.myreview.MyReviewViewModel
 import com.hand.comeeatme.view.main.user.menu.recentreview.RecentReviewViewModel
@@ -70,13 +70,13 @@ val appModule = module {
     viewModel { UserViewModel(get(), get(), get(), get(), get()) }
     viewModel { UserEditViewModel(get(), get(), get()) }
     viewModel { MyReviewViewModel(get(), get()) }
-    viewModel { MyCommentViewModel(get()) }
-    viewModel { HeartReviewViewModel(get()) }
+    viewModel { MyCommentViewModel(get(), get()) }
+    viewModel { LikedPostViewModel(get(), get()) }
     viewModel { RecentReviewViewModel(get()) }
     viewModel { OtherPageViewModel(get(), get(), get(), get(), get()) }
     viewModel { DetailRestaurantViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { TermViewModel(get(), get()) }
-    viewModel { SettingViewModel(get(), get()) }
+    viewModel { SettingViewModel(get(), get(), get()) }
     viewModel { ReportViewModel(get(), get()) }
     viewModel { RankViewModel(get(), get(), get(), get(), get()) }
     viewModel { RegionViewModel(get(), get()) }

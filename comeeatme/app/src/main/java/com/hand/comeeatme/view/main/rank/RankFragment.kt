@@ -23,6 +23,7 @@ import com.hand.comeeatme.data.response.restaurant.RestaurantsRankContent
 import com.hand.comeeatme.databinding.FragmentRankBinding
 import com.hand.comeeatme.util.widget.adapter.rank.RestaurantsRankAdapter
 import com.hand.comeeatme.view.base.BaseFragment
+import com.hand.comeeatme.view.dialog.RankSortDialog
 import com.hand.comeeatme.view.main.home.search.SearchFragment
 import com.hand.comeeatme.view.main.rank.region.RegionActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -102,6 +103,20 @@ class RankFragment : BaseFragment<RankViewModel, FragmentRankBinding>() {
             ft.add(R.id.fg_MainContainer, SearchFragment.newInstance(), SearchFragment.TAG)
             ft.addToBackStack(SearchFragment.TAG)
             ft.commitAllowingStateLoss()
+        }
+
+        clSort.setOnClickListener {
+            RankSortDialog(
+                requireContext(),
+                postSort = {
+                    viewModel.getRestaurantsRank(0, 10, viewModel.getAddCode(), 1, it)
+                    tvSort.text = "게시글순 "
+                },
+                favoriteSort = {
+                    viewModel.getRestaurantsRank(0, 10, viewModel.getAddCode(), 1, it)
+                    tvSort.text = "즐겨찾기순 "
+                }
+            ).show()
         }
 
     }

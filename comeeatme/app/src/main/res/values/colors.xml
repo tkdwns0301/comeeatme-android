@@ -15,4 +15,5 @@
     <color name="whiteF">#F3F0EF</color>
     <color name="basic68">#686868</color>
     <color name="settingDivider">#F3F0EF</color>
+    <color name="transparent">#00000000</color>
 </resources>

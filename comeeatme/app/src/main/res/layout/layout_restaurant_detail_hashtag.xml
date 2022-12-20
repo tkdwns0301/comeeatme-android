@@ -6,6 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:paddingTop="6dp"
     android:paddingBottom="6dp"
+    android:clickable="true"
     android:paddingStart="8dp"
     android:paddingEnd="8dp"
     android:background="@drawable/background_hashtag_uncheck">

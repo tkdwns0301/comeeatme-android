@@ -4,5 +4,6 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     app:chipStrokeColor="@color/basic68"
+    android:clickable="true"
     app:chipStrokeWidth="1dp"
     app:chipCornerRadius="4dp" />

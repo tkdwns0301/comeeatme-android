@@ -7,6 +7,7 @@ import com.hand.comeeatme.data.repository.bookmark.BookmarkRepository
 import com.hand.comeeatme.data.repository.like.LikeRepository
 import com.hand.comeeatme.data.repository.member.MemberRepository
 import com.hand.comeeatme.data.repository.post.PostRepository
+import com.hand.comeeatme.data.response.post.Content
 import com.hand.comeeatme.view.base.BaseViewModel
 import kotlinx.coroutines.launch
 
@@ -22,6 +23,16 @@ class UserViewModel(
     private var profile: String? = null
     private var nickname: String? = null
     private var introduction: String? = null
+
+    private var page: Long = 0
+    private var isLast: Boolean = false
+    private var contents = arrayListOf<Content>()
+
+    fun setIsLast(isLast: Boolean) {
+        this.isLast = isLast
+    }
+
+    fun getIsLast(): Boolean = isLast
 
     fun setProfile(profile: String?) {
         this.profile = profile
@@ -47,14 +58,34 @@ class UserViewModel(
         return introduction
     }
 
-    fun getMemberPost() = viewModelScope.launch {
-        val response = postRepository.getMemberPost("${appPreferenceManager.getAccessToken()}",
-            appPreferenceManager.getMemberId())
+    fun getMemberPost(isRefresh: Boolean) = viewModelScope.launch {
+        if(isRefresh) {
+            contents = arrayListOf()
+            page = 0
+        }
+
+        val response = postRepository.getMemberPost(
+            "${appPreferenceManager.getAccessToken()}",
+            appPreferenceManager.getMemberId(),
+            page++,
+            10
+        )
 
         response?.let {
-            userStateLiveData.value = UserState.UserPostSuccess(
-                response = it,
-            )
+            if(it.data!!.content.isNotEmpty()) {
+                contents.addAll(it.data.content)
+                userStateLiveData.value = UserState.UserPostSuccess(
+                    response = contents,
+                )
+                isLast = false
+            } else {
+                isLast = true
+                userStateLiveData.value = UserState.UserPostSuccess(
+                    response = contents
+                )
+            }
+
+
         } ?: run {
             userStateLiveData.value = UserState.Error(
                 "사용자 글을 불러오는 도중 오류가 발생했습니다."

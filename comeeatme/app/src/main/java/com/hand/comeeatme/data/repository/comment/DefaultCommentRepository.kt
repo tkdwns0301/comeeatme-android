@@ -5,6 +5,7 @@ import com.hand.comeeatme.data.request.comment.ModifyCommentRequest
 import com.hand.comeeatme.data.request.comment.WritingCommentRequest
 import com.hand.comeeatme.data.response.comment.CommentListResponse
 import com.hand.comeeatme.data.response.comment.CommentResponse
+import com.hand.comeeatme.data.response.comment.MemberCommentsResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
@@ -84,6 +85,26 @@ class DefaultCommentRepository(
         )
 
         if (response.isSuccessful) {
+            response.body()!!
+        } else {
+            null
+        }
+    }
+
+    override suspend fun getMemberComments(
+        accessToken: String,
+        memberId: Long,
+        page: Long,
+        size: Long,
+    ): MemberCommentsResponse? = withContext(ioDispatcher){
+        val response = commentService.getMemberComments(
+            Authorization = "Bearer $accessToken",
+            memberId = memberId,
+            page = page,
+            size = size,
+        )
+
+        if(response.isSuccessful) {
             response.body()!!
         } else {
             null

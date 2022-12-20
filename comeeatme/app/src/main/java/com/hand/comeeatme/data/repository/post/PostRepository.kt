@@ -15,7 +15,7 @@ interface PostRepository {
         sort: Boolean?,
         hashTags: List<String>?,
     ): PostResponse?
-    suspend fun getMemberPost(accessToken: String, memberId: Long): PostResponse?
+    suspend fun getMemberPost(accessToken: String, memberId: Long, page: Long, size: Long): PostResponse?
     suspend fun getRestaurantPosts(accessToken: String, restaurantId: Long): RestaurantPostResponse?
     suspend fun getDetailPost(accessToken: String, postId: Long): DetailPostResponse?
     suspend fun putNewPost(accessToken: String, newPost: NewPostRequest): NewPostResponse?

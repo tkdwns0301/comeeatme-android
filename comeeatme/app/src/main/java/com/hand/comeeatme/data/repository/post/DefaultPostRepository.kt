@@ -54,9 +54,16 @@ class DefaultPostRepository(
     override suspend fun getMemberPost(
         accessToken: String,
         memberId: Long,
+        page: Long,
+        size: Long,
     ): PostResponse? = withContext(ioDispatcher) {
         val response =
-            postService.getUserPost(Authorization = "Bearer $accessToken", memberId = memberId)
+            postService.getUserPost(
+                Authorization = "Bearer $accessToken",
+                memberId = memberId,
+                page = page,
+                size = size,
+            )
 
         if (response.isSuccessful) {
             response.body()!!

@@ -143,6 +143,8 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
                 }
 
                 is NewPostState.DetailPostSuccess -> {
+                    binding.clLoading.isGone = true
+                    activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                     setView(it.response.data)
                 }
 
@@ -281,7 +283,6 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
 
         icLocation.ibSearch.setOnClickListener {
             val search: String = icLocation.etSearch.text.toString()
-            Log.e("search", "$search")
             viewModel.searchRestaurants(null, null, null, search)
         }
 
@@ -383,6 +384,17 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
                     intArrayOf(nonClickBackground, clickBackground)
                 )
 
+                val nonClickStroke = ContextCompat.getColor(context, R.color.basic68)
+                val clickStroke = ContextCompat.getColor(context, R.color.transparent)
+
+                chipStrokeColor = ColorStateList(
+                    arrayOf(
+                        intArrayOf(-android.R.attr.state_checked),
+                        intArrayOf(android.R.attr.state_checked)
+                    ),
+                    intArrayOf(nonClickStroke, clickStroke)
+                )
+
                 val nonCLickTextColor = ContextCompat.getColor(context, R.color.basic68)
                 val clickTextColor = ContextCompat.getColor(context, R.color.white)
                 //텍스트
@@ -410,6 +422,17 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
                         intArrayOf(android.R.attr.state_checked)
                     ),
                     intArrayOf(nonClickBackground, clickBackground)
+                )
+
+                val nonClickStroke = ContextCompat.getColor(context, R.color.basic68)
+                val clickStroke = ContextCompat.getColor(context, R.color.transparent)
+
+                chipStrokeColor = ColorStateList(
+                    arrayOf(
+                        intArrayOf(-android.R.attr.state_checked),
+                        intArrayOf(android.R.attr.state_checked)
+                    ),
+                    intArrayOf(nonClickStroke, clickStroke)
                 )
 
                 val nonCLickTextColor = ContextCompat.getColor(context, R.color.basic)
@@ -445,7 +468,7 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
             ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT
         )
 
-        layoutParams.rightMargin = dpToPx(10)
+        layoutParams.rightMargin = dpToPx(4)
         addView(chip, childCount, layoutParams)
 
         if (!isSelected) {
@@ -463,6 +486,7 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
         binding.icLocation.etSearch.clearFocus()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun setImageAdapter(data: ArrayList<String>, isModify: Boolean) {
         photoAdapter = NewPostPhotosAdapter(
             requireContext(),
@@ -473,24 +497,6 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
         photoAdapter.notifyDataSetChanged()
     }
 
-
-//    private fun setAdapter() {
-//        if (images != null) {
-//            val recyclerViewState = recyclerView.layoutManager?.onSaveInstanceState()
-//            adapter = NewPostImagesAdapter(images, onClickDeleteIcon = {
-//                deleteTask(it)
-//            })
-//            recyclerView.adapter = adapter
-//            recyclerView.layoutManager?.onRestoreInstanceState(recyclerViewState)
-//            adapter.notifyDataSetChanged()
-//        }
-//    }
-//
-//    private fun deleteTask(position: Int) {
-//        images.removeAt(position)
-//        checkedImageList.removeAt(position)
-//        adapter.notifyDataSetChanged()
-//    }
 
     private fun finish() {
         val manager: FragmentManager? = activity?.supportFragmentManager

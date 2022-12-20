@@ -26,8 +26,9 @@ class NewPostPhotosAdapter(
             Glide.with(context)
                 .load(photoPath)
                 .into(holder.photoLayout)
+        } else {
+            holder.photoLayout.setImageURI(Uri.fromFile(File(photoPath)))
         }
-        holder.photoLayout.setImageURI(Uri.fromFile(File(photoPath)))
     }
 
     override fun getItemCount(): Int = photos.size

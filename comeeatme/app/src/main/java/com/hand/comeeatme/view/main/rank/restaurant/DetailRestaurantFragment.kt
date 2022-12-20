@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View.OnTouchListener
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -69,6 +70,7 @@ class DetailRestaurantFragment :
             when (it) {
                 is DetailRestaurantState.Uninitialized -> {
                     binding.clLoading.isVisible = true
+                    activity?.window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                     viewModel.getDetailRestaurant(restaurantId!!)
                     viewModel.getRestaurantImage(restaurantId!!)
                     viewModel.getRestaurantPosts(restaurantId!!)
@@ -76,6 +78,7 @@ class DetailRestaurantFragment :
 
                 is DetailRestaurantState.Loading -> {
                     binding.clLoading.isVisible = true
+                    activity?.window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 }
 
                 is DetailRestaurantState.Success -> {
@@ -103,12 +106,15 @@ class DetailRestaurantFragment :
 
                 is DetailRestaurantState.CoordSuccess -> {
                     binding.clLoading.isGone = true
+                    activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                     viewModel.setLongitude(it.response.documents[0].x)
                     viewModel.setLatitude(it.response.documents[0].y)
                     setKakaoMap(it.response.documents[0].x, it.response.documents[0].y)
                 }
 
                 is DetailRestaurantState.Error -> {
+                    binding.clLoading.isGone = true
+                    activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
                 }
             }

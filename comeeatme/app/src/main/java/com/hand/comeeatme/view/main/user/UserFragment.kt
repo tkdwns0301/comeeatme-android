@@ -2,11 +2,14 @@ package com.hand.comeeatme.view.main.user
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.view.WindowManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.hand.comeeatme.R
 import com.hand.comeeatme.data.response.member.MemberDetailData
@@ -17,7 +20,7 @@ import com.hand.comeeatme.util.widget.adapter.user.UserListAdapter
 import com.hand.comeeatme.view.base.BaseFragment
 import com.hand.comeeatme.view.dialog.UserSortDialog
 import com.hand.comeeatme.view.main.user.edit.UserEditFragment
-import com.hand.comeeatme.view.main.user.menu.heartreview.HeartReviewFragment
+import com.hand.comeeatme.view.main.user.menu.likepost.LikedPostFragment
 import com.hand.comeeatme.view.main.user.menu.mycomment.MyCommentFragment
 import com.hand.comeeatme.view.main.user.menu.myreview.MyReviewFragment
 import com.hand.comeeatme.view.main.user.menu.recentreview.RecentReviewFragment
@@ -37,26 +40,33 @@ class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
         viewModel.userStateLiveData.observe(viewLifecycleOwner) {
             when (it) {
                 is UserState.Uninitialized -> {
+                    binding.clLoading.isVisible = true
+                    activity?.window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                     viewModel.getMemberDetail()
                 }
 
                 is UserState.Loading -> {
-
+                    binding.clLoading.isVisible = true
+                    activity?.window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 }
 
                 is UserState.UserDetailSuccess -> {
                     viewModel.setProfile(it.response.data.imageUrl)
                     viewModel.setNickname(it.response.data.nickname)
                     setUserInformation(it.response.data)
-                    viewModel.getMemberPost()
+                    viewModel.getMemberPost(true)
                 }
 
                 is UserState.UserPostSuccess -> {
-                    setUserPost(it.response.data!!.content)
+                    binding.clLoading.isGone = true
+                    activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                    setUserPost(it.response)
                 }
 
                 is UserState.Error -> {
-
+                    binding.clLoading.isGone = true
+                    activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                    Toast.makeText(requireContext(), "$it", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -66,6 +76,10 @@ class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
     private lateinit var adapterGrid: UserGridAdapter
 
     override fun initView() = with(binding) {
+        Glide.with(requireContext())
+            .load(R.drawable.loading)
+            .into(ivLoading)
+
         ibSetting.setOnClickListener {
             startActivity(SettingActivity.newIntent(requireContext()))
         }
@@ -116,6 +130,7 @@ class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
             ft.add(R.id.fg_MainContainer,
                 MyReviewFragment.newInstance(),
                 MyReviewFragment.TAG)
+            ft.addToBackStack(MyReviewFragment.TAG)
             ft.commitAllowingStateLoss()
         }
 
@@ -124,6 +139,7 @@ class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
             val ft: FragmentTransaction = manager.beginTransaction()
 
             ft.add(R.id.fg_MainContainer, RecentReviewFragment.newInstance(), RecentReviewFragment.TAG)
+            ft.addToBackStack(RecentReviewFragment.TAG)
             ft.commitAllowingStateLoss()
         }
 
@@ -132,6 +148,7 @@ class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
             val ft: FragmentTransaction = manager.beginTransaction()
 
             ft.add(R.id.fg_MainContainer, MyCommentFragment.newInstance(), MyCommentFragment.TAG)
+            ft.addToBackStack(MyCommentFragment.TAG)
             ft.commitAllowingStateLoss()
         }
 
@@ -139,7 +156,8 @@ class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
             val manager: FragmentManager = requireActivity().supportFragmentManager
             val ft: FragmentTransaction = manager.beginTransaction()
 
-            ft.add(R.id.fg_MainContainer, HeartReviewFragment.newInstance(), HeartReviewFragment.TAG)
+            ft.add(R.id.fg_MainContainer, LikedPostFragment.newInstance(), LikedPostFragment.TAG)
+            ft.addToBackStack(LikedPostFragment.TAG)
             ft.commitAllowingStateLoss()
         }
 
@@ -147,6 +165,32 @@ class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
             viewModel.getMemberDetail()
             srlUser.isRefreshing = false
         }
+
+        rvList.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                if(!viewModel.getIsLast()) {
+                    if(!binding.rvList.canScrollVertically(1)) {
+                        viewModel.setIsLast(true)
+                        viewModel.getMemberPost(false)
+                    }
+                }
+            }
+        })
+
+        rvGrid.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                if(!viewModel.getIsLast()) {
+                    if(!binding.rvGrid.canScrollVertically(1)) {
+                        viewModel.setIsLast(true)
+                        viewModel.getMemberPost(false)
+                    }
+                }
+            }
+        })
     }
 
 

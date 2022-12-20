@@ -3,17 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:paddingStart="16dp"
     android:paddingEnd="16dp"
+    android:clickable="true"
     android:paddingTop="10dp"
     android:paddingBottom="10dp">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_Image"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
         app:cardCornerRadius="4dp"
-        app:layout_constraintEnd_toStartOf="@id/cl_ContentAndDateAndView"
+        app:layout_constraintWidth_percent="0.14"
+        app:layout_constraintEnd_toStartOf="@id/cl_CommentAndContentAndDateAndView"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -22,15 +26,15 @@
             android:id="@+id/iv_Image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/food1"
-            android:scaleType="fitCenter"/>
+            tools:src="@drawable/food1"
+            android:scaleType="centerCrop"/>
     </androidx.cardview.widget.CardView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_CommentAndContentAndDateAndView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingStart="10dp"
+        android:paddingStart="9dp"
         android:paddingEnd="10dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@id/cl_Comment"
@@ -48,7 +52,7 @@
             android:maxLines="1"
             android:ellipsize="end"
             android:maxLength="47"
-            android:text="동해물과백두산이마르고닳도록하느님이보우하사우리나라만세동해물과백두산이마르고닳도록"
+            tools:text="동해물과백두산이마르고닳도록하느님이보우하사우리나라만세동해물과백두산이마르고닳도록"
             android:textSize="14sp"
             android:textColor="@color/basic"
             app:layout_constraintVertical_chainStyle="spread_inside"/>
@@ -93,6 +97,7 @@
 
             <TextView
                 android:id="@+id/tv_View"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
@@ -111,11 +116,12 @@
         android:id="@+id/cl_Comment"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:visibility="invisible"
         android:background="@drawable/background_user_comment"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/cl_ContentAndDateAndView">
+        app:layout_constraintStart_toEndOf="@id/cl_CommentAndContentAndDateAndView">
 
         <TextView
             android:id="@+id/tv_CommentCnt"
@@ -125,7 +131,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:text="7"
+            tools:text="7"
             android:textColor="@color/basic"
             android:textSize="14sp"/>
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,6 +7,7 @@ sealed class SettingState {
     object Uninitialized : SettingState()
     object Loading: SettingState()
     object Success: SettingState()
+    object Logout: SettingState()
 
     @SuppressLint("SupportAnnotationUsage")
     data class Error(
