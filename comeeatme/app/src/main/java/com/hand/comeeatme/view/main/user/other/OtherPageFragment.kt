@@ -14,6 +14,7 @@ import com.hand.comeeatme.databinding.FragmentOtherPageBinding
 import com.hand.comeeatme.util.widget.adapter.user.UserGridAdapter
 import com.hand.comeeatme.util.widget.adapter.user.UserListAdapter
 import com.hand.comeeatme.view.base.BaseFragment
+import com.hand.comeeatme.view.dialog.RestaurantPostSortDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class OtherPageFragment : BaseFragment<OtherPageViewModel, FragmentOtherPageBinding>() {
@@ -91,6 +92,20 @@ class OtherPageFragment : BaseFragment<OtherPageViewModel, FragmentOtherPageBind
 
         srlOtherPage.setOnRefreshListener {
             refresh()
+        }
+
+        clSort.setOnClickListener {
+            RestaurantPostSortDialog(
+                requireContext(),
+                recentSort = {
+                    viewModel.setSort(it)
+                    viewModel.getMemberPost(memberId!!)
+                },
+                likeSort = {
+                    viewModel.setSort(it)
+                    viewModel.getMemberPost(memberId!!)
+                }
+            ).show()
         }
     }
 

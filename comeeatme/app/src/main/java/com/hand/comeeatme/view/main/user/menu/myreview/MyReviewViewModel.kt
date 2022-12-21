@@ -17,7 +17,7 @@ class MyReviewViewModel(
         myReviewStateLiveData.value = MyReviewState.Loading
 
         val response = postRepository.getMemberPost("${appPreferenceManager.getAccessToken()}", appPreferenceManager.getMemberId(),
-        0, 10)
+        0, 10, "id,desc")
 
         response?.let {
             myReviewStateLiveData.value = MyReviewState.Success(

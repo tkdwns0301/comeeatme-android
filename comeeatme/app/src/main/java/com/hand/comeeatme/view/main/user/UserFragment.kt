@@ -18,7 +18,7 @@ import com.hand.comeeatme.databinding.FragmentUserBinding
 import com.hand.comeeatme.util.widget.adapter.user.UserGridAdapter
 import com.hand.comeeatme.util.widget.adapter.user.UserListAdapter
 import com.hand.comeeatme.view.base.BaseFragment
-import com.hand.comeeatme.view.dialog.UserSortDialog
+import com.hand.comeeatme.view.dialog.RestaurantPostSortDialog
 import com.hand.comeeatme.view.main.user.edit.UserEditFragment
 import com.hand.comeeatme.view.main.user.menu.likepost.LikedPostFragment
 import com.hand.comeeatme.view.main.user.menu.mycomment.MyCommentFragment
@@ -108,7 +108,17 @@ class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
         }
 
         clSort.setOnClickListener {
-            UserSortDialog(requireContext()).showDialog()
+            RestaurantPostSortDialog(
+                requireContext(),
+                recentSort = {
+                    viewModel.setSort(it)
+                    tvSort.text = "최신순"
+                },
+                likeSort = {
+                    viewModel.setSort(it)
+                    tvSort.text = "좋아요순"
+                }
+            ).show()
         }
 
         clFollower.setOnClickListener {

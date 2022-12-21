@@ -22,6 +22,11 @@ class OtherPageViewModel(
 
     private var profile: String? = null
     private var nickname: String? = null
+    private var sort: String = "id,desc"
+
+    fun setSort(sort: String) {
+        this.sort = sort
+    }
 
     fun setProfile(profile: String?) {
         this.profile = profile
@@ -59,7 +64,8 @@ class OtherPageViewModel(
             "${appPreferenceManager.getAccessToken()}",
             memberId,
             0,
-            10
+            10,
+            sort
         )
 
         response?.let {

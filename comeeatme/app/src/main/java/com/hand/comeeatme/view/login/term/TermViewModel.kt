@@ -19,7 +19,6 @@ class TermViewModel(
     private var isTerm2 = false
 
     fun setTerm1(term: Boolean) = viewModelScope.launch {
-        // TODO 서버로 상태 보내기
         isTerm1 = term
 
         if(termAllReady()) {
@@ -31,7 +30,6 @@ class TermViewModel(
     }
 
     fun setTerm2(term: Boolean) = viewModelScope.launch {
-        // TODO 서버로 상태 보내기
         isTerm2 = term
 
         if(termAllReady()) {

@@ -101,5 +101,13 @@
             android:exported="true"
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"/>
+        <activity android:name=".view.main.user.setting.unlink.Unlink1Activity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".view.main.user.setting.unlink.Unlink2Activity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"/>
     </application>
 </manifest>

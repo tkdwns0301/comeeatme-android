@@ -56,6 +56,7 @@ class DefaultPostRepository(
         memberId: Long,
         page: Long,
         size: Long,
+        sort: String,
     ): PostResponse? = withContext(ioDispatcher) {
         val response =
             postService.getUserPost(
@@ -63,6 +64,7 @@ class DefaultPostRepository(
                 memberId = memberId,
                 page = page,
                 size = size,
+                sort = sort
             )
 
         if (response.isSuccessful) {

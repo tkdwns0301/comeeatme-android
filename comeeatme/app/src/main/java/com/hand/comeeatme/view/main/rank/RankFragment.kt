@@ -9,6 +9,7 @@ import android.location.Location
 import android.os.Build
 import android.os.Looper
 import android.util.Log
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -51,17 +52,23 @@ class RankFragment : BaseFragment<RankViewModel, FragmentRankBinding>() {
             when (it) {
                 is RankState.Uninitialized -> {
                     binding.clLoading.isVisible = true
+                    activity?.window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                     if (checkPermissionForLocation(requireContext())) {
                         getCurrentLocation()
                     }
+
                 }
 
                 is RankState.Loading -> {
                     binding.clLoading.isVisible = true
+                    activity?.window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 }
 
                 is RankState.Success -> {
                     binding.clLoading.isGone = true
+                    activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                     setAdapter(it.response.data.content)
                 }
 
@@ -73,6 +80,8 @@ class RankFragment : BaseFragment<RankViewModel, FragmentRankBinding>() {
                 }
 
                 is RankState.Error -> {
+                    binding.clLoading.isGone = true
+                    activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                     Toast.makeText(requireContext(), "$it", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -93,11 +102,15 @@ class RankFragment : BaseFragment<RankViewModel, FragmentRankBinding>() {
         }
 
         clLocation.setOnClickListener {
-            startActivityForResult(RegionActivity.newIntent(requireContext(), viewModel.getDepth1(), viewModel.getDepth2(), viewModel.getAddCode()), 100)
+            startActivityForResult(RegionActivity.newIntent(requireContext(),
+                viewModel.getDepth1(),
+                viewModel.getDepth2(),
+                viewModel.getAddCode()), 100)
         }
 
         ibSearch.setOnClickListener {
-            val manager: FragmentManager = (requireContext() as AppCompatActivity).supportFragmentManager
+            val manager: FragmentManager =
+                (requireContext() as AppCompatActivity).supportFragmentManager
             val ft: FragmentTransaction = manager.beginTransaction()
 
             ft.add(R.id.fg_MainContainer, SearchFragment.newInstance(), SearchFragment.TAG)
@@ -141,7 +154,7 @@ class RankFragment : BaseFragment<RankViewModel, FragmentRankBinding>() {
     }
 
     private fun refresh() {
-        if(checkPermissionForLocation(requireContext())) {
+        if (checkPermissionForLocation(requireContext())) {
             getCurrentLocation()
         }
 
@@ -222,8 +235,10 @@ class RankFragment : BaseFragment<RankViewModel, FragmentRankBinding>() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(resultCode == AppCompatActivity.RESULT_OK && requestCode == 100) {
-            viewModel.setDepth1Depth2AddressCode(data!!.getStringExtra(RegionActivity.DEPTH1) as String, data!!.getStringExtra(RegionActivity.DEPTH2) as String, data!!.getStringExtra(RegionActivity.ADDRESS_CODE) as String)
+        if (resultCode == AppCompatActivity.RESULT_OK && requestCode == 100) {
+            viewModel.setDepth1Depth2AddressCode(data!!.getStringExtra(RegionActivity.DEPTH1) as String,
+                data!!.getStringExtra(RegionActivity.DEPTH2) as String,
+                data!!.getStringExtra(RegionActivity.ADDRESS_CODE) as String)
         }
     }
 

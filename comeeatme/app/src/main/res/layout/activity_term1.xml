@@ -13,7 +13,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/tv_Title"
         app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/ic_cancel_x_basic_24">
+        app:navigationIcon="@drawable/ic_prev_basic_24">
 
 
     </androidx.appcompat.widget.Toolbar>
@@ -40,9 +40,9 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="18dp"
         android:layout_marginEnd="16dp"
-        android:background="@drawable/background_content"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@id/cl_Okay"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="63dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_Title">
@@ -55,37 +55,6 @@
             android:textColor="@color/nonCheck"
             android:textSize="12sp" />
     </ScrollView>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_Okay"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="74dp"
-        android:layout_marginTop="44dp"
-        android:background="@drawable/background_next_checked"
-        android:paddingTop="18dp"
-        android:paddingBottom="18dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sv_Content">
-
-        <TextView
-            android:id="@+id/tv_Next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="다음"
-            android:textColor="@color/white"
-            android:textSize="17sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

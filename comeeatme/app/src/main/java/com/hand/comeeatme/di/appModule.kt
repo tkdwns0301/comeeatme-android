@@ -49,6 +49,7 @@ import com.hand.comeeatme.view.main.user.menu.myreview.MyReviewViewModel
 import com.hand.comeeatme.view.main.user.menu.recentreview.RecentReviewViewModel
 import com.hand.comeeatme.view.main.user.other.OtherPageViewModel
 import com.hand.comeeatme.view.main.user.setting.SettingViewModel
+import com.hand.comeeatme.view.main.user.setting.unlink.UnlinkViewModel
 import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -80,6 +81,7 @@ val appModule = module {
     viewModel { ReportViewModel(get(), get()) }
     viewModel { RankViewModel(get(), get(), get(), get(), get()) }
     viewModel { RegionViewModel(get(), get()) }
+    viewModel { UnlinkViewModel(get(), get())}
 
     // repository
     single<PostRepository> { DefaultPostRepository(get(), get()) }

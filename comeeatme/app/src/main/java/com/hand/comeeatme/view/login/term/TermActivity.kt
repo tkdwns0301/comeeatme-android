@@ -3,11 +3,14 @@ package com.hand.comeeatme.view.login.term
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.view.WindowManager
 import android.widget.Toast
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import com.hand.comeeatme.R
 import com.hand.comeeatme.databinding.ActivityTermBinding
 import com.hand.comeeatme.view.base.BaseActivity
-import com.hand.comeeatme.view.main.MainActivity
+import com.hand.comeeatme.view.login.onboarding.OnBoardingActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TermActivity: BaseActivity<TermViewModel, ActivityTermBinding>() {
@@ -24,18 +27,21 @@ class TermActivity: BaseActivity<TermViewModel, ActivityTermBinding>() {
     override fun observeData() = viewModel.termStateLiveData.observe(this) {
         when(it) {
             is TermState.Uninitialized -> {
-
+                binding.clLoading.isVisible = true
+                window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
             }
 
             is TermState.Loading -> {
-
+                binding.clLoading.isVisible = true
+                window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
             }
 
             is TermState.Success -> {
+                binding.clLoading.isGone = true
+                window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+
                 startActivity(
-                    MainActivity.newIntent(
-                        applicationContext
-                    )
+                    OnBoardingActivity.newIntent(applicationContext)
                 )
                 finish()
             }
@@ -50,9 +56,10 @@ class TermActivity: BaseActivity<TermViewModel, ActivityTermBinding>() {
                 binding.tvNext.setTextColor(applicationContext.getColor(R.color.basic))
             }
 
-
-
             is TermState.Error -> {
+                binding.clLoading.isGone = true
+                window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+
                 Toast.makeText(applicationContext, "$it", Toast.LENGTH_SHORT).show()
             }
         }

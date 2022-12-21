@@ -27,6 +27,7 @@ interface PostService {
         @Path("memberId") memberId: Long,
         @Query("page") page: Long,
         @Query("size") size: Long,
+        @Query("sort") sort: String,
     ) : Response<PostResponse>
 
     // 음식점 게시물 리스트 조회

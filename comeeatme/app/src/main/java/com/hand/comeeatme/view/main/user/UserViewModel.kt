@@ -27,6 +27,12 @@ class UserViewModel(
     private var page: Long = 0
     private var isLast: Boolean = false
     private var contents = arrayListOf<Content>()
+    private var sort: String = "id,desc"
+
+    fun setSort(sort: String) {
+        this.sort = sort
+        getMemberPost(true)
+    }
 
     fun setIsLast(isLast: Boolean) {
         this.isLast = isLast
@@ -68,7 +74,8 @@ class UserViewModel(
             "${appPreferenceManager.getAccessToken()}",
             appPreferenceManager.getMemberId(),
             page++,
-            10
+            10,
+            sort
         )
 
         response?.let {

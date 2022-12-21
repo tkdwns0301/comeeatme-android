@@ -1,6 +1,7 @@
 package com.hand.comeeatme.view.login
 
 import android.util.Log
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -27,15 +28,18 @@ class LogInActivity : BaseActivity<LogInViewModel, ActivityLoginBinding>() {
     override fun observeData() = viewModel.loginStateLiveData.observe(this) {
         when (it) {
             is LogInState.Uninitialized -> {
-
+                binding.clLoading.isVisible = true
+                window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
             }
 
             is LogInState.Loading -> {
                 binding.clLoading.isVisible = true
+                window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
             }
 
             is LogInState.Success -> {
                 binding.clLoading.isGone = true
+                window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
 
                 viewModel.saveToken(it.token)
 
@@ -51,6 +55,8 @@ class LogInActivity : BaseActivity<LogInViewModel, ActivityLoginBinding>() {
             }
 
             is LogInState.Error -> {
+                binding.clLoading.isGone = true
+                window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
             }
         }
