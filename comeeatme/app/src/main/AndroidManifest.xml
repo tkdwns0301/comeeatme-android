@@ -11,9 +11,9 @@
     <application
         android:name=".ComeEatMeApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/icon_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Comeeatme"
         android:usesCleartextTraffic="true">
@@ -106,6 +106,10 @@
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"/>
         <activity android:name=".view.main.user.setting.unlink.Unlink2Activity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".view.main.user.setting.notice.NoticeActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"/>

@@ -9,6 +9,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.hand.comeeatme.R
 import com.hand.comeeatme.databinding.LayoutHomeImageBinding
 import com.hand.comeeatme.view.main.home.post.DetailPostFragment
@@ -33,11 +35,19 @@ class ViewPagerAdapter(
 
         if (item.isEmpty()) {
             Glide.with(context)
-                .load(R.drawable.default_image)
+                .load(R.drawable.default_image).apply(
+                    RequestOptions()
+                        .skipMemoryCache(true)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                )
                 .into(holder.images)
         } else {
             Glide.with(context)
-                .load(item)
+                .load(item).apply(
+                    RequestOptions()
+                        .skipMemoryCache(true)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                )
                 .into(holder.images)
         }
 
@@ -45,6 +55,12 @@ class ViewPagerAdapter(
             holder.images.setOnClickListener {
                 val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
                 val ft: FragmentTransaction = manager.beginTransaction()
+
+                val findFragment = manager.findFragmentByTag(DetailPostFragment.TAG)
+
+                findFragment?.let {
+                    manager.beginTransaction().remove(it).commitAllowingStateLoss()
+                }
 
                 ft.add(R.id.fg_MainContainer, DetailPostFragment.newInstance(postId), DetailPostFragment.TAG)
                 ft.addToBackStack(DetailPostFragment.TAG)

@@ -27,9 +27,5 @@ class Term1Activity: AppCompatActivity() {
             finish()
         }
 
-        clOkay.setOnClickListener {
-            finish()
-        }
-
     }
 }

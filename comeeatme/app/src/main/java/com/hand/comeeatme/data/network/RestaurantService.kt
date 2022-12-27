@@ -16,7 +16,6 @@ interface RestaurantService {
         @Header("Authorization") Authorization: String,
         @Query("page") page: Long?,
         @Query("size") size: Long?,
-        @Query("sort") sort: Boolean?,
         @Query("keyword") keyword: String,
     ): Response<SimpleRestaurantResponse>
 

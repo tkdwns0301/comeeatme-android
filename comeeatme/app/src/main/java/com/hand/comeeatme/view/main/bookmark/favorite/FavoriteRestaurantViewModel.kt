@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hand.comeeatme.data.preference.AppPreferenceManager
 import com.hand.comeeatme.data.repository.favorite.FavoriteRepository
+import com.hand.comeeatme.data.response.favorite.FavoritePostContent
 import com.hand.comeeatme.view.base.BaseViewModel
 import kotlinx.coroutines.launch
 
@@ -13,6 +14,15 @@ class FavoriteRestaurantViewModel(
 ) : BaseViewModel() {
     val favoritePostStateLiveData =
         MutableLiveData<FavoriteRestaurantState>(FavoriteRestaurantState.Uninitialized)
+
+    private var page: Long = 0
+    private var isLast: Boolean = false
+    private var contents = arrayListOf<FavoritePostContent>()
+
+    fun getIsLast() : Boolean = isLast
+    fun setIsLast(isLast: Boolean) {
+        this.isLast = isLast
+    }
 
     fun favoriteRestaurant(
         restaurantId: Long,
@@ -45,26 +55,34 @@ class FavoriteRestaurantViewModel(
     }
 
     fun getAllFavorite(
-        page: Long?,
-        size: Long?,
+        isRefresh: Boolean,
     ) = viewModelScope.launch {
         favoritePostStateLiveData.value = FavoriteRestaurantState.Loading
+
+        if(isRefresh) {
+            page = 0
+            contents = arrayListOf()
+        }
 
         val response = favoriteRepository.getAllFavorite(
             "${appPreferenceManager.getAccessToken()}",
             appPreferenceManager.getMemberId(),
-            page,
-            size,
+            page++,
+            10,
         )
 
         response?.let {
-            if (it.data.content.isEmpty()) {
-                favoritePostStateLiveData.value = FavoriteRestaurantState.Error(
-                    "즐겨찾기 목록이 없어요,,,"
-                )
-            } else {
+            if (it.data.content.isNotEmpty()) {
+                contents.addAll(it.data.content)
+
                 favoritePostStateLiveData.value = FavoriteRestaurantState.Success(
-                    response = it
+                    response = contents
+                )
+                isLast = false
+            } else {
+                isLast = true
+                favoritePostStateLiveData.value = FavoriteRestaurantState.Success(
+                    response = contents
                 )
             }
         } ?: run {

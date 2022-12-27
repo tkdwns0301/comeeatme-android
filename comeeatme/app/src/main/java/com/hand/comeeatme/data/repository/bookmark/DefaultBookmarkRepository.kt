@@ -1,16 +1,19 @@
 package com.hand.comeeatme.data.repository.bookmark
 
-import android.util.Log
 import com.hand.comeeatme.data.network.BookmarkService
+import com.hand.comeeatme.data.network.OAuthService
+import com.hand.comeeatme.data.preference.AppPreferenceManager
 import com.hand.comeeatme.data.response.bookmark.BookmarkPostResponse
 import com.hand.comeeatme.data.response.like.SuccessResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import org.json.JSONObject
 
 class DefaultBookmarkRepository(
+    private val appPreferenceManager: AppPreferenceManager,
     private val bookmarkService: BookmarkService,
     private val ioDispatcher: CoroutineDispatcher,
+    private val oAuthService: OAuthService,
+
 ) : BookmarkRepository {
     override suspend fun bookmarkPost(accessToken: String, postId: Long): SuccessResponse? =
         withContext(ioDispatcher) {
@@ -22,17 +25,21 @@ class DefaultBookmarkRepository(
             if (response.isSuccessful) {
                 response.body()!!
             } else if (response.code() == 401) {
-                var jsonObject: JSONObject? = null
-                var errorResponse: SuccessResponse? = null
+                val response2 = oAuthService.reissueToken(
+                    "Bearer ${appPreferenceManager.getRefreshToken()}"
+                )
 
-                try {
-                    jsonObject = JSONObject(response.errorBody()!!.string())
-                    errorResponse =
-                        SuccessResponse(success = jsonObject.getBoolean("success"), error = null)
-                } catch (e: Exception) {
-                    Log.e("error", "${e.printStackTrace()}")
+                if(response2.isSuccessful) {
+                    appPreferenceManager.putRefreshToken(response2.body()!!.refreshToken)
+                    appPreferenceManager.putAccessToken(response2.body()!!.accessToken)
+
+                    bookmarkPost(
+                        "${appPreferenceManager.getAccessToken()}",
+                        postId
+                    )
+                } else {
+                    null
                 }
-                errorResponse
             } else {
                 null
             }
@@ -49,16 +56,21 @@ class DefaultBookmarkRepository(
             if (response.isSuccessful) {
                 response.body()!!
             } else if(response.code() == 401) {
-                var jsonObject: JSONObject? = null
-                var errorResponse: SuccessResponse? = null
+                val response2 = oAuthService.reissueToken(
+                    "Bearer ${appPreferenceManager.getRefreshToken()}"
+                )
 
-                try {
-                    jsonObject = JSONObject(response.errorBody()!!.string())
-                    errorResponse = SuccessResponse(success = jsonObject.getBoolean("success"),  error = null)
-                } catch (e: Exception) {
-                    Log.e("error", "${e.printStackTrace()}")
+                if(response2.isSuccessful) {
+                    appPreferenceManager.putRefreshToken(response2.body()!!.refreshToken)
+                    appPreferenceManager.putAccessToken(response2.body()!!.accessToken)
+
+                    unBookmarkPost(
+                        "${appPreferenceManager.getAccessToken()}",
+                        postId
+                    )
+                } else {
+                    null
                 }
-                errorResponse
             } else {
                 null
             }
@@ -80,16 +92,23 @@ class DefaultBookmarkRepository(
         if (response.isSuccessful) {
             response.body()!!
         } else if(response.code() == 401) {
-            var jsonObject: JSONObject? = null
-            var errorResponse: BookmarkPostResponse? = null
+            val response2 = oAuthService.reissueToken(
+                "Bearer ${appPreferenceManager.getRefreshToken()}"
+            )
 
-            try {
-                jsonObject = JSONObject(response.errorBody()!!.string())
-                errorResponse = BookmarkPostResponse(success = jsonObject.getBoolean("success"), data = null, error = null)
-            } catch (e: Exception) {
-                Log.e("error", "${e.printStackTrace()}")
+            if(response2.isSuccessful) {
+                appPreferenceManager.putRefreshToken(response2.body()!!.refreshToken)
+                appPreferenceManager.putAccessToken(response2.body()!!.accessToken)
+
+                getAllBookmarked(
+                    "${appPreferenceManager.getAccessToken()}",
+                    memberId,
+                    page,
+                    size
+                )
+            } else {
+                null
             }
-            errorResponse
         }
         else {
             null

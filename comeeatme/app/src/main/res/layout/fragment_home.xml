@@ -120,9 +120,9 @@
                     android:id="@+id/tv_HashTag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="1"
+                    tools:text="1"
                     android:textColor="@color/white"
-                    android:textSize="10dp"
+                    android:textSize="10sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -160,14 +160,72 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar_Home">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_HomeList"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_Post"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:paddingBottom="80dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/layout_home_item" />
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_NonPost"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="1:0.5"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/iv_NonPost"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:nestedScrollingEnabled="false"
+                        android:src="@drawable/ic_tabler_30"
+                        app:layout_constraintBottom_toTopOf="@id/tv_NonPost"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_NonPost"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="작성된 게시글이 없습니다."
+                        android:layout_marginTop="8dp"
+                        android:textColor="#686868"
+                        android:textSize="13sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/iv_NonPost" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_HomeList"
+                android:paddingBottom="80dp"
+                android:clipToPadding="false"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/layout_home_item" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

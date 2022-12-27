@@ -1,5 +1,6 @@
 package com.hand.comeeatme.view.main.home
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.view.View
 import android.view.WindowManager
@@ -17,7 +18,6 @@ import com.hand.comeeatme.data.response.post.Content
 import com.hand.comeeatme.databinding.FragmentHomeBinding
 import com.hand.comeeatme.util.widget.adapter.home.CommunityAdapter
 import com.hand.comeeatme.view.base.BaseFragment
-import com.hand.comeeatme.view.login.onboarding.OnBoardingActivity
 import com.hand.comeeatme.view.main.home.hashtag.HashTagActivity
 import com.hand.comeeatme.view.main.home.search.SearchFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -66,6 +66,7 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
         }
     }
 
+
     override fun initView() = with(binding) {
         Glide.with(requireContext())
             .load(R.drawable.loading)
@@ -88,17 +89,21 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
                 (requireContext() as AppCompatActivity).supportFragmentManager
             val ft: FragmentTransaction = manager.beginTransaction()
 
+            val findFragment = manager.findFragmentByTag(SearchFragment.TAG)
+
+            findFragment?.let {
+                manager.beginTransaction().remove(it).commitAllowingStateLoss()
+            }
+
             ft.add(R.id.fg_MainContainer, SearchFragment.newInstance(), SearchFragment.TAG)
             ft.addToBackStack(SearchFragment.TAG)
             ft.commitAllowingStateLoss()
         }
 
-        ibNotification.setOnClickListener {
-            // TODO Notification
-            val intent = Intent(requireContext(), OnBoardingActivity::class.java)
-            startActivity(intent)
-
-        }
+//        ibNotification.setOnClickListener {
+//            val intent = Intent(requireContext(), OnBoardingActivity::class.java)
+//            startActivity(intent)
+//        }
 
         rvHomeList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -134,8 +139,14 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
 
     }
 
+
+
+    @SuppressLint("NotifyDataSetChanged")
     private fun setAdapter(contents: ArrayList<Content>) {
         if (contents.isNotEmpty()) {
+            binding.clNonPost.isGone = true
+            binding.rvHomeList.isVisible = true
+
             val recyclerViewState = binding.rvHomeList.layoutManager?.onSaveInstanceState()
 
             adapter = CommunityAdapter(
@@ -154,6 +165,9 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
             binding.rvHomeList.adapter = adapter
             binding.rvHomeList.layoutManager?.onRestoreInstanceState(recyclerViewState)
             adapter.notifyDataSetChanged()
+        } else {
+            binding.clNonPost.isVisible = true
+            binding.rvHomeList.isGone = true
         }
 
 

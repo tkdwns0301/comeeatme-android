@@ -28,8 +28,6 @@ class LogInActivity : BaseActivity<LogInViewModel, ActivityLoginBinding>() {
     override fun observeData() = viewModel.loginStateLiveData.observe(this) {
         when (it) {
             is LogInState.Uninitialized -> {
-                binding.clLoading.isVisible = true
-                window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
             }
 
             is LogInState.Loading -> {
@@ -57,6 +55,7 @@ class LogInActivity : BaseActivity<LogInViewModel, ActivityLoginBinding>() {
             is LogInState.Error -> {
                 binding.clLoading.isGone = true
                 window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                binding.clLogIn.isVisible = true
                 Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
             }
         }

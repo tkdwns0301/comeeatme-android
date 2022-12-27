@@ -1,7 +1,7 @@
 package com.hand.comeeatme.view.main.bookmark.favorite
 
 import android.annotation.SuppressLint
-import android.util.Log
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -9,6 +9,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.hand.comeeatme.R
 import com.hand.comeeatme.data.response.favorite.FavoritePostContent
@@ -31,31 +32,35 @@ class FavoriteRestaurantFragment: BaseFragment<FavoriteRestaurantViewModel, Layo
             when (it) {
                 is FavoriteRestaurantState.Uninitialized -> {
                     binding.clLoading.isVisible = true
-                    viewModel.getAllFavorite(0, 10)
+                    activity?.window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                    viewModel.getAllFavorite(true)
                 }
 
                 is FavoriteRestaurantState.Loading -> {
                     binding.clLoading.isVisible = true
+                    activity?.window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 }
 
                 is FavoriteRestaurantState.Success -> {
                     binding.clLoading.isGone = true
-                    setAdapter(it.response.data.content)
+                    activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                    setAdapter(it.response)
                 }
 
                 is FavoriteRestaurantState.Error -> {
                     binding.clLoading.isGone = true
+                    activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                     Toast.makeText(requireContext(), "$it", Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
+
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     override fun onResume() {
         super.onResume()
-        Log.e("on_resume", "asdasda")
-        viewModel.getAllFavorite(0, 10)
+        viewModel.getAllFavorite(true)
     }
 
 
@@ -68,21 +73,39 @@ class FavoriteRestaurantFragment: BaseFragment<FavoriteRestaurantViewModel, Layo
 
         rvFavoriteList.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
+        rvFavoriteList.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                if(!viewModel.getIsLast()) {
+                    if(!rvFavoriteList.canScrollVertically(1)) {
+                        viewModel.setIsLast(true)
+                        viewModel.getAllFavorite(false)
+                    }
+                }
+            }
+        })
+
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun setAdapter(contents: List<FavoritePostContent>) {
-        adapter = FavoriteRestaurantAdapter(
-            requireContext(),
-            contents,
-            favoriteRestaurant = {
-                viewModel.favoriteRestaurant(it)
-            },
-            unFavoriteRestaurant = {
-                viewModel.unFavoriteRestaurant(it)
-            }
-        )
-        binding.rvFavoriteList.adapter = adapter
-        adapter.notifyDataSetChanged()
+        if(contents.isNotEmpty()) {
+            val recyclerViewState = binding.rvFavoriteList.layoutManager?.onSaveInstanceState()
+
+            adapter = FavoriteRestaurantAdapter(
+                requireContext(),
+                contents,
+                favoriteRestaurant = {
+                    viewModel.favoriteRestaurant(it)
+                },
+                unFavoriteRestaurant = {
+                    viewModel.unFavoriteRestaurant(it)
+                }
+            )
+            binding.rvFavoriteList.adapter = adapter
+            binding.rvFavoriteList.layoutManager?.onRestoreInstanceState(recyclerViewState)
+            adapter.notifyDataSetChanged()
+        }
     }
 }

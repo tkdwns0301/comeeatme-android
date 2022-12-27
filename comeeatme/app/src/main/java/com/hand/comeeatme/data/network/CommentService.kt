@@ -43,7 +43,6 @@ interface CommentService {
         @Path("postId") postId: Long,
         @Query("page") page: Long,
         @Query("size") size: Long,
-        @Query("sort") sort: Boolean,
     ): Response<CommentListResponse>
 
     // 회원 댓글 리스트 조회

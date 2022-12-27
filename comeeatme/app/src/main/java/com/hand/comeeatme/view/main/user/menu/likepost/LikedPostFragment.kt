@@ -1,5 +1,6 @@
 package com.hand.comeeatme.view.main.user.menu.likepost
 
+import android.annotation.SuppressLint
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.view.isGone
@@ -7,6 +8,8 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.hand.comeeatme.R
 import com.hand.comeeatme.data.response.post.Content
 import com.hand.comeeatme.databinding.FragmentLikedpostBinding
 import com.hand.comeeatme.util.widget.adapter.user.LikedPostAdapter
@@ -29,7 +32,10 @@ class LikedPostFragment : BaseFragment<LikedPostViewModel, FragmentLikedpostBind
     override fun observeData() {
         viewModel.likedPostStateLiveData.observe(viewLifecycleOwner) {
             when (it) {
-                is LikedPostState.Uninitialized -> {}
+                is LikedPostState.Uninitialized -> {
+                    binding.clLoading.isVisible = true
+                    activity?.window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                }
                 is LikedPostState.Loading -> {
                     binding.clLoading.isVisible = true
                     activity?.window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
@@ -51,21 +57,40 @@ class LikedPostFragment : BaseFragment<LikedPostViewModel, FragmentLikedpostBind
     }
 
     override fun initView() = with(binding) {
+        Glide.with(requireContext())
+            .load(R.drawable.loading)
+            .into(ivLoading)
+
         rvHeartReview.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
         toolbarLikePost.setNavigationOnClickListener {
             finish()
         }
+
+        srlLikedPost.setOnRefreshListener {
+            viewModel.getLikedPosts()
+            srlLikedPost.isRefreshing = false
+        }
+
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun setAdapter(contents: List<Content>) {
-        adapter = LikedPostAdapter(
-            requireContext(),
-            contents,
-        )
+        if(contents.isNotEmpty()) {
+            val recyclerViewState = binding.rvHeartReview.layoutManager?.onSaveInstanceState()
 
-        binding.rvHeartReview.adapter = adapter
-        adapter.notifyDataSetChanged()
+            adapter = LikedPostAdapter(
+                requireContext(),
+                contents,
+            )
+
+            binding.rvHeartReview.adapter = adapter
+            binding.rvHeartReview.layoutManager?.onRestoreInstanceState(recyclerViewState)
+            adapter.notifyDataSetChanged()
+
+        }
+
+
     }
 
 

@@ -10,6 +10,6 @@ interface CommentRepository {
     suspend fun writingComment(accessToken: String, postId: Long, comment: WritingCommentRequest) : CommentResponse?
     suspend fun modifyComment(accessToken: String, postId: Long, commentId: Long, content: ModifyCommentRequest, ): CommentResponse?
     suspend fun deleteComment(accessToken: String, postId: Long, commentId: Long) : CommentResponse?
-    suspend fun getCommentList(accessToken: String, postId: Long, page: Long, size: Long, sort: Boolean) : CommentListResponse?
+    suspend fun getCommentList(accessToken: String, postId: Long, page: Long, size: Long) : CommentListResponse?
     suspend fun getMemberComments(accessToken: String, memberId: Long, page: Long, size: Long): MemberCommentsResponse?
 }

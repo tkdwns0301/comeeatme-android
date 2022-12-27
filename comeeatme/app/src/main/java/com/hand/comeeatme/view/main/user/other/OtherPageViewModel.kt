@@ -7,6 +7,7 @@ import com.hand.comeeatme.data.repository.bookmark.BookmarkRepository
 import com.hand.comeeatme.data.repository.like.LikeRepository
 import com.hand.comeeatme.data.repository.member.MemberRepository
 import com.hand.comeeatme.data.repository.post.PostRepository
+import com.hand.comeeatme.data.response.post.Content
 import com.hand.comeeatme.view.base.BaseViewModel
 import kotlinx.coroutines.launch
 
@@ -23,6 +24,15 @@ class OtherPageViewModel(
     private var profile: String? = null
     private var nickname: String? = null
     private var sort: String = "id,desc"
+
+    private var page: Long = 0
+    private var contents = arrayListOf<Content>()
+    private var isLast: Boolean = false
+
+    fun getIsLast(): Boolean = isLast
+    fun setIsLast(isLast: Boolean) {
+        this.isLast = isLast
+    }
 
     fun setSort(sort: String) {
         this.sort = sort
@@ -59,19 +69,39 @@ class OtherPageViewModel(
         }
     }
 
-    fun getMemberPost(memberId: Long) = viewModelScope.launch {
+    fun getMemberPost(isRefresh: Boolean, memberId: Long) = viewModelScope.launch {
+        otherPageStateLiveData.value = OtherPageState.Loading
+
+        if(isRefresh) {
+            page = 0
+            contents = arrayListOf()
+        }
+
         val response = postRepository.getMemberPost(
             "${appPreferenceManager.getAccessToken()}",
             memberId,
-            0,
+            page++,
             10,
             sort
         )
 
         response?.let {
-            otherPageStateLiveData.value = OtherPageState.MemberPostSuccess(
-                response = it
-            )
+            if(it.data!!.content.isNotEmpty()) {
+                contents.addAll(it.data.content)
+
+                otherPageStateLiveData.value = OtherPageState.MemberPostSuccess(
+                    response = it
+                )
+
+                isLast = false
+            } else {
+                isLast = true
+
+                otherPageStateLiveData.value = OtherPageState.MemberPostSuccess (
+                    response = it
+                )
+            }
+
         }?:run {
             otherPageStateLiveData.value = OtherPageState.Error(
                 "사용자 글을 불러오는 도중 오류가 발생했습니다."

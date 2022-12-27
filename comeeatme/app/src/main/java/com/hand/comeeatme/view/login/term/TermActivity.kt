@@ -7,6 +7,7 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import com.bumptech.glide.Glide
 import com.hand.comeeatme.R
 import com.hand.comeeatme.databinding.ActivityTermBinding
 import com.hand.comeeatme.view.base.BaseActivity
@@ -27,8 +28,6 @@ class TermActivity: BaseActivity<TermViewModel, ActivityTermBinding>() {
     override fun observeData() = viewModel.termStateLiveData.observe(this) {
         when(it) {
             is TermState.Uninitialized -> {
-                binding.clLoading.isVisible = true
-                window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
             }
 
             is TermState.Loading -> {
@@ -68,6 +67,10 @@ class TermActivity: BaseActivity<TermViewModel, ActivityTermBinding>() {
 
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun initView() = with(binding) {
+        Glide.with(applicationContext)
+            .load(R.drawable.loading)
+            .into(ivLoading)
+
         toolbarTerm.setNavigationOnClickListener {
             finish()
         }

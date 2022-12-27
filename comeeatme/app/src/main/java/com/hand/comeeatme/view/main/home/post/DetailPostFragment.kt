@@ -11,6 +11,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
@@ -23,6 +24,7 @@ import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.flexbox.FlexboxLayout
 import com.hand.comeeatme.R
@@ -83,16 +85,19 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
             when (it) {
                 is DetailPostState.Uninitialized -> {
                     binding.clLoading.isVisible = true
+                    activity?.window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                     viewModel.getDetailPost()
-                    viewModel.getCommentList(0, 10, false)
+                    viewModel.getCommentList(true)
                 }
 
                 is DetailPostState.Loading -> {
                     binding.clLoading.isVisible = true
+                    activity?.window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 }
 
                 is DetailPostState.Success -> {
                     binding.clLoading.isGone = true
+                    activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                     viewModel.setPostWriterMemberId(it.response!!.data.member.id)
                     viewModel.setRestaurantId(it.response.data.restaurant.id)
                     viewModel.getRestaurantImage(it.response.data.restaurant.id)
@@ -101,6 +106,7 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
 
                 is DetailPostState.RestaurantImageSuccess -> {
                     binding.clLoading.isGone = true
+                    activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                     Glide.with(requireContext())
                         .load(it.response!!.data.content[0].imageUrl)
                         .into(binding.ivRestaurantImage)
@@ -108,21 +114,26 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
 
                 is DetailPostState.CommentListSuccess -> {
                     binding.clLoading.isGone = true
-                    setAdapter(it.response!!.data.content)
+                    activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                    setAdapter(it.response!!)
                 }
 
                 is DetailPostState.WritingCommentSuccess -> {
-                    viewModel.getDetailPost()
-                    viewModel.getCommentList(0, 10, false)
+                    binding.clLoading.isGone = true
+                    activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                    viewModel.getCommentList(true)
                 }
 
                 is DetailPostState.DeletePostSuccess -> {
+                    binding.clLoading.isGone = true
+                    activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                     finish()
                 }
 
                 is DetailPostState.Error -> {
                     binding.clLoading.isGone = true
-                    Toast.makeText(requireContext(), "$it", Toast.LENGTH_SHORT).show()
+                    activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
                 }
 
             }
@@ -205,7 +216,6 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
                         MyPostDialog(
                             requireContext(),
                             modifyPost = {
-                                // TODO 정보도 같이 넘겨주기 (사진은 안바뀌게)
                                 val manager: FragmentManager =
                                     requireActivity().supportFragmentManager
                                 val ft: FragmentTransaction = manager.beginTransaction()
@@ -277,6 +287,12 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
             val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
             val ft: FragmentTransaction = manager.beginTransaction()
 
+            val findFragment = activity?.supportFragmentManager?.findFragmentByTag(DetailRestaurantFragment.TAG)
+
+            findFragment?.let {
+                manager.beginTransaction().remove(it).commitAllowingStateLoss()
+            }
+
             ft.add(R.id.fg_MainContainer,
                 DetailRestaurantFragment.newInstance(viewModel.getRestaurantId()!!),
                 DetailRestaurantFragment.TAG)
@@ -284,10 +300,23 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
             ft.commitAllowingStateLoss()
         }
 
+        rvCommentList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                if(!viewModel.getIsLast()) {
+                    if(rvCommentList.canScrollVertically(1)) {
+                        viewModel.setIsLast(true)
+                        viewModel.getCommentList(false)
+                    }
+                }
+            }
+        })
+
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun setAdapter(contents: List<CommentListContent>) {
+    private fun setAdapter(contents: ArrayList<CommentListContent>) {
         adapter = CommentListAdapter(
             contents,
             requireContext(),

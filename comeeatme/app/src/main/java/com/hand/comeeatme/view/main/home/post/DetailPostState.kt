@@ -2,7 +2,7 @@ package com.hand.comeeatme.view.main.home.post
 
 import android.annotation.SuppressLint
 import androidx.annotation.StringRes
-import com.hand.comeeatme.data.response.comment.CommentListResponse
+import com.hand.comeeatme.data.response.comment.CommentListContent
 import com.hand.comeeatme.data.response.image.RestaurantImageResponse
 import com.hand.comeeatme.data.response.post.DetailPostResponse
 
@@ -20,7 +20,7 @@ sealed class DetailPostState {
     object UnBookmarkPostSuccess: DetailPostState()
 
     data class CommentListSuccess(
-        val response: CommentListResponse?
+        val response: ArrayList<CommentListContent>?
     ): DetailPostState()
 
     data class RestaurantImageSuccess(

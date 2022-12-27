@@ -8,6 +8,7 @@ import com.hand.comeeatme.data.repository.code.CodeRepository
 import com.hand.comeeatme.data.repository.favorite.FavoriteRepository
 import com.hand.comeeatme.data.repository.kakao.KakaoRepository
 import com.hand.comeeatme.data.repository.restaurant.RestaurantRepository
+import com.hand.comeeatme.data.response.restaurant.RestaurantsRankContent
 import com.hand.comeeatme.view.base.BaseViewModel
 import kotlinx.coroutines.launch
 
@@ -23,6 +24,20 @@ class RankViewModel(
     private var depth1: String? = null
     private var depth2: String? = null
     private var addCode: String? = null
+
+    private var page: Long = 0
+    private var isLast: Boolean = false
+    private var contents = arrayListOf<RestaurantsRankContent>()
+    private var sort: String = "postCount,desc"
+
+    fun setSort(sort: String) {
+        this.sort = sort
+    }
+
+    fun getIsLast() : Boolean = isLast
+    fun setIsLast(isLast: Boolean) {
+        this.isLast = isLast
+    }
 
     fun getDepth1(): String = depth1!!
     fun getDepth2(): String = depth2!!
@@ -68,27 +83,43 @@ class RankViewModel(
     }
 
     fun getRestaurantsRank(
-        page: Long?,
-        size: Long?,
+        isRefresh: Boolean,
         addressCode: String,
         perImageNum: Long,
-        sort: String,
     ) = viewModelScope.launch {
         rankStateLiveDate.value = RankState.Loading
 
+        if(isRefresh) {
+            page = 0
+            contents = arrayListOf()
+        }
+
         val response = restaurantRepository.getRestaurantsRank(
             "${appPreferenceManager.getAccessToken()}",
-            page,
-            size,
+            page++,
+            10,
             addressCode,
             perImageNum,
             sort
         )
 
         response?.let {
-            rankStateLiveDate.value = RankState.Success(
-                response = it
-            )
+            if(it.data!!.content.isNotEmpty()) {
+                contents.addAll(it.data.content)
+
+                rankStateLiveDate.value = RankState.Success(
+                    response = contents
+                )
+                isLast = false
+            } else {
+                isLast = true
+
+                rankStateLiveDate.value = RankState.Success(
+                    response = contents
+                )
+            }
+
+
         } ?: run {
             rankStateLiveDate.value = RankState.Error(
                 "랭킹을 불러오는 도중 오류가 발생했습니다."

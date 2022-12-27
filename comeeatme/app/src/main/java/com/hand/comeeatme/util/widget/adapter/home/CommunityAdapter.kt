@@ -12,6 +12,8 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.hand.comeeatme.R
 import com.hand.comeeatme.data.response.post.Content
 import com.hand.comeeatme.databinding.LayoutHomeItemBinding
@@ -143,11 +145,19 @@ class CommunityAdapter(
 
             if (item.member.imageUrl.isNullOrEmpty()) {
                 Glide.with(context)
-                    .load(R.drawable.default_profile)
-                    .into(profile)
+                    .load(R.drawable.default_profile).apply(
+                        RequestOptions()
+                            .skipMemoryCache(true)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    ).into(profile)
+
             } else {
                 Glide.with(context)
-                    .load(item.member.imageUrl)
+                    .load(item.member.imageUrl).apply(
+                        RequestOptions()
+                            .skipMemoryCache(true)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    )
                     .into(profile)
             }
 
@@ -195,6 +205,12 @@ class CommunityAdapter(
                 val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
                 val ft: FragmentTransaction = manager.beginTransaction()
 
+                val findFragment = context.supportFragmentManager.findFragmentByTag(DetailPostFragment.TAG)
+
+                findFragment?.let {
+                    manager.beginTransaction().remove(it).commitAllowingStateLoss()
+                }
+
 
                 ft.add(R.id.fg_MainContainer,
                     DetailPostFragment.newInstance(item.id),
@@ -216,6 +232,12 @@ class CommunityAdapter(
         private fun toOtherFragment(context: Context, item: Content) {
             val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
             val ft: FragmentTransaction = manager.beginTransaction()
+
+            val findFragment = manager.findFragmentByTag(OtherPageFragment.TAG)
+
+            findFragment?.let {
+                manager.beginTransaction().remove(it).commitAllowingStateLoss()
+            }
 
             ft.add(R.id.fg_MainContainer,
                 OtherPageFragment.newInstance(item.member.id),

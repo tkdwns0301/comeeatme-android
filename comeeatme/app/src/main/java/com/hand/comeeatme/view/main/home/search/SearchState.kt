@@ -3,7 +3,7 @@ package com.hand.comeeatme.view.main.home.search
 import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 import com.hand.comeeatme.data.response.member.MemberSearchResponse
-import com.hand.comeeatme.data.response.restaurant.SimpleRestaurantResponse
+import com.hand.comeeatme.data.response.restaurant.SimpleRestaurantContent
 
 sealed class SearchState {
     object Uninitialized : SearchState()
@@ -13,7 +13,7 @@ sealed class SearchState {
     ) : SearchState()
 
     data class SearchRestaurantSuccess(
-        val response: SimpleRestaurantResponse
+        val response: ArrayList<SimpleRestaurantContent>
     ) : SearchState()
 
 

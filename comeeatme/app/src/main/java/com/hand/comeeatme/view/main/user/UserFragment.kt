@@ -41,13 +41,15 @@ class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
             when (it) {
                 is UserState.Uninitialized -> {
                     binding.clLoading.isVisible = true
-                    activity?.window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                    activity?.window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                     viewModel.getMemberDetail()
                 }
 
                 is UserState.Loading -> {
                     binding.clLoading.isVisible = true
-                    activity?.window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                    activity?.window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 }
 
                 is UserState.UserDetailSuccess -> {
@@ -102,7 +104,11 @@ class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
             val manager: FragmentManager = requireActivity().supportFragmentManager
             val ft: FragmentTransaction = manager.beginTransaction()
 
-            ft.add(R.id.fg_MainContainer, UserEditFragment.newInstance(viewModel.getProfile(), viewModel.getNickname(), viewModel.getIntroduction()), UserEditFragment.TAG)
+            ft.add(R.id.fg_MainContainer,
+                UserEditFragment.newInstance(viewModel.getProfile(),
+                    viewModel.getNickname(),
+                    viewModel.getIntroduction()),
+                UserEditFragment.TAG)
             ft.addToBackStack(UserEditFragment.TAG)
             ft.commitAllowingStateLoss()
         }
@@ -148,7 +154,9 @@ class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
             val manager: FragmentManager = requireActivity().supportFragmentManager
             val ft: FragmentTransaction = manager.beginTransaction()
 
-            ft.add(R.id.fg_MainContainer, RecentReviewFragment.newInstance(), RecentReviewFragment.TAG)
+            ft.add(R.id.fg_MainContainer,
+                RecentReviewFragment.newInstance(),
+                RecentReviewFragment.TAG)
             ft.addToBackStack(RecentReviewFragment.TAG)
             ft.commitAllowingStateLoss()
         }
@@ -176,12 +184,12 @@ class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
             srlUser.isRefreshing = false
         }
 
-        rvList.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+        rvList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
-                if(!viewModel.getIsLast()) {
-                    if(!binding.rvList.canScrollVertically(1)) {
+                if (!viewModel.getIsLast()) {
+                    if (!binding.rvList.canScrollVertically(1)) {
                         viewModel.setIsLast(true)
                         viewModel.getMemberPost(false)
                     }
@@ -189,18 +197,27 @@ class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
             }
         })
 
-        rvGrid.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+        rvGrid.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
-                if(!viewModel.getIsLast()) {
-                    if(!binding.rvGrid.canScrollVertically(1)) {
+                if (!viewModel.getIsLast()) {
+                    if (!binding.rvGrid.canScrollVertically(1)) {
                         viewModel.setIsLast(true)
                         viewModel.getMemberPost(false)
                     }
                 }
             }
         })
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if(!hidden) {
+            adapterList.notifyDataSetChanged()
+            adapterGrid.notifyDataSetChanged()
+        }
     }
 
 
@@ -224,6 +241,7 @@ class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun setUserPost(contents: List<Content>) {
+
         if (contents.isNullOrEmpty()) {
             binding.rvGrid.isGone = true
             binding.rvList.isGone = true
@@ -237,6 +255,10 @@ class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
                 binding.rvGrid.isGone = true
                 binding.rvList.isVisible = true
             }
+
+            var recyclerViewState1 = binding.rvGrid.layoutManager?.onSaveInstanceState()
+            var recyclerViewState2 = binding.rvList.layoutManager?.onSaveInstanceState()
+
             adapterGrid = UserGridAdapter(contents, requireContext())
             adapterList = UserListAdapter(contents, requireContext(),
                 viewModel.getProfile(), viewModel.getNickname(),
@@ -255,6 +277,9 @@ class UserFragment : BaseFragment<UserViewModel, FragmentUserBinding>() {
 
             binding.rvGrid.adapter = adapterGrid
             binding.rvList.adapter = adapterList
+
+            binding.rvGrid.layoutManager?.onRestoreInstanceState(recyclerViewState1)
+            binding.rvList.layoutManager?.onRestoreInstanceState(recyclerViewState2)
 
             adapterGrid.notifyDataSetChanged()
             adapterList.notifyDataSetChanged()

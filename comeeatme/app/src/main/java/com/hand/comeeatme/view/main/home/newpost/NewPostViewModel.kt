@@ -1,6 +1,5 @@
 package com.hand.comeeatme.view.main.home.newpost
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.android.material.chip.Chip
@@ -10,6 +9,7 @@ import com.hand.comeeatme.data.repository.post.PostRepository
 import com.hand.comeeatme.data.repository.restaurant.RestaurantRepository
 import com.hand.comeeatme.data.request.post.ModifyPostRequest
 import com.hand.comeeatme.data.request.post.NewPostRequest
+import com.hand.comeeatme.data.response.restaurant.SimpleRestaurantContent
 import com.hand.comeeatme.view.base.BaseViewModel
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -27,6 +27,7 @@ class NewPostViewModel(
         const val CHECKED_PHOTOS_KEY = "CheckedPhotos"
         const val COMPRESSED_PHOTO_KEY = "CompressedPhotos"
     }
+
     private val hashTagKorToEng = hashMapOf<String, String>(
         "감성있는" to "MOODY",
         "혼밥" to "EATING_ALON",
@@ -68,24 +69,40 @@ class NewPostViewModel(
     private var chipList: ArrayList<Chip> = arrayListOf()
     private var checkedChipList: ArrayList<Chip> = arrayListOf()
     private var compressImagePathList: ArrayList<String> = arrayListOf()
-    private var selectedImageList: ArrayList<String> = arrayListOf()
+    //private var selectedImageList: ArrayList<String> = arrayListOf()
     private var hashTagList: ArrayList<String> = arrayListOf()
     private var restaurantId: Long? = null
     private var content: String? = null
 
+    private var page: Long = 0
+    private var contents = arrayListOf<SimpleRestaurantContent>()
+    private var isLast: Boolean = false
+    private var query: String = ""
+
     val newPostStateLiveData = MutableLiveData<NewPostState>(NewPostState.Uninitialized)
 
-    fun clearSelectedImageList() {
-        this.selectedImageList.clear()
+    fun setQuery(query: String) {
+        this.query = query
+    }
+    fun getIsLast(): Boolean = isLast
+    fun setIsLast(isLast: Boolean) {
+        this.isLast = isLast
     }
 
-    fun addSelectedImageList(path: String) {
-        this.selectedImageList.add(path)
-    }
 
-    fun getSelectedImageList() : ArrayList<String> {
-        return this.selectedImageList
-    }
+//    fun getHashTags() : ArrayList<String> = hashTagList
+//
+//    fun clearSelectedImageList() {
+//        this.selectedImageList.clear()
+//    }
+//
+//    fun addSelectedImageList(path: String) {
+//        this.selectedImageList.add(path)
+//    }
+//
+//    fun getSelectedImageList(): ArrayList<String> {
+//        return this.selectedImageList
+//    }
 
     fun addChip(chip: Chip) {
         chipList.add(chip)
@@ -96,14 +113,26 @@ class NewPostViewModel(
     fun addHashTag(tag: String, chip: Chip) {
         hashTagList.add(hashTagKorToEng[tag]!!)
         checkedChipList.add(chip)
+
+        if (isReady()) {
+            newPostStateLiveData.value = NewPostState.NewPostReady
+        } else {
+            newPostStateLiveData.value = NewPostState.NewPostUnReady
+        }
     }
 
     fun removeHashTag(tag: String, chip: Chip) {
         hashTagList.remove(hashTagKorToEng[tag]!!)
         checkedChipList.remove(chip)
+
+        if (isReady()) {
+            newPostStateLiveData.value = NewPostState.NewPostReady
+        } else {
+            newPostStateLiveData.value = NewPostState.NewPostUnReady
+        }
     }
 
-    fun hashTagKorToEng(tag: String) : String {
+    fun hashTagKorToEng(tag: String): String {
         return this.hashTagKorToEng[tag]!!
     }
 
@@ -157,22 +186,34 @@ class NewPostViewModel(
 
 
     fun searchRestaurants(
-        page: Long?,
-        size: Long?,
-        sort: Boolean?,
-        keyword: String,
+        isRefresh: Boolean,
     ) = viewModelScope.launch {
 
+        if(isRefresh) {
+            page = 0
+            contents = arrayListOf()
+        }
 
         val response =
             restaurantRepository.getSearchRestaurants("${appPreferenceManager.getAccessToken()}",
-                page, size, sort, keyword
+                page++, 10, query
             )
 
         response?.let {
-            newPostStateLiveData.value = NewPostState.SearchRestaurantSuccess(
-                restaurants = it
-            )
+            if (it.data.content.isNotEmpty()) {
+                contents.addAll(it.data.content)
+
+                newPostStateLiveData.value = NewPostState.SearchRestaurantSuccess(
+                    restaurants = contents
+                )
+                isLast = false
+            } else {
+                isLast = true
+
+                newPostStateLiveData.value = NewPostState.SearchRestaurantSuccess(
+                    restaurants = contents
+                )
+            }
         } ?: run {
             newPostStateLiveData.value = NewPostState.Error(
                 "검색한 단어의 식당을 찾을 수 없었습니다."
@@ -189,10 +230,10 @@ class NewPostViewModel(
         compressImagePathList.forEachIndexed { index, path ->
             val file = File(path)
             val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), file)
-            images.add(MultipartBody.Part.createFormData("images", "test-image$index.webp", requestFile))
+            images.add(MultipartBody.Part.createFormData("images",
+                "test-image$index.webp",
+                requestFile))
         }
-
-        Log.e("images", "$images")
 
         val response = imageRepository.sendImages(
             "${appPreferenceManager.getAccessToken()}",
@@ -201,7 +242,7 @@ class NewPostViewModel(
 
         response?.let {
             sendNewPost(it.data.ids)
-        } ?:run {
+        } ?: run {
             newPostStateLiveData.value = NewPostState.Error("이미지를 전송하기에 실패했습니다.")
         }
     }
@@ -222,16 +263,17 @@ class NewPostViewModel(
         }
     }
 
-    fun getDetailPost(postId : Long) = viewModelScope.launch {
+    fun getDetailPost(postId: Long) = viewModelScope.launch {
         newPostStateLiveData.value = NewPostState.Loading
 
-        val response = postRepository.getDetailPost("${appPreferenceManager.getAccessToken()}", postId)
+        val response =
+            postRepository.getDetailPost("${appPreferenceManager.getAccessToken()}", postId)
 
         response?.let {
             newPostStateLiveData.value = NewPostState.DetailPostSuccess(
                 response = it
             )
-        }?:run {
+        } ?: run {
             newPostStateLiveData.value = NewPostState.Error(
                 "수정을 위한 글을 불러오는 도중 오류가 발생했습니다."
             )
@@ -243,11 +285,13 @@ class NewPostViewModel(
 
         val modifyPostRequest = ModifyPostRequest(restaurantId!!, hashTagList, content!!)
 
-        val response = postRepository.modifyPost("${appPreferenceManager.getAccessToken()}", postId, modifyPostRequest)
+        val response = postRepository.modifyPost("${appPreferenceManager.getAccessToken()}",
+            postId,
+            modifyPostRequest)
 
         response?.let {
             newPostStateLiveData.value = NewPostState.ModifyPostSuccess
-        } ?:run {
+        } ?: run {
             newPostStateLiveData.value = NewPostState.Error(
                 "글을 수정하는 도중 오류가 발생했습니다."
             )

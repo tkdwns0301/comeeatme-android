@@ -16,24 +16,6 @@ class SettingViewModel (
     val settingStateLiveData = MutableLiveData<SettingState>(SettingState.Uninitialized)
 
 
-    fun withdrawalService() = viewModelScope.launch {
-        settingStateLiveData.value = SettingState.Loading
-
-        val response = memberRepository.withdrawalService(
-            "${appPreferenceManager.getAccessToken()}"
-        )
-
-        response?.let {
-            settingStateLiveData.value = SettingState.Success
-            appPreferenceManager.clear()
-
-        }?:run {
-            settingStateLiveData.value = SettingState.Error(
-                "회원탈퇴를 하는 도중 오류가 발생했습니다. 다시 시도해주세요."
-            )
-        }
-    }
-
     fun logout() = viewModelScope.launch {
         settingStateLiveData.value = SettingState.Loading
 

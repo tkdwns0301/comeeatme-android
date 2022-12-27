@@ -1,6 +1,8 @@
 package com.hand.comeeatme.data.repository.comment
 
 import com.hand.comeeatme.data.network.CommentService
+import com.hand.comeeatme.data.network.OAuthService
+import com.hand.comeeatme.data.preference.AppPreferenceManager
 import com.hand.comeeatme.data.request.comment.ModifyCommentRequest
 import com.hand.comeeatme.data.request.comment.WritingCommentRequest
 import com.hand.comeeatme.data.response.comment.CommentListResponse
@@ -10,6 +12,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
 class DefaultCommentRepository(
+    private val appPreferenceManager: AppPreferenceManager,
+    private val oAuthService: OAuthService,
     private val commentService: CommentService,
     private val ioDispatcher: CoroutineDispatcher,
 ) : CommentRepository {
@@ -25,6 +29,23 @@ class DefaultCommentRepository(
 
         if (response.isSuccessful) {
             response.body()!!
+        } else if (response.code() == 401) {
+            val response2 = oAuthService.reissueToken(
+                "Bearer ${appPreferenceManager.getRefreshToken()}"
+            )
+
+            if (response2.isSuccessful) {
+                appPreferenceManager.putRefreshToken(response2.body()!!.refreshToken)
+                appPreferenceManager.putAccessToken(response2.body()!!.accessToken)
+
+                writingComment(
+                    "${appPreferenceManager.getAccessToken()}",
+                    postId,
+                    comment
+                )
+            } else {
+                null
+            }
         } else {
             null
         }
@@ -45,6 +66,24 @@ class DefaultCommentRepository(
 
         if (response.isSuccessful) {
             response.body()!!
+        } else if (response.code() == 401) {
+            val response2 = oAuthService.reissueToken(
+                "Bearer ${appPreferenceManager.getRefreshToken()}"
+            )
+
+            if (response2.isSuccessful) {
+                appPreferenceManager.putRefreshToken(response2.body()!!.refreshToken)
+                appPreferenceManager.putAccessToken(response2.body()!!.accessToken)
+
+                modifyComment(
+                    "${appPreferenceManager.getAccessToken()}",
+                    postId,
+                    commentId,
+                    content
+                )
+            } else {
+                null
+            }
         } else {
             null
         }
@@ -63,7 +102,24 @@ class DefaultCommentRepository(
 
         if (response.isSuccessful) {
             response.body()!!
-        } else {
+        }else if (response.code() == 401) {
+            val response2 = oAuthService.reissueToken(
+                "Bearer ${appPreferenceManager.getRefreshToken()}"
+            )
+
+            if (response2.isSuccessful) {
+                appPreferenceManager.putRefreshToken(response2.body()!!.refreshToken)
+                appPreferenceManager.putAccessToken(response2.body()!!.accessToken)
+
+                deleteComment(
+                    "${appPreferenceManager.getAccessToken()}",
+                    postId,
+                    commentId,
+                )
+            } else {
+                null
+            }
+        }  else {
             null
         }
 
@@ -74,19 +130,35 @@ class DefaultCommentRepository(
         postId: Long,
         page: Long,
         size: Long,
-        sort: Boolean,
     ): CommentListResponse? = withContext(ioDispatcher) {
         val response = commentService.getCommentList(
             Authorization = "Bearer $accessToken",
             postId = postId,
             page = page,
             size = size,
-            sort = sort,
         )
 
         if (response.isSuccessful) {
             response.body()!!
-        } else {
+        } else if (response.code() == 401) {
+            val response2 = oAuthService.reissueToken(
+                "Bearer ${appPreferenceManager.getRefreshToken()}"
+            )
+
+            if (response2.isSuccessful) {
+                appPreferenceManager.putRefreshToken(response2.body()!!.refreshToken)
+                appPreferenceManager.putAccessToken(response2.body()!!.accessToken)
+
+                getCommentList(
+                    "${appPreferenceManager.getAccessToken()}",
+                    postId,
+                    page,
+                    size,
+                )
+            } else {
+                null
+            }
+        }  else {
             null
         }
     }
@@ -96,7 +168,7 @@ class DefaultCommentRepository(
         memberId: Long,
         page: Long,
         size: Long,
-    ): MemberCommentsResponse? = withContext(ioDispatcher){
+    ): MemberCommentsResponse? = withContext(ioDispatcher) {
         val response = commentService.getMemberComments(
             Authorization = "Bearer $accessToken",
             memberId = memberId,
@@ -104,9 +176,29 @@ class DefaultCommentRepository(
             size = size,
         )
 
-        if(response.isSuccessful) {
+        if (response.isSuccessful) {
             response.body()!!
-        } else {
+        } else if (response.code() == 401) {
+            val response2 = oAuthService.reissueToken(
+                "Bearer ${appPreferenceManager.getRefreshToken()}"
+            )
+
+            if (response2.isSuccessful) {
+                appPreferenceManager.putRefreshToken(response2.body()!!.refreshToken)
+                appPreferenceManager.putAccessToken(response2.body()!!.accessToken)
+
+                getMemberComments(
+                    "${appPreferenceManager.getAccessToken()}",
+                    memberId,
+                    page,
+                    size
+                )
+            } else {
+                null
+            }
+        }
+
+        else {
             null
         }
     }

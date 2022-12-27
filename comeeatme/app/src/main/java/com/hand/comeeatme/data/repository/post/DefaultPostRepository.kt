@@ -1,7 +1,8 @@
 package com.hand.comeeatme.data.repository.post
 
-import android.util.Log
+import com.hand.comeeatme.data.network.OAuthService
 import com.hand.comeeatme.data.network.PostService
+import com.hand.comeeatme.data.preference.AppPreferenceManager
 import com.hand.comeeatme.data.request.post.ModifyPostRequest
 import com.hand.comeeatme.data.request.post.NewPostRequest
 import com.hand.comeeatme.data.response.post.DetailPostResponse
@@ -10,10 +11,11 @@ import com.hand.comeeatme.data.response.post.PostResponse
 import com.hand.comeeatme.data.response.post.RestaurantPostResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import org.json.JSONObject
 
 class DefaultPostRepository(
+    private val appPreferenceManager: AppPreferenceManager,
     private val postService: PostService,
+    private val oAuthService: OAuthService,
     private val ioDispatcher: CoroutineDispatcher,
 ) : PostRepository {
 
@@ -33,20 +35,26 @@ class DefaultPostRepository(
 
         if (response.isSuccessful) {
             response.body()!!
-        } else if(response.code() == 401) {
-            var jsonObject: JSONObject? = null
-            var errorResponse: PostResponse? = null
+        } else if (response.code() == 401) {
+            val response2 = oAuthService.reissueToken(
+                "Bearer ${appPreferenceManager.getRefreshToken()}"
+            )
 
-            try {
-                jsonObject = JSONObject(response.errorBody()!!.string())
-                errorResponse = PostResponse(success = jsonObject.getBoolean("success"), data = null, error = null)
-            } catch (e: Exception) {
-                Log.e("error", "${e.printStackTrace()}")
+            if (response2.isSuccessful) {
+                appPreferenceManager.putRefreshToken(response2.body()!!.refreshToken)
+                appPreferenceManager.putAccessToken(response2.body()!!.accessToken)
+
+                getPosts(
+                    "${appPreferenceManager.getAccessToken()}",
+                    page,
+                    size,
+                    sort,
+                    hashTags
+                )
+            } else {
+                null
             }
-            errorResponse
-        }
-
-        else {
+        } else {
             null
         }
     }
@@ -69,6 +77,26 @@ class DefaultPostRepository(
 
         if (response.isSuccessful) {
             response.body()!!
+        } else if (response.code() == 401) {
+            val response2 = oAuthService.reissueToken(
+                "Bearer ${appPreferenceManager.getRefreshToken()}"
+            )
+
+            if (response2.isSuccessful) {
+                appPreferenceManager.putRefreshToken(response2.body()!!.refreshToken)
+                appPreferenceManager.putAccessToken(response2.body()!!.accessToken)
+
+                getMemberPost(
+                    "${appPreferenceManager.getAccessToken()}",
+                    memberId,
+                    page,
+                    size,
+                    sort
+                )
+            } else {
+                null
+            }
+
         } else {
             null
         }
@@ -84,10 +112,22 @@ class DefaultPostRepository(
         )
 
         if (response.isSuccessful) {
-            if (!response.body()!!.success) {
-                null
+            response.body()!!
+        } else if (response.code() == 401) {
+            val response2 = oAuthService.reissueToken(
+                "Bearer ${appPreferenceManager.getRefreshToken()}"
+            )
+
+            if (response2.isSuccessful) {
+                appPreferenceManager.putRefreshToken(response2.body()!!.refreshToken)
+                appPreferenceManager.putAccessToken(response2.body()!!.accessToken)
+
+                getRestaurantPosts(
+                    "${appPreferenceManager.getAccessToken()}",
+                    restaurantId
+                )
             } else {
-                response.body()!!
+                null
             }
         } else {
             null
@@ -103,6 +143,23 @@ class DefaultPostRepository(
 
         if (response.isSuccessful) {
             response.body()!!
+        } else if (response.code() == 401) {
+            val response2 = oAuthService.reissueToken(
+                "Bearer ${appPreferenceManager.getRefreshToken()}"
+            )
+
+            if (response2.isSuccessful) {
+                appPreferenceManager.putRefreshToken(response2.body()!!.refreshToken)
+                appPreferenceManager.putAccessToken(response2.body()!!.accessToken)
+
+                putNewPost(
+                    "${appPreferenceManager.getAccessToken()}",
+                    newPost
+                )
+            } else {
+                null
+            }
+
         } else {
             null
         }
@@ -119,6 +176,24 @@ class DefaultPostRepository(
 
         if (response.isSuccessful) {
             response.body()!!
+        } else if (response.code() == 401) {
+            val response2 = oAuthService.reissueToken(
+                "Bearer ${appPreferenceManager.getRefreshToken()}"
+            )
+
+            if (response2.isSuccessful) {
+                appPreferenceManager.putRefreshToken(response2.body()!!.refreshToken)
+                appPreferenceManager.putAccessToken(response2.body()!!.accessToken)
+
+                getDetailPost(
+                    "${appPreferenceManager.getAccessToken()}",
+                    postId
+                )
+            } else {
+                null
+            }
+
+
         } else {
             null
         }
@@ -136,6 +211,25 @@ class DefaultPostRepository(
 
         if (response.isSuccessful) {
             response.body()!!
+        } else if (response.code() == 401) {
+            val response2 = oAuthService.reissueToken(
+                "Bearer ${appPreferenceManager.getRefreshToken()}"
+            )
+
+            if (response2.isSuccessful) {
+                appPreferenceManager.putRefreshToken(response2.body()!!.refreshToken)
+                appPreferenceManager.putAccessToken(response2.body()!!.accessToken)
+
+                modifyPost(
+                    "${appPreferenceManager.getAccessToken()}",
+                    postId,
+                    modifyPost
+                )
+            } else {
+                null
+            }
+
+
         } else {
             null
         }
@@ -152,6 +246,24 @@ class DefaultPostRepository(
 
         if (response.isSuccessful) {
             response.body()!!
+        } else if (response.code() == 401) {
+            val response2 = oAuthService.reissueToken(
+                "Bearer ${appPreferenceManager.getRefreshToken()}"
+            )
+
+            if (response2.isSuccessful) {
+                appPreferenceManager.putRefreshToken(response2.body()!!.refreshToken)
+                appPreferenceManager.putAccessToken(response2.body()!!.accessToken)
+
+                deletePost(
+                    "${appPreferenceManager.getAccessToken()}",
+                    postId
+                )
+            } else {
+                null
+            }
+
+
         } else {
             null
         }

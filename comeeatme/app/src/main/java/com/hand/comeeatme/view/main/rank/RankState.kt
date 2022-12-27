@@ -3,14 +3,14 @@ package com.hand.comeeatme.view.main.rank
 import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 import com.hand.comeeatme.data.request.code.AddressCodeResponse
-import com.hand.comeeatme.data.response.restaurant.RestaurantsRankResponse
+import com.hand.comeeatme.data.response.restaurant.RestaurantsRankContent
 
 sealed class RankState {
     object Uninitialized : RankState()
     object Loading : RankState()
 
     data class Success(
-        val response: RestaurantsRankResponse,
+        val response: ArrayList<RestaurantsRankContent>,
     ) : RankState()
 
     data class CurrentAddressSuccess(

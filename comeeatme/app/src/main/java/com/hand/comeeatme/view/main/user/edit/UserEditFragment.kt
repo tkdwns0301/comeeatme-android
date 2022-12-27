@@ -3,6 +3,8 @@ package com.hand.comeeatme.view.main.user.edit
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.os.bundleOf
@@ -11,6 +13,8 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.hand.comeeatme.R
 import com.hand.comeeatme.databinding.FragmentUserEditBinding
 import com.hand.comeeatme.view.base.BaseFragment
@@ -72,7 +76,7 @@ class UserEditFragment : BaseFragment<UserEditViewModel, FragmentUserEditBinding
                 is UserEditState.Uninitialized -> {
                     if (profile.isNullOrEmpty()) {
                         Glide.with(requireContext())
-                            .load(R.drawable.default_image)
+                            .load(R.drawable.default_profile)
                             .into(binding.clProfile)
                     } else {
                         Glide.with(requireContext())
@@ -86,33 +90,49 @@ class UserEditFragment : BaseFragment<UserEditViewModel, FragmentUserEditBinding
 
                 is UserEditState.Loading -> {
                     binding.clLoading.isVisible = true
+                    activity?.window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 }
 
                 is UserEditState.CompressPhotoFinish -> {
                     if(it.compressPhotoList[0].isNullOrEmpty()) {
                         Glide.with(requireContext())
-                            .load(R.drawable.default_profile)
+                            .load(R.drawable.default_profile).apply(
+                                RequestOptions()
+                                    .skipMemoryCache(true)
+                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            )
                             .into(binding.clProfile)
                     } else {
                         Glide.with(requireContext())
-                            .load(it.compressPhotoList[0])
+                            .load(it.compressPhotoList[0]).apply(
+                                RequestOptions()
+                                    .skipMemoryCache(true)
+                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            )
                             .into(binding.clProfile)
                     }
                 }
 
                 is UserEditState.Success -> {
                     binding.clLoading.isGone = true
+                    activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                     finish()
                 }
 
                 is UserEditState.Error -> {
-
+                    binding.clLoading.isGone = true
+                    activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
     override fun initView() = with(binding) {
+        Glide.with(requireContext())
+            .load(R.drawable.loading)
+            .into(ivLoading)
+
         clProfileEdit.setOnClickListener {
             val readPermission = ActivityCompat.checkSelfPermission(
                 requireContext(),

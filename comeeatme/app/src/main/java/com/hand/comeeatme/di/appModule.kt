@@ -17,6 +17,8 @@ import com.hand.comeeatme.data.repository.like.DefaultLikeRepository
 import com.hand.comeeatme.data.repository.like.LikeRepository
 import com.hand.comeeatme.data.repository.member.DefaultMemberRepository
 import com.hand.comeeatme.data.repository.member.MemberRepository
+import com.hand.comeeatme.data.repository.notice.DefaultNoticeRepository
+import com.hand.comeeatme.data.repository.notice.NoticeRepository
 import com.hand.comeeatme.data.repository.oauth.DefaultOAuthRepository
 import com.hand.comeeatme.data.repository.oauth.OAuthRepository
 import com.hand.comeeatme.data.repository.post.DefaultPostRepository
@@ -49,6 +51,7 @@ import com.hand.comeeatme.view.main.user.menu.myreview.MyReviewViewModel
 import com.hand.comeeatme.view.main.user.menu.recentreview.RecentReviewViewModel
 import com.hand.comeeatme.view.main.user.other.OtherPageViewModel
 import com.hand.comeeatme.view.main.user.setting.SettingViewModel
+import com.hand.comeeatme.view.main.user.setting.notice.NoticeViewModel
 import com.hand.comeeatme.view.main.user.setting.unlink.UnlinkViewModel
 import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidApplication
@@ -59,7 +62,7 @@ import org.koin.dsl.module
 val appModule = module {
     // viewModel
     viewModel { LogInViewModel(get(), get()) }
-    viewModel { HomeViewModel(get(), get(), get(), get(), get()) }
+    viewModel { HomeViewModel(get(), get(), get(), get()) }
     viewModel { SearchViewModel(get(), get(), get()) }
     viewModel { NewPostViewModel(get(), get(), get(), get()) }
     viewModel { AlbumViewModel() }
@@ -82,20 +85,22 @@ val appModule = module {
     viewModel { RankViewModel(get(), get(), get(), get(), get()) }
     viewModel { RegionViewModel(get(), get()) }
     viewModel { UnlinkViewModel(get(), get())}
+    viewModel { NoticeViewModel(get(), get())}
 
     // repository
-    single<PostRepository> { DefaultPostRepository(get(), get()) }
-    single<OAuthRepository> { DefaultOAuthRepository(get(), get()) }
-    single<MemberRepository> { DefaultMemberRepository(get(), get()) }
-    single<RestaurantRepository> { DefaultRestaurantRepository(get(), get()) }
-    single<ImageRepository> { DefaultImageRepository(get(), get()) }
-    single<LikeRepository> { DefaultLikeRepository(get(), get()) }
-    single<BookmarkRepository> { DefaultBookmarkRepository(get(), get()) }
-    single<FavoriteRepository> { DefaultFavoriteRepository(get(), get()) }
-    single<CommentRepository> { DefaultCommentRepository(get(), get()) }
-    single<ReportRepository> { DefaultReportRepository(get(), get()) }
+    single<PostRepository> { DefaultPostRepository(get(), get(), get(), get()) }
+    single<OAuthRepository> { DefaultOAuthRepository(get(), get(), get()) }
+    single<MemberRepository> { DefaultMemberRepository(get(), get(), get(), get()) }
+    single<RestaurantRepository> { DefaultRestaurantRepository(get(), get(), get(), get()) }
+    single<ImageRepository> { DefaultImageRepository(get(), get(), get(), get()) }
+    single<LikeRepository> { DefaultLikeRepository(get(), get(), get(), get()) }
+    single<BookmarkRepository> { DefaultBookmarkRepository(get(), get(), get(), get()) }
+    single<FavoriteRepository> { DefaultFavoriteRepository(get(), get(), get(), get()) }
+    single<CommentRepository> { DefaultCommentRepository(get(), get(), get(), get()) }
+    single<ReportRepository> { DefaultReportRepository(get(), get(), get(), get()) }
     single<KakaoRepository> { DefaultKakaoRepository(get(), get()) }
-    single<CodeRepository> { DefaultCodeRepository(get(), get()) }
+    single<CodeRepository> { DefaultCodeRepository(get(), get(), get(), get()) }
+    single<NoticeRepository> { DefaultNoticeRepository(get(), get(), get(), get())}
 
     // provider
     single(named("comeeatme")) { provideApiRetrofit(get(), get(), get()) }
@@ -113,6 +118,7 @@ val appModule = module {
     single { provideCommentService(get(qualifier = named("comeeatme"))) }
     single { provideReportService(get(qualifier = named("comeeatme"))) }
     single { provideCodeService(get(qualifier = named("comeeatme"))) }
+    single { provideNoticeService(get(qualifier = named("comeeatme"))) }
 
     // Kakao
     single { provideKakaoService(get(qualifier = named("kakao"))) }
@@ -129,5 +135,6 @@ val appModule = module {
 
     single { Dispatchers.IO }
     single { Dispatchers.Main }
+
 
 }

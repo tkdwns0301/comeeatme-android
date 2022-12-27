@@ -2,13 +2,13 @@ package com.hand.comeeatme.view.main.bookmark.post
 
 import android.annotation.SuppressLint
 import androidx.annotation.StringRes
-import com.hand.comeeatme.data.response.bookmark.BookmarkPostResponse
+import com.hand.comeeatme.data.response.bookmark.BookmarkPostContent
 
 sealed class BookmarkPostState {
     object Uninitialized : BookmarkPostState()
 
     data class Success (
-        val response: BookmarkPostResponse
+        val response: ArrayList<BookmarkPostContent>
             ): BookmarkPostState()
 
     @SuppressLint("SupportAnnotationUsage")

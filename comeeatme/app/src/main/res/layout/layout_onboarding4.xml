@@ -14,9 +14,9 @@
         app:layout_constraintBottom_toTopOf="@id/iv_1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:gravity="left"
+        android:gravity="start"
         android:text="해쉬태그 필터링으로\n안성맞춤 맛집을 찾아봐요"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textColor="@color/basic"
         android:textStyle="bold" />
 
@@ -29,7 +29,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="20dp"
-        android:src="@drawable/onboading4"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

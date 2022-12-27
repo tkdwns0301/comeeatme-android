@@ -1,12 +1,16 @@
 package com.hand.comeeatme.data.repository.favorite
 
 import com.hand.comeeatme.data.network.FavoriteService
+import com.hand.comeeatme.data.network.OAuthService
+import com.hand.comeeatme.data.preference.AppPreferenceManager
 import com.hand.comeeatme.data.response.favorite.FavoritePostResponse
 import com.hand.comeeatme.data.response.like.SuccessResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
 class DefaultFavoriteRepository(
+    private val appPreferenceManager: AppPreferenceManager,
+    private val oAuthService: OAuthService,
     private val favoriteService: FavoriteService,
     private val ioDispatcher: CoroutineDispatcher,
 ) : FavoriteRepository {
@@ -19,6 +23,22 @@ class DefaultFavoriteRepository(
 
             if (response.isSuccessful) {
                 response.body()!!
+            }  else if (response.code() == 401) {
+                val response2 = oAuthService.reissueToken(
+                    "Bearer ${appPreferenceManager.getRefreshToken()}"
+                )
+
+                if (response2.isSuccessful) {
+                    appPreferenceManager.putRefreshToken(response2.body()!!.refreshToken)
+                    appPreferenceManager.putAccessToken(response2.body()!!.accessToken)
+
+                    favoriteRestaurant(
+                        "${appPreferenceManager.getAccessToken()}",
+                        restaurantId
+                    )
+                } else {
+                    null
+                }
             } else {
                 null
             }
@@ -33,6 +53,22 @@ class DefaultFavoriteRepository(
 
         if(response.isSuccessful) {
             response.body()!!
+        } else if (response.code() == 401) {
+            val response2 = oAuthService.reissueToken(
+                "Bearer ${appPreferenceManager.getRefreshToken()}"
+            )
+
+            if (response2.isSuccessful) {
+                appPreferenceManager.putRefreshToken(response2.body()!!.refreshToken)
+                appPreferenceManager.putAccessToken(response2.body()!!.accessToken)
+
+                unFavoriteRestaurant(
+                    "${appPreferenceManager.getAccessToken()}",
+                    restaurantId
+                )
+            } else {
+                null
+            }
         } else {
             null
         }
@@ -54,7 +90,25 @@ class DefaultFavoriteRepository(
 
         if(response.isSuccessful) {
             response.body()!!
-        } else {
+        }else if (response.code() == 401) {
+            val response2 = oAuthService.reissueToken(
+                "Bearer ${appPreferenceManager.getRefreshToken()}"
+            )
+
+            if (response2.isSuccessful) {
+                appPreferenceManager.putRefreshToken(response2.body()!!.refreshToken)
+                appPreferenceManager.putAccessToken(response2.body()!!.accessToken)
+
+                getAllFavorite(
+                    "${appPreferenceManager.getAccessToken()}",
+                    memberId,
+                    page,
+                    size
+                )
+            } else {
+                null
+            }
+        }  else {
             null
         }
     }

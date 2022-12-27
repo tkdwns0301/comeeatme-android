@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 import com.hand.comeeatme.data.response.post.DetailPostResponse
 import com.hand.comeeatme.data.response.post.NewPostResponse
-import com.hand.comeeatme.data.response.restaurant.SimpleRestaurantResponse
+import com.hand.comeeatme.data.response.restaurant.SimpleRestaurantContent
 
 sealed class NewPostState {
     object Uninitialized : NewPostState()
@@ -14,7 +14,7 @@ sealed class NewPostState {
     ) : NewPostState()
 
     data class SearchRestaurantSuccess(
-        val restaurants: SimpleRestaurantResponse,
+        val restaurants: ArrayList<SimpleRestaurantContent>,
     ) : NewPostState()
 
     @SuppressLint("SupportAnnotationUsage")

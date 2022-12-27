@@ -14,9 +14,9 @@
         app:layout_constraintBottom_toTopOf="@id/iv_1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:gravity="left"
+        android:gravity="start"
         android:text="핫플레이스를 발견하셨나요?\n우리만의 맛집을 공유해요."
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textColor="@color/basic"
         android:textStyle="bold" />
 
@@ -29,7 +29,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="20dp"
-        android:src="@drawable/onboading2"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

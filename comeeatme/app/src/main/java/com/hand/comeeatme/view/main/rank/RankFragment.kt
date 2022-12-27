@@ -6,8 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
+import android.location.LocationManager
 import android.os.Build
-import android.os.Looper
 import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
@@ -17,6 +17,7 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.gms.location.*
 import com.hand.comeeatme.R
@@ -28,6 +29,7 @@ import com.hand.comeeatme.view.dialog.RankSortDialog
 import com.hand.comeeatme.view.main.home.search.SearchFragment
 import com.hand.comeeatme.view.main.rank.region.RegionActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.*
 
 
 class RankFragment : BaseFragment<RankViewModel, FragmentRankBinding>() {
@@ -54,8 +56,9 @@ class RankFragment : BaseFragment<RankViewModel, FragmentRankBinding>() {
                     binding.clLoading.isVisible = true
                     activity?.window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                         WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-                    if (checkPermissionForLocation(requireContext())) {
-                        getCurrentLocation()
+
+                    if(checkPermissionForLocation(requireContext())) {
+                        getCurrentLoc()
                     }
 
                 }
@@ -69,20 +72,20 @@ class RankFragment : BaseFragment<RankViewModel, FragmentRankBinding>() {
                 is RankState.Success -> {
                     binding.clLoading.isGone = true
                     activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-                    setAdapter(it.response.data.content)
+                    setAdapter(it.response)
                 }
 
                 is RankState.CurrentAddressSuccess -> {
                     binding.tvDepth1.text = it.depth1
                     binding.tvDepth2.text = "${it.depth2} "
 
-                    viewModel.getRestaurantsRank(0, 10, it.addressCode, 1, "postCount,desc")
+                    viewModel.getRestaurantsRank(true, it.addressCode, 1)
                 }
 
                 is RankState.Error -> {
                     binding.clLoading.isGone = true
                     activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-                    Toast.makeText(requireContext(), "$it", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -122,88 +125,114 @@ class RankFragment : BaseFragment<RankViewModel, FragmentRankBinding>() {
             RankSortDialog(
                 requireContext(),
                 postSort = {
-                    viewModel.getRestaurantsRank(0, 10, viewModel.getAddCode(), 1, it)
+                    viewModel.setSort(it)
+                    viewModel.getRestaurantsRank(true,  viewModel.getAddCode(), 1)
                     tvSort.text = "게시글순 "
                 },
                 favoriteSort = {
-                    viewModel.getRestaurantsRank(0, 10, viewModel.getAddCode(), 1, it)
+                    viewModel.setSort(it)
+                    viewModel.getRestaurantsRank(true , viewModel.getAddCode(), 1)
                     tvSort.text = "즐겨찾기순 "
                 }
             ).show()
         }
 
+        rvRank.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                if(!viewModel.getIsLast()) {
+                    if(rvRank.canScrollVertically(1)) {
+                        viewModel.setIsLast(true)
+                        viewModel.getRestaurantsRank(false, viewModel.getAddCode(), 1)
+                    }
+                }
+            }
+        })
+
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun setAdapter(contents: List<RestaurantsRankContent>) {
-        adapter = RestaurantsRankAdapter(
-            requireContext(),
-            contents,
-            favoriteRestaurant = {
-                viewModel.favoriteRestaurants(it)
-            },
-            unFavoriteRestaurant = {
-                viewModel.unFavoriteRestaurants(it)
-            },
-            viewModel.getDepth1(),
-            viewModel.getDepth2(),
-        )
+        if(contents.isNotEmpty()) {
+            binding.rvRank.isVisible = true
+            binding.clNonPost.isGone = true
 
-        binding.rvRank.adapter = adapter
-        adapter.notifyDataSetChanged()
+            val recyclerViewState = binding.rvRank.layoutManager?.onSaveInstanceState()
+
+            adapter = RestaurantsRankAdapter(
+                requireContext(),
+                contents,
+                favoriteRestaurant = {
+                    viewModel.favoriteRestaurants(it)
+                },
+                unFavoriteRestaurant = {
+                    viewModel.unFavoriteRestaurants(it)
+                },
+                viewModel.getDepth1(),
+                viewModel.getDepth2(),
+            )
+
+            binding.rvRank.adapter = adapter
+            binding.rvRank.layoutManager?.onRestoreInstanceState(recyclerViewState)
+            adapter.notifyDataSetChanged()
+        } else {
+            binding.rvRank.isGone = true
+            binding.clNonPost.isVisible = true
+        }
+
+
     }
 
+//    @SuppressLint("NotifyDataSetChanged")
+//    override fun onHiddenChanged(hidden: Boolean) {
+//        super.onHiddenChanged(hidden)
+//        if(!hidden) {
+//            adapter.notifyDataSetChanged()
+//        }
+//    }
+
     private fun refresh() {
-        if (checkPermissionForLocation(requireContext())) {
-            getCurrentLocation()
+        if(checkPermissionForLocation(requireContext())) {
+            getCurrentLoc()
         }
 
         binding.srlRank.isRefreshing = false
     }
 
+    private fun getCurrentLoc() {
+        val locationManager = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
 
-    private fun getCurrentLocation() {
-//FusedLocationProviderClient의 인스턴스를 생성.
-        mFusedLocationProviderClient =
-            LocationServices.getFusedLocationProviderClient(requireContext())
-        if (ActivityCompat.checkSelfPermission(requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-            && ActivityCompat.checkSelfPermission(requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
-        // 기기의 위치에 관한 정기 업데이트를 요청하는 메서드 실행
-        // 지정한 루퍼 스레드(Looper.myLooper())에서 콜백(mLocationCallback)으로 위치 업데이트를 요청
-        mFusedLocationProviderClient!!.requestLocationUpdates(mLocationRequest,
-            mLocationCallback,
-            Looper.myLooper())
+        val userLocation: Location = getLatLng(locationManager)
+
+        val latitude = userLocation.latitude
+        val longitude = userLocation.longitude
+        Log.d("CheckCurrentLocation", "현재 내 위치 값: $latitude, $longitude")
+
+        viewModel.getAddress("$latitude", "$longitude")
+
     }
 
-    // 시스템으로 부터 위치 정보를 콜백으로 받음
-    private val mLocationCallback = object : LocationCallback() {
-        override fun onLocationResult(locationResult: LocationResult) {
-            // 시스템에서 받은 location 정보를 onLocationChanged()에 전달
-            locationResult.lastLocation
-            onLocationChanged(locationResult.lastLocation!!)
+    private fun getLatLng(locationManager: LocationManager?) : Location {
+        var currentLatLng: Location? = null
+
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_PERMISSION_LOCATION)
+            getLatLng(locationManager)
+        } else {
+            val locationProvider = LocationManager.GPS_PROVIDER
+            currentLatLng = locationManager?.getLastKnownLocation(locationProvider)
         }
-    }
-
-    // 시스템으로 부터 받은 위치정보를 화면에 갱신해주는 메소드
-    fun onLocationChanged(location: Location) {
-        mLastLocation = location
-
-        viewModel.getAddress("${mLastLocation.latitude}", "${mLastLocation.longitude}")
+        return currentLatLng!!
     }
 
     @SuppressLint("ObsoleteSdkInt")
     private fun checkPermissionForLocation(context: Context): Boolean {
-// Android 6.0 Marshmallow 이상에서는 위치 권한에 추가 런타임 권한이 필요
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 true
             } else {
-                // 권한이 없으므로 권한 요청 알림 보내기
                 ActivityCompat.requestPermissions(requireActivity(),
                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                     REQUEST_PERMISSION_LOCATION)
@@ -223,9 +252,8 @@ class RankFragment : BaseFragment<RankViewModel, FragmentRankBinding>() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_PERMISSION_LOCATION) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getCurrentLocation()
+                getCurrentLoc()
             } else {
-                Log.d("ttt", "onRequestPermissionsResult() _ 권한 허용 거부")
                 Toast.makeText(requireContext(), "권한이 없어 해당 기능을 실행할 수 없습니다.", Toast.LENGTH_SHORT)
                     .show()
             }

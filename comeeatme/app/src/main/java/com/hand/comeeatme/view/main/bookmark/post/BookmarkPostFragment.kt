@@ -1,12 +1,14 @@
 package com.hand.comeeatme.view.main.bookmark.post
 
 import android.annotation.SuppressLint
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.OnLifecycleEvent
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.hand.comeeatme.R
 import com.hand.comeeatme.data.response.bookmark.BookmarkPostContent
@@ -30,20 +32,24 @@ class BookmarkPostFragment : BaseFragment<BookmarkPostViewModel, LayoutBookmarkP
             when (it) {
                 is BookmarkPostState.Uninitialized -> {
                     binding.clLoading.isVisible = true
-                    viewModel.getAllBookmarked(0, 10)
+                    activity?.window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                    viewModel.getAllBookmarked(true)
                 }
                 is BookmarkPostState.Loading -> {
                     binding.clLoading.isVisible = true
+                    activity?.window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 }
 
                 is BookmarkPostState.Success -> {
                     binding.clLoading.isGone = true
-                    setAdapter(it.response.data!!.content)
+                    activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                    setAdapter(it.response)
                 }
 
                 is BookmarkPostState.Error -> {
                     binding.clLoading.isGone = true
-                    Toast.makeText(requireContext(), "$it", Toast.LENGTH_SHORT).show()
+                    activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -59,26 +65,45 @@ class BookmarkPostFragment : BaseFragment<BookmarkPostViewModel, LayoutBookmarkP
         rvPostList.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
+        rvPostList.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                if(!viewModel.getIsLast()) {
+                    if(!rvPostList.canScrollVertically(1)) {
+                        viewModel.setIsLast(true)
+                        viewModel.getAllBookmarked(false)
+                    }
+                }
+            }
+        })
+
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     override fun onResume() {
         super.onResume()
-        viewModel.getAllBookmarked(0, 10)
+        viewModel.getAllBookmarked(true)
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun setAdapter(contents: List<BookmarkPostContent>) {
-        adapter = BookmarkPostAdapter(
-            requireContext(), contents,
-            bookmarkPost = {
-                viewModel.bookmarkPost(it)
-            },
-            unBookmarkPost = {
-                viewModel.unBookmarkPost(it)
-            }
-        )
-        binding.rvPostList.adapter = adapter
-        adapter.notifyDataSetChanged()
+        if(contents.isNotEmpty()) {
+            val recyclerViewState = binding.rvPostList.layoutManager?.onSaveInstanceState()
+            adapter = BookmarkPostAdapter(
+                requireContext(), contents,
+                bookmarkPost = {
+                    viewModel.bookmarkPost(it)
+                },
+                unBookmarkPost = {
+                    viewModel.unBookmarkPost(it)
+                }
+            )
+            binding.rvPostList.adapter = adapter
+            binding.rvPostList.layoutManager?.onRestoreInstanceState(recyclerViewState)
+            adapter.notifyDataSetChanged()
+        }
+
+
     }
 }

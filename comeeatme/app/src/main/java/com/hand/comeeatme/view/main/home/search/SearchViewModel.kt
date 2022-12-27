@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.hand.comeeatme.data.preference.AppPreferenceManager
 import com.hand.comeeatme.data.repository.member.MemberRepository
 import com.hand.comeeatme.data.repository.restaurant.RestaurantRepository
+import com.hand.comeeatme.data.response.restaurant.SimpleRestaurantContent
 import com.hand.comeeatme.view.base.BaseViewModel
 import kotlinx.coroutines.launch
 
@@ -16,10 +17,30 @@ class SearchViewModel(
 
     val searchStateLiveData = MutableLiveData<SearchState>(SearchState.Uninitialized)
 
-    fun getSearchNicknames(nickname: String) {
+    private var page: Long = 0
+    private var contents = arrayListOf<SimpleRestaurantContent>()
+    private var isLast: Boolean = false
+    private var query: String = ""
+    private var type: Boolean = false
+
+    fun getType(): Boolean = type
+    fun setType(type: Boolean) {
+        this.type = type
+    }
+
+    fun setQuery(query: String) {
+        this.query = query
+    }
+
+    fun getIsLast(): Boolean = isLast
+    fun setIsLast(isLast: Boolean) {
+        this.isLast = isLast
+    }
+
+    fun getSearchNicknames() {
         viewModelScope.launch {
             searchStateLiveData.value = SearchState.Loading
-            val nicknames = memberRepository.getSearchNicknames("${appPreferenceManager.getAccessToken()}", nickname)
+            val nicknames = memberRepository.getSearchNicknames("${appPreferenceManager.getAccessToken()}", query)
 
             nicknames?.let {
                 searchStateLiveData.value = SearchState.SearchUserSuccess(
@@ -34,25 +55,40 @@ class SearchViewModel(
     }
 
     fun getSearchRestaurants(
-        page: Long?,
-        size: Long?,
-        sort: Boolean?,
-        keyword: String,
+        isRefresh: Boolean,
     ) = viewModelScope.launch {
         searchStateLiveData.value = SearchState.Loading
 
+        if(isRefresh) {
+            page = 0
+            contents = arrayListOf()
+        }
+
         val response = restaurantRepository.getSearchRestaurants(
             "${appPreferenceManager.getAccessToken()}",
-            page,
-            size,
-            sort,
-            keyword
+            page++,
+            10,
+            query
         )
 
         response?.let {
-            searchStateLiveData.value = SearchState.SearchRestaurantSuccess(
-                response = it
-            )
+            if(it.data!!.content.isNotEmpty()) {
+                contents.addAll(it.data.content)
+
+                searchStateLiveData.value = SearchState.SearchRestaurantSuccess(
+                    response = contents
+                )
+
+                isLast = false
+            } else {
+                isLast = true
+
+                searchStateLiveData.value = SearchState.SearchRestaurantSuccess(
+                    response = contents
+                )
+            }
+
+
         }?:run {
             searchStateLiveData.value = SearchState.Error(
                 "검색한 단어의 식당을 찾을 수 없습니다."

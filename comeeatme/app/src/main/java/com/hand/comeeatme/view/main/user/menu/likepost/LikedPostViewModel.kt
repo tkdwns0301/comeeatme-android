@@ -14,6 +14,7 @@ class LikedPostViewModel(
 ) : BaseViewModel() {
     val likedPostStateLiveData = MutableLiveData<LikedPostState>(LikedPostState.Uninitialized)
 
+
     override fun fetchData(): Job = viewModelScope.launch {
         getLikedPosts()
     }

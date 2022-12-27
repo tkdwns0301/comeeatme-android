@@ -53,14 +53,24 @@
             android:textStyle="bold"/>
     </androidx.appcompat.widget.Toolbar>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_HeartReview"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/srl_LikedPost"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/toolbar_LikePost"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:listitem="@layout/layout_user_likedpost"/>
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_HeartReview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="80dp"
+            android:clipToPadding="false"
+            tools:listitem="@layout/layout_user_likedpost"/>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

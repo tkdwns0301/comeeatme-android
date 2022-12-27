@@ -8,8 +8,10 @@ import com.hand.comeeatme.databinding.ActivitySettingBinding
 import com.hand.comeeatme.view.base.BaseActivity
 import com.hand.comeeatme.view.dialog.LogoutDialog
 import com.hand.comeeatme.view.login.LogInActivity
+import com.hand.comeeatme.view.login.onboarding.OnBoardingActivity
 import com.hand.comeeatme.view.login.term.Term1Activity
 import com.hand.comeeatme.view.login.term.Term2Activity
+import com.hand.comeeatme.view.main.user.setting.notice.NoticeActivity
 import com.hand.comeeatme.view.main.user.setting.unlink.Unlink1Activity
 import com.kakao.sdk.user.UserApiClient
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -76,7 +78,7 @@ class SettingActivity : BaseActivity<SettingViewModel, ActivitySettingBinding>()
         }
 
         clNotice.setOnClickListener {
-            // TODO 공지사항
+            startActivity(NoticeActivity.newIntent(applicationContext))
         }
 
         clTerm1.setOnClickListener {
@@ -89,6 +91,10 @@ class SettingActivity : BaseActivity<SettingViewModel, ActivitySettingBinding>()
 
         tvVersion3.setOnClickListener {
             // TODO 플레이스토어로 연결
+        }
+
+        clVersion.setOnClickListener {
+            startActivity(OnBoardingActivity.newIntent(applicationContext))
         }
 
         clWithdrawal.setOnClickListener {

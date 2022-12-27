@@ -3,6 +3,7 @@ package com.hand.comeeatme.view.main
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
@@ -88,18 +89,25 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     private fun setFragment(tag: String, fragment: Fragment) {
+        val transaction = supportFragmentManager.beginTransaction()
         val findFragment = supportFragmentManager.findFragmentByTag(tag)
+
         supportFragmentManager.fragments.forEach { fm ->
-            supportFragmentManager.beginTransaction().hide(fm).commitAllowingStateLoss()
+            transaction.hide(fm)
         }
 
+
+
         findFragment?.let {
-            supportFragmentManager.beginTransaction().show(it).commitAllowingStateLoss()
+            transaction.show(it)
         } ?:kotlin.run {
-            supportFragmentManager.beginTransaction()
+            transaction
                 .add(R.id.fg_MainContainer, fragment, tag)
-                .commitAllowingStateLoss()
         }
+
+        transaction.commitAllowingStateLoss()
+
+        Log.e("fragments", "${supportFragmentManager.fragments}")
 
     }
 

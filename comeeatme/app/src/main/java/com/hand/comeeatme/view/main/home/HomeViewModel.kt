@@ -5,27 +5,18 @@ import androidx.lifecycle.viewModelScope
 import com.hand.comeeatme.data.preference.AppPreferenceManager
 import com.hand.comeeatme.data.repository.bookmark.BookmarkRepository
 import com.hand.comeeatme.data.repository.like.LikeRepository
-import com.hand.comeeatme.data.repository.oauth.OAuthRepository
 import com.hand.comeeatme.data.repository.post.PostRepository
-import com.hand.comeeatme.data.response.logIn.TokenResponse
 import com.hand.comeeatme.data.response.post.Content
 import com.hand.comeeatme.view.base.BaseViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class HomeViewModel(
     private val appPreferenceManager: AppPreferenceManager,
     private val postRepository: PostRepository,
     private val likeRepository: LikeRepository,
     private val bookmarkRepository: BookmarkRepository,
-    private val oauthRepository: OAuthRepository,
 ) : BaseViewModel() {
-    companion object {
-        const val COMMUNITY_KEY = "Community"
-    }
-
     private val hashTagKorToEng = hashMapOf<String, String>(
         "감성있는" to "MOODY",
         "혼밥" to "EATING_ALON",
@@ -102,11 +93,7 @@ class HomeViewModel(
             bookmarkRepository.bookmarkPost("${appPreferenceManager.getAccessToken()}", postId)
 
         response?.let {
-            if (it.success) {
-                homeStateLiveData.value = HomeState.BookmarkPostSuccess
-            } else {
-                reissueToken()
-            }
+            homeStateLiveData.value = HomeState.BookmarkPostSuccess
         } ?: run {
             homeStateLiveData.value = HomeState.Error(
                 "북마크를 하는 도중 오류가 발생했습니다."
@@ -121,11 +108,8 @@ class HomeViewModel(
             bookmarkRepository.unBookmarkPost("${appPreferenceManager.getAccessToken()}", postId)
 
         response?.let {
-            if (it.success) {
-                homeStateLiveData.value = HomeState.UnBookmarkPostSuccess
-            } else {
-                reissueToken()
-            }
+            homeStateLiveData.value = HomeState.UnBookmarkPostSuccess
+
         } ?: run {
             homeStateLiveData.value = HomeState.Error(
                 "북마크를 취소하는 도중 오류가 발생했습니다."
@@ -161,58 +145,23 @@ class HomeViewModel(
             hashTagsEng)
 
         posts?.let {
-            if (!it.success) {
-                reissueToken()
+            if (it.data!!.content.isNotEmpty()) {
+                contents.addAll(it.data!!.content)
+                homeStateLiveData.value = HomeState.Success(
+                    posts = contents
+                )
+                isLast = false
             } else {
-                if(it.data!!.content.isNotEmpty()) {
-                    contents.addAll(it.data!!.content)
-                    homeStateLiveData.value = HomeState.Success(
-                        posts = contents
-                    )
-                    isLast = false
-                } else {
-                    isLast = true
-                    homeStateLiveData.value = HomeState.Success(
-                        posts = contents
-                    )
-                }
-
+                isLast = true
+                homeStateLiveData.value = HomeState.Success(
+                    posts = contents
+                )
             }
 
         } ?: run {
             homeStateLiveData.value = HomeState.Error(
                 "글을 불러오는 도중 오류가 발생했습니다."
             )
-        }
-
-
-    }
-
-    private fun reissueToken() = viewModelScope.launch {
-        val response = oauthRepository.reissueToken(
-            "${appPreferenceManager.getRefreshToken()}"
-        )
-
-        response?.let {
-            saveToken(it)
-
-            homeStateLiveData.value = HomeState.Error(
-                "다시 시도해주세요"
-            )
-
-        } ?: run {
-            homeStateLiveData.value = HomeState.Error(
-                "정보를 요청하는 도중 오류가 발생했습니다."
-            )
-        }
-    }
-
-    private fun saveToken(token: TokenResponse) = viewModelScope.launch {
-        withContext(Dispatchers.IO) {
-            appPreferenceManager.putAccessToken(token.accessToken)
-            appPreferenceManager.putRefreshToken(token.refreshToken)
-            appPreferenceManager.putMemberId(token.memberId!!)
-            fetchData()
         }
     }
 

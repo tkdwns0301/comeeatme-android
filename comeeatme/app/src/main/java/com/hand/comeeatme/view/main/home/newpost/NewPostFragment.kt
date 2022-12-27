@@ -2,7 +2,6 @@ package com.hand.comeeatme.view.main.home.newpost
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
@@ -12,7 +11,6 @@ import android.text.TextWatcher
 import android.util.Log
 import android.util.TypedValue
 import android.view.*
-import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -24,6 +22,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.chip.Chip
@@ -130,7 +129,7 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
                 is NewPostState.SearchRestaurantSuccess -> {
                     restaurantAdapter = SearchNewPostRestaurantAdapter(
                         requireContext(),
-                        it.restaurants.data.content,
+                        it.restaurants,
                         false,
                         onClickItem = {
                             viewModel.setRestaurantId(it.id)
@@ -199,15 +198,6 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
                     AlbumActivity.newIntent(requireContext(), false)
                 )
 
-
-//                val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
-//                    type = "image/*"
-//                    putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-//                    type = android.provider.MediaStore.Images.Media.CONTENT_TYPE;
-//                }
-//
-//                startActivityForResult(Intent.createChooser(intent, "Chooser Title"), 100)
-
             }
         }
 
@@ -235,12 +225,11 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
         llLocation.setOnClickListener {
             if (!icLocation.clLocation.isVisible) {
                 icLocation.clLocation.isVisible = true
-                ivLocation.setImageResource(R.drawable.ic_arrow_up_32)
             } else if (icLocation.clLocation.isVisible) {
                 icLocation.clLocation.isGone = true
 
                 if (tvSelectedLocation.text.isEmpty()) {
-                    ivLocation.setImageResource(R.drawable.ic_arrow_down_32)
+                    ivLocation.setImageResource(R.drawable.ic_arrow_down_32_gray)
                 } else {
                     ivLocation.setImageResource(R.drawable.ic_arrow_down_green_32)
                 }
@@ -249,12 +238,10 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
         }
 
         llHashTag.setOnClickListener {
-            if (binding.icHashTag.clHashTag.visibility == View.GONE) {
-                binding.icHashTag.clHashTag.visibility = View.VISIBLE
-                binding.ivHashTag.setImageResource(R.drawable.ic_arrow_up_32)
-            } else if (binding.icHashTag.clHashTag.visibility == View.VISIBLE) {
-                binding.ivHashTag.setImageResource(R.drawable.ic_arrow_down_32)
-                binding.icHashTag.clHashTag.visibility = View.GONE
+            if (!icHashTag.clHashTag.isVisible) {
+                icHashTag.clHashTag.isVisible = true
+            } else if (icHashTag.clHashTag.isVisible) {
+                icHashTag.clHashTag.isGone = true
             }
         }
 
@@ -283,14 +270,16 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
 
         icLocation.ibSearch.setOnClickListener {
             val search: String = icLocation.etSearch.text.toString()
-            viewModel.searchRestaurants(null, null, null, search)
+            viewModel.setQuery(search)
+            viewModel.searchRestaurants(true)
         }
 
         icLocation.etSearch.setOnKeyListener { p0, p1, p2 ->
             when (p1) {
                 KeyEvent.KEYCODE_ENTER -> {
                     val search: String = icLocation.etSearch.text.toString()
-                    viewModel.searchRestaurants(null, null, null, search)
+                    viewModel.setQuery(search)
+                    viewModel.searchRestaurants(true)
                 }
 
             }
@@ -306,7 +295,6 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
                 if (etContent.text.isEmpty()) {
                     viewModel.removeContent()
                 } else {
-                    Log.e("content", "${etContent.text}")
                     viewModel.setContent("${etContent.text}")
                 }
             }
@@ -319,6 +307,19 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
         icHashTag.tvInit.setOnClickListener {
             viewModel.clearHashTag()
         }
+
+        icLocation.rvLocationResult.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                if(!viewModel.getIsLast()) {
+                    if(!icLocation.rvLocationResult.canScrollVertically(1)) {
+                        viewModel.setIsLast(true)
+                        viewModel.searchRestaurants(false)
+                    }
+                }
+            }
+        })
     }
 
     private fun setView(data: DetailPostData) = with(binding) {
@@ -456,10 +457,18 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
                 if (isChecked) {
                     binding.flSelectHashTag.addItem("#$tag", true)
                     viewModel.addHashTag(tag, chip)
+                    if(viewModel.getCheckedChipList().isNotEmpty()) {
+                        binding.ivHashTag.setImageResource(R.drawable.ic_arrow_down_green_32)
+                    }
+
                 } else {
                     val chipIndex = viewModel.getCheckedChipList().indexOf(chip)
                     binding.flSelectHashTag.removeViewAt(chipIndex)
                     viewModel.removeHashTag(tag, chip)
+
+                    if(viewModel.getCheckedChipList().isEmpty()) {
+                        binding.ivHashTag.setImageResource(R.drawable.ic_arrow_down_32_gray)
+                    }
                 }
             }
         }
@@ -478,13 +487,6 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
 
     }
 
-    private fun softKeyboardHide() {
-        val imm =
-            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(requireActivity().currentFocus!!.windowToken, 0)
-        binding.etContent.clearFocus()
-        binding.icLocation.etSearch.clearFocus()
-    }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun setImageAdapter(data: ArrayList<String>, isModify: Boolean) {
@@ -499,6 +501,8 @@ class NewPostFragment : BaseFragment<NewPostViewModel, FragmentNewpostBinding>()
 
 
     private fun finish() {
+        activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+
         val manager: FragmentManager? = activity?.supportFragmentManager
         val ft: FragmentTransaction = manager!!.beginTransaction()
 

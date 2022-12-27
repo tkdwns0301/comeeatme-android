@@ -1,6 +1,8 @@
 package com.hand.comeeatme.data.repository.restaurant
 
+import com.hand.comeeatme.data.network.OAuthService
 import com.hand.comeeatme.data.network.RestaurantService
+import com.hand.comeeatme.data.preference.AppPreferenceManager
 import com.hand.comeeatme.data.response.restaurant.DetailRestaurantResponse
 import com.hand.comeeatme.data.response.restaurant.RestaurantsRankResponse
 import com.hand.comeeatme.data.response.restaurant.SimpleRestaurantResponse
@@ -8,6 +10,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
 class DefaultRestaurantRepository(
+    private val appPreferenceManager: AppPreferenceManager,
+    private val oAuthService: OAuthService,
     private val restaurantService: RestaurantService,
     private val ioDispatcher: CoroutineDispatcher,
 ) : RestaurantRepository {
@@ -15,19 +19,35 @@ class DefaultRestaurantRepository(
         accessToken: String,
         page: Long?,
         size: Long?,
-        sort: Boolean?,
         keyword: String,
     ): SimpleRestaurantResponse? = withContext(ioDispatcher) {
         val response = restaurantService.getSearchRestaurantList(
             Authorization = "Bearer $accessToken",
             page = page,
             size = size,
-            sort = sort,
             keyword = keyword
         )
 
         if (response.isSuccessful) {
             response.body()!!
+        } else if (response.code() == 401) {
+            val response2 = oAuthService.reissueToken(
+                "Bearer ${appPreferenceManager.getRefreshToken()}",
+            )
+
+            if (response2.isSuccessful) {
+                appPreferenceManager.putRefreshToken(response2.body()!!.refreshToken)
+                appPreferenceManager.putAccessToken(response2.body()!!.accessToken)
+
+                getSearchRestaurants(
+                    "${appPreferenceManager.getAccessToken()}",
+                    page,
+                    size,
+                    keyword
+                )
+            } else {
+                null
+            }
         } else {
             null
         }
@@ -39,7 +59,7 @@ class DefaultRestaurantRepository(
         size: Long?,
         addressCode: String,
         perImageNum: Long,
-        sort: String
+        sort: String,
     ): RestaurantsRankResponse? = withContext(ioDispatcher) {
         val response = restaurantService.getRestaurantsRank(
             Authorization = "Bearer $accessToken",
@@ -50,11 +70,27 @@ class DefaultRestaurantRepository(
             sort = sort,
         )
 
-        if(response.isSuccessful) {
-            if(!response.body()!!.success) {
-                null
+        if (response.isSuccessful) {
+            response.body()!!
+        } else if (response.code() == 401) {
+            val response2 = oAuthService.reissueToken(
+                "Bearer ${appPreferenceManager.getRefreshToken()}",
+            )
+
+            if (response2.isSuccessful) {
+                appPreferenceManager.putRefreshToken(response2.body()!!.refreshToken)
+                appPreferenceManager.putAccessToken(response2.body()!!.accessToken)
+
+                getRestaurantsRank(
+                    "${appPreferenceManager.getAccessToken()}",
+                    page,
+                    size,
+                    addressCode,
+                    perImageNum,
+                    sort
+                )
             } else {
-                response.body()!!
+                null
             }
         } else {
             null
@@ -71,10 +107,22 @@ class DefaultRestaurantRepository(
         )
 
         if (response.isSuccessful) {
-            if (!response.body()!!.success) {
-                null
+            response.body()!!
+        } else if (response.code() == 401) {
+            val response2 = oAuthService.reissueToken(
+                "Bearer ${appPreferenceManager.getRefreshToken()}",
+            )
+
+            if (response2.isSuccessful) {
+                appPreferenceManager.putRefreshToken(response2.body()!!.refreshToken)
+                appPreferenceManager.putAccessToken(response2.body()!!.accessToken)
+
+                getDetailRestaurant(
+                    "${appPreferenceManager.getAccessToken()}",
+                    restaurantId
+                )
             } else {
-                response.body()!!
+                null
             }
         } else {
             null

@@ -10,6 +10,7 @@ import com.hand.comeeatme.data.repository.like.LikeRepository
 import com.hand.comeeatme.data.repository.post.PostRepository
 import com.hand.comeeatme.data.request.comment.ModifyCommentRequest
 import com.hand.comeeatme.data.request.comment.WritingCommentRequest
+import com.hand.comeeatme.data.response.comment.CommentListContent
 import com.hand.comeeatme.view.base.BaseViewModel
 import kotlinx.coroutines.launch
 
@@ -45,6 +46,14 @@ class DetailPostViewModel(
 
     private var postWriterMemberId: Long? = null
     private var restaurantId: Long? = null
+    private var page: Long = 0
+    private var isLast: Boolean = false
+    private var contents = arrayListOf<CommentListContent>()
+
+    fun getIsLast(): Boolean = isLast
+    fun setIsLast(isLast: Boolean) {
+        this.isLast = isLast
+    }
 
     fun setRestaurantId(restaurantId: Long) {
         this.restaurantId = restaurantId
@@ -196,21 +205,36 @@ class DetailPostViewModel(
         }
     }
 
-    fun getCommentList(page: Long, size: Long, sort: Boolean) = viewModelScope.launch {
+    fun getCommentList(isRefresh: Boolean) = viewModelScope.launch {
         detailPostStateLiveData.value = DetailPostState.Loading
+
+        if(isRefresh) {
+            contents = arrayListOf()
+            page = 0
+        }
 
         val response = commentRepository.getCommentList(
             "${appPreferenceManager.getAccessToken()}",
             postId,
-            page,
-            size,
-            sort
+            page++,
+            10,
         )
 
         response?.let {
-            detailPostStateLiveData.value = DetailPostState.CommentListSuccess(
-                response = it
-            )
+            if(it.data!!.content.isNotEmpty()) {
+                contents.addAll(it.data.content)
+                detailPostStateLiveData.value = DetailPostState.CommentListSuccess(
+                    response = contents
+                )
+                isLast = false
+            } else {
+                isLast = true
+                detailPostStateLiveData.value = DetailPostState.CommentListSuccess(
+                    response = contents
+                )
+            }
+
+
         }?: run {
             detailPostStateLiveData.value = DetailPostState.Error(
                 "댓글을 불러오는 도중 오류가 발생했습니다."

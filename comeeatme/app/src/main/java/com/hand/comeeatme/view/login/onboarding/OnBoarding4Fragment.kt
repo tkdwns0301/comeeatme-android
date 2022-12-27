@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.hand.comeeatme.R
 import com.hand.comeeatme.databinding.LayoutOnboarding4Binding
 
@@ -18,6 +19,10 @@ class OnBoarding4Fragment : Fragment(R.layout.layout_onboarding4) {
         savedInstanceState: Bundle?
     ): View? {
         _binding = LayoutOnboarding4Binding.inflate(inflater, container, false)
+
+        Glide.with(requireContext())
+            .load(R.drawable.onboarding4)
+            .into(binding.iv1)
 
         return binding.root
     }
