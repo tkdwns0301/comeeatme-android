@@ -5,9 +5,13 @@
         android:title="홈"
         android:icon="@drawable/ic_home"/>
     <item
-        android:id="@+id/fm_Map"
-        android:title="지도"
-        android:icon="@drawable/ic_map"/>
+        android:id="@+id/fm_Rank"
+        android:title="랭킹"
+        android:icon="@drawable/ic_rank_34"/>
+    <item
+        android:id="@+id/fm_NewPost"
+        android:title="글쓰기"
+        android:icon="@drawable/ic_newpost"/>
     <item
         android:id="@+id/fm_Bookmark"
         android:title="북마크"
@@ -15,6 +19,6 @@
     <item
         android:id="@+id/fm_User"
         android:title="유저"
-        android:icon="@drawable/ic_user"/>
+        android:icon="@drawable/ic_user_24"/>
 
 </menu>

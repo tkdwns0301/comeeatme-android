@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_Loading"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="#80FFFFFF"
+        android:translationZ="10dp"
+        android:visibility="gone"
+        android:touchscreenBlocksFocus="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/iv_Loading"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintWidth_percent="0.3"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.3" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_unlink"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tv_Content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:navigationIcon="@drawable/ic_prev_basic_24">
+
+        <TextView
+            android:id="@+id/tv_Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="회원탈퇴"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/basic"
+            android:layout_gravity="center"/>
+    </androidx.appcompat.widget.Toolbar>
+
+    <TextView
+        android:id="@+id/tv_Content"
+        android:layout_marginTop="35dp"
+        android:layout_width="match_parent"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toTopOf="@id/tv_Content2"
+        android:layout_height="wrap_content"
+        android:text="무엇이 불편하셨나요?"
+        android:textSize="20sp"
+        android:textColor="@color/basic"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_unlink"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/tv_Content2"
+        android:layout_marginStart="16dp"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/rg_UnlinkReason"
+        app:layout_constraintTop_toBottomOf="@id/tv_Content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="불편하셨던 점을 알려주시면,\n더 나은 서비스를 위해 노력하겠습니다."
+        android:textSize="14sp"
+        android:textColor="@color/nonCheck"/>
+
+    <RadioGroup
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:id="@+id/rg_UnlinkReason"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_Content2"
+        app:layout_constraintBottom_toTopOf="@id/view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <RadioButton
+            android:id="@+id/rv_Reason1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35dp"
+            android:button="@drawable/selector_check"
+            android:theme="@style/CustomRadioButton"
+            android:text="앱에서 오류나 장애가 자주 발생해요"
+            android:textSize="14sp"
+            android:textColor="@color/basic68"/>
+        <RadioButton
+            android:id="@+id/rv_Reason2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35dp"
+            android:theme="@style/CustomRadioButton"
+            android:button="@drawable/selector_check"
+            android:text="찾는 정보가 없어요"
+            android:textSize="14sp"
+            android:textColor="@color/basic68"/>
+        <RadioButton
+            android:id="@+id/rv_Reason3"
+            android:layout_marginTop="35dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/CustomRadioButton"
+            android:button="@drawable/selector_check"
+            android:text="개인정보를 삭제하고 싶어요"
+            android:textSize="14sp"
+            android:textColor="@color/basic68"/>
+        <RadioButton
+            android:id="@+id/rv_Reason4"
+            android:layout_marginTop="35dp"
+            android:layout_width="match_parent"
+            android:theme="@style/CustomRadioButton"
+            android:layout_height="wrap_content"
+            android:button="@drawable/selector_check"
+            android:text="방문 빈도가 낮아요"
+            android:textSize="14sp"
+            android:textColor="@color/basic68"/>
+
+    </RadioGroup>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/rg_UnlinkReason"
+        app:layout_constraintBottom_toTopOf="@id/cl_Unlink"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_Unlink"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="80dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@drawable/background_setting_next_unchecked">
+
+        <TextView
+            android:id="@+id/tv_Unlink"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="탈퇴하기"
+            android:textColor="@color/basic"
+            android:textSize="17sp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

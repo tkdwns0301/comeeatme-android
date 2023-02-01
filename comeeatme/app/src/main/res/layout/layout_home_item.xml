@@ -2,25 +2,76 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_HomeItem"
+    android:clickable="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/vp_Images"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintBottom_toTopOf="@id/cl_Profile_Name_Follow_Bookmark"
-        app:layout_constraintDimensionRatio="1:1"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_Photos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        app:layout_constraintBottom_toTopOf="@id/cl_ProfileAndNickNameAndFollowAndBookmark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vp_Photos"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_Location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/background_home_location"
+            android:padding="5dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_Location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="올드타운베어"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                app:drawableStartCompat="@drawable/ic_location"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageView
+            android:id="@+id/iv_Number"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@null"
+            android:src="@drawable/ic_image1_24"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.07" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_Profile_Name_Follow_Bookmark"
+        android:id="@+id/cl_ProfileAndNickNameAndFollowAndBookmark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -29,41 +80,87 @@
         app:layout_constraintBottom_toTopOf="@id/tv_Content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/vp_Images">
+        app:layout_constraintTop_toBottomOf="@id/cl_Photos">
+
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/cv_Profile"
-            android:layout_width="28dp"
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            android:src="@drawable/food1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toStartOf="@id/tv_NickName"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.08"
+            tools:src="@drawable/food1" />
 
         <TextView
             android:id="@+id/tv_NickName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="NiCKNAME"
-            android:textSize="14sp"
+            android:textColor="@color/basic"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tb_Follow"
             app:layout_constraintStart_toEndOf="@id/cv_Profile"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="NiCKNAME" />
+
+        <ToggleButton
+            android:id="@+id/tb_Follow"
+            android:layout_width="27dp"
+            android:layout_height="19dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/selector_follow"
+            android:textOff=""
+            android:textOn=""
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/view"
+            app:layout_constraintStart_toEndOf="@id/tv_NickName"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageButton
-            android:id='@+id/ib_Bookmark'
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_bookmark"
+        <View
+            android:id="@+id/view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tb_Like"
+            app:layout_constraintStart_toEndOf="@id/tb_Follow"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ToggleButton
+            android:id="@+id/tb_Like"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/selector_like"
+            android:textOff=""
+            android:textOn=""
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@id/tb_Bookmark"
+            app:layout_constraintStart_toEndOf="@id/view"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="SpeakableTextPresentCheck" />
+            app:layout_constraintWidth_percent="0.1" />
+
+
+        <ToggleButton
+            android:id='@+id/tb_Bookmark'
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/selector_bookmark"
+            android:textOff=""
+            android:textOn=""
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tb_Like"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.1" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
@@ -72,69 +169,94 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:ellipsize="end"
+        android:maxLines="2"
         android:paddingTop="10dp"
-        android:text="Lorem ipsum dolor sit amet. Quo quis sint qui autem sunt aut nulla autem. Et optio..."
+        android:textColor="@color/basic"
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@id/cl_Comment_Like"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cl_Profile_Name_Follow_Bookmark" />
+        app:layout_constraintTop_toBottomOf="@id/cl_ProfileAndNickNameAndFollowAndBookmark"
+        tools:text="Lorem ipsum dolor sit amet. Quo quis sint qui autem sunt aut nulla autem. Et optio..." />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_Comment_Like"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="16dp"
         android:paddingTop="10dp"
         app:layout_constraintBottom_toTopOf="@id/divider1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_Content">
 
-        <ImageButton
-            android:id='@+id/ib_Comment'
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ImageView
+            android:id="@+id/iv_Comment"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:background="@null"
-            android:src="@drawable/ic_comment"
+            android:src="@drawable/ic_comment_32"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toStartOf="@id/tv_Comment"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.1" />
 
         <TextView
             android:id="@+id/tv_Comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
+            android:gravity="center"
             android:text='(13)'
-            android:textSize="14sp"
+            android:textColor="@color/basic68"
+            android:textSize="13sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/ib_Like"
-            app:layout_constraintStart_toEndOf="@id/ib_Comment"
+            app:layout_constraintEnd_toStartOf="@id/iv_Like"
+            app:layout_constraintStart_toEndOf="@id/iv_Comment"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageButton
-            android:id="@+id/ib_Like"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+        <ImageView
+            android:id="@+id/iv_Like"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:background="@null"
-            android:src="@drawable/ic_like"
+            android:src="@drawable/ic_like_unchecked_32"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@id/tv_Like"
             app:layout_constraintStart_toEndOf="@id/tv_Comment"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.1" />
 
         <TextView
             android:id="@+id/tv_Like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
+            android:gravity="center"
             android:text='(13)'
-            android:textSize="14sp"
+            android:textColor="@color/basic68"
+            android:textSize="13sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/ib_Like"
+            app:layout_constraintEnd_toStartOf="@id/tv_Date"
+            app:layout_constraintStart_toEndOf="@id/iv_Like"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/tv_Date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="15시간 전"
+            android:textColor="@color/nonCheck"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_Like"
             app:layout_constraintTop_toTopOf="parent" />
 
 
