@@ -48,7 +48,20 @@
         <activity android:name=".view.main.MainActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait">
+
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                    android:host="comeeatme.page.link"
+                    android:scheme="https"/>
+                <data
+                    android:host="comeeatme.page.link"
+                    android:scheme="http"/>
+            </intent-filter>
+        </activity>
         <activity android:name=".view.main.home.newpost.album.AlbumActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan"

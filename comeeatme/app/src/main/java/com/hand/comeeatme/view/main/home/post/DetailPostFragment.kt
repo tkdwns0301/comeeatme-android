@@ -31,12 +31,14 @@ import com.hand.comeeatme.R
 import com.hand.comeeatme.data.response.comment.CommentListContent
 import com.hand.comeeatme.data.response.post.DetailPostData
 import com.hand.comeeatme.databinding.FragmentDetailpostBinding
+import com.hand.comeeatme.util.DynamicLinkUtils
 import com.hand.comeeatme.util.KeyboardVisibilityUtil
 import com.hand.comeeatme.util.widget.adapter.comment.CommentListAdapter
 import com.hand.comeeatme.util.widget.adapter.home.ViewPagerAdapter
 import com.hand.comeeatme.view.base.BaseFragment
 import com.hand.comeeatme.view.dialog.MyPostDialog
 import com.hand.comeeatme.view.dialog.OtherPostDialog
+import com.hand.comeeatme.view.main.MainActivity
 import com.hand.comeeatme.view.main.home.newpost.NewPostFragment
 import com.hand.comeeatme.view.main.rank.restaurant.DetailRestaurantFragment
 import com.hand.comeeatme.view.main.user.other.OtherPageFragment
@@ -85,14 +87,16 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
             when (it) {
                 is DetailPostState.Uninitialized -> {
                     binding.clLoading.isVisible = true
-                    activity?.window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                    activity?.window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                     viewModel.getDetailPost()
                     viewModel.getCommentList(true)
                 }
 
                 is DetailPostState.Loading -> {
                     binding.clLoading.isVisible = true
-                    activity?.window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                    activity?.window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 }
 
                 is DetailPostState.Success -> {
@@ -227,10 +231,27 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
                             },
                             deletePost = {
                                 viewModel.deletePost()
+                            },
+                            dynamicLink = {
+                                DynamicLinkUtils.onDynamicLinkClick(
+                                    requireActivity(),
+                                    MainActivity.SCHEME_POSTID,
+                                    MainActivity.PARAM_ID,
+                                    "$postId"
+                                )
                             }
                         ).show()
                     } else {
-                        OtherPostDialog(requireContext(), postId!!).show()
+                        OtherPostDialog(
+                            requireContext(),
+                            postId!!,
+                            dynamicLink = {
+                                DynamicLinkUtils.onDynamicLinkClick(
+                                    requireActivity(),
+                                    MainActivity.SCHEME_POSTID,
+                                )
+                            },
+                        ).show()
                     }
 
                     true
@@ -287,7 +308,8 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
             val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
             val ft: FragmentTransaction = manager.beginTransaction()
 
-            val findFragment = activity?.supportFragmentManager?.findFragmentByTag(DetailRestaurantFragment.TAG)
+            val findFragment =
+                activity?.supportFragmentManager?.findFragmentByTag(DetailRestaurantFragment.TAG)
 
             findFragment?.let {
                 manager.beginTransaction().remove(it).commitAllowingStateLoss()
@@ -304,8 +326,8 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
-                if(!viewModel.getIsLast()) {
-                    if(rvCommentList.canScrollVertically(1)) {
+                if (!viewModel.getIsLast()) {
+                    if (rvCommentList.canScrollVertically(1)) {
                         viewModel.setIsLast(true)
                         viewModel.getCommentList(false)
                     }
@@ -365,7 +387,7 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
         Log.e("size", "${data.imageUrls.size}")
 
         Glide.with(requireContext())
-            .load(imageCounts[data.imageUrls.size-1])
+            .load(imageCounts[data.imageUrls.size - 1])
             .into(ivImageCount)
 
 
@@ -492,6 +514,7 @@ class DetailPostFragment : BaseFragment<DetailPostViewModel, FragmentDetailpostB
             resources.displayMetrics
         )
             .roundToInt()
+
 
 
     override fun onDestroy() {

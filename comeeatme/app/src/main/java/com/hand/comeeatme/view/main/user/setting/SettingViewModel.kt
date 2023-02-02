@@ -25,6 +25,7 @@ class SettingViewModel (
 
         response?.let {
             settingStateLiveData.value = SettingState.Logout
+            appPreferenceManager.clear()
         }?:run {
             settingStateLiveData.value = SettingState.Error(
                 "로그아웃을 하는 도중 오류가 발생했습니다."
