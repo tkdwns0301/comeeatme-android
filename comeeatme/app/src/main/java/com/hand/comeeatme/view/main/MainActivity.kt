@@ -2,6 +2,7 @@ package com.hand.comeeatme.view.main
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -15,12 +16,15 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.dynamiclinks.ktx.dynamicLinks
+import com.google.firebase.ktx.Firebase
 import com.hand.comeeatme.R
 import com.hand.comeeatme.databinding.ActivityMainBinding
 import com.hand.comeeatme.util.event.MenuChangeEventBus
 import com.hand.comeeatme.view.main.bookmark.BookmarkFragment
 import com.hand.comeeatme.view.main.home.HomeFragment
 import com.hand.comeeatme.view.main.home.newpost.NewPostFragment
+import com.hand.comeeatme.view.main.home.post.DetailPostFragment
 import com.hand.comeeatme.view.main.rank.RankFragment
 import com.hand.comeeatme.view.main.user.UserFragment
 import kotlinx.coroutines.launch
@@ -28,6 +32,10 @@ import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
     companion object {
+        const val SCHEME_POSTID = "postId"
+
+        const val PARAM_ID = "id"
+
         fun newIntent(context: Context) = Intent(context, MainActivity::class.java)
     }
 
@@ -61,6 +69,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         binding.ibNewPost.setOnClickListener {
             onNewPost()
         }
+
+        handleDynamicLinks()
     }
 
     private fun goToTab(mainTabMenu: MainTabMenu) {
@@ -96,19 +106,14 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             transaction.hide(fm)
         }
 
-
-
         findFragment?.let {
             transaction.show(it)
-        } ?:kotlin.run {
+        } ?: kotlin.run {
             transaction
                 .add(R.id.fg_MainContainer, fragment, tag)
         }
 
         transaction.commitAllowingStateLoss()
-
-        Log.e("fragments", "${supportFragmentManager.fragments}")
-
     }
 
 
@@ -132,6 +137,46 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             }
             else -> true
         }
+    }
+
+    private fun handleDynamicLinks() {
+        Firebase.dynamicLinks
+            .getDynamicLink(intent)
+            .addOnSuccessListener(this) { pendingDynamicLinkData ->
+                var deepLink: Uri? = null
+                if (pendingDynamicLinkData != null) {
+                    deepLink = pendingDynamicLinkData.link
+                }
+
+                if (deepLink != null) {
+                    when (deepLink.lastPathSegment!!) {
+                        SCHEME_POSTID -> {
+                            val postId: String = deepLink.getQueryParameter(PARAM_ID)!!
+                            Log.e("postId", "$postId")
+
+                            val manager: FragmentManager = supportFragmentManager
+                            val ft: FragmentTransaction = manager.beginTransaction()
+
+                            val findFragment = supportFragmentManager.findFragmentByTag(
+                                DetailPostFragment.TAG)
+
+                            findFragment?.let {
+                                manager.beginTransaction().remove(it).commitAllowingStateLoss()
+                            }
+
+                            ft.add(R.id.fg_MainContainer,
+                                DetailPostFragment.newInstance(postId.toLong()),
+                                DetailPostFragment.TAG)
+                            ft.addToBackStack(DetailPostFragment.TAG).commitAllowingStateLoss()
+                        }
+                    }
+                } else {
+                    Log.e("handleDynamicLink", "No Link Found")
+                }
+            }
+            .addOnFailureListener(this) { e ->
+                Log.e(HomeFragment.TAG, "getDynamicLink:onFailure", e)
+            }
     }
 }
 

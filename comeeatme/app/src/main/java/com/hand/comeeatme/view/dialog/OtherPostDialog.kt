@@ -9,10 +9,12 @@ import android.view.WindowManager
 import com.hand.comeeatme.databinding.DialogOtherPostBinding
 import com.hand.comeeatme.view.main.home.post.report.ReportActivity
 
+
 class OtherPostDialog(
     context: Context,
     private val postId: Long,
-): Dialog(context) {
+    val dynamicLink: () -> Unit,
+) : Dialog(context) {
     private lateinit var binding: DialogOtherPostBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +43,7 @@ class OtherPostDialog(
         }
 
         llShare.setOnClickListener {
-            // TODO 공유하기
+            dynamicLink.invoke()
             dismiss()
         }
 
@@ -50,5 +52,6 @@ class OtherPostDialog(
             dismiss()
         }
     }
+
 
 }

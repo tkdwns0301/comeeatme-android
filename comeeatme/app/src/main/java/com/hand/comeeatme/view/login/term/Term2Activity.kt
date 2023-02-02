@@ -23,9 +23,12 @@ class Term2Activity: AppCompatActivity() {
     }
 
     private fun initView() = with(binding){
-        toolbarTerm.setNavigationOnClickListener {
-            finish()
-        }
+        webView.settings.loadWithOverviewMode = true
+        webView.settings.useWideViewPort = true
+        webView.settings.javaScriptEnabled = true
+        webView.settings.javaScriptCanOpenWindowsAutomatically = true
+        webView.settings.domStorageEnabled = true
 
+        webView.loadUrl("https://amused-sing-8d6.notion.site/c4c2d1f04b79439ab4dc7a18c93e741c")
     }
 }

@@ -1,5 +1,6 @@
 package com.hand.comeeatme.view.login
 
+import android.content.Intent
 import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
@@ -46,7 +47,9 @@ class LogInActivity : BaseActivity<LogInViewModel, ActivityLoginBinding>() {
                         TermActivity.newIntent(applicationContext)
                     )
                 } else {
-                    startActivity(MainActivity.newIntent(applicationContext))
+                    val intent = MainActivity.newIntent(applicationContext)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
                 }
 
                 finish()
@@ -119,4 +122,7 @@ class LogInActivity : BaseActivity<LogInViewModel, ActivityLoginBinding>() {
         }
 
     }
+
+
+
 }

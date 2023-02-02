@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "298695769672",
+    "project_id": "comeeatme-fe33a",
+    "storage_bucket": "comeeatme-fe33a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:298695769672:android:f8a4865da7187f16d5627d",
+        "android_client_info": {
+          "package_name": "com.hand.comeeatme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "298695769672-10m9tlp64kahqqp5uv6cjbjhl8kcro66.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hand.comeeatme",
+            "certificate_hash": "8dbdf96976755ace9213d7446ffdfe6bae6d39f8"
+          }
+        },
+        {
+          "client_id": "298695769672-7kunn1iest1e5k9nntlbrbia8lmqtcb2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hand.comeeatme",
+            "certificate_hash": "47be3ab298ebc836e1fe9f711e8262c18bfc3511"
+          }
+        },
+        {
+          "client_id": "298695769672-vh4fg197rg9smoh2defe96950pqq740i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hand.comeeatme",
+            "certificate_hash": "f0f2f5f47850f106d7a25aadfe73ce221df44331"
+          }
+        },
+        {
+          "client_id": "298695769672-oms2k0kmeje1gs0rul3aaeln8dsvmoml.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-bn9uPwrR4RGdIh02Ud07nvqZq5gPWS4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "298695769672-oms2k0kmeje1gs0rul3aaeln8dsvmoml.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

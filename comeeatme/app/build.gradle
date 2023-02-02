@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'kotlin-parcelize'
+    id 'com.google.gms.google-services'
 }
 
 Properties properties = new Properties()
@@ -10,14 +11,15 @@ properties.load(project.rootProject.file('local.properties').newDataInputStream(
 def kakao_api_key= properties.get('kakao_api_key')
 
 android {
+
     compileSdkVersion 31
 
     defaultConfig {
         applicationId "com.hand.comeeatme"
         minSdkVersion 26
         targetSdk 31
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.01"
 
 
         manifestPlaceholders = [kakao_api_key: kakao_api_key]
@@ -26,6 +28,9 @@ android {
         buildConfigField "String", "BASE_URL", "\"${properties['BASE_URL']}\""
         buildConfigField "String", "KAKAO_URL", "\"${properties['KAKAO_URL']}\""
         buildConfigField "String", "kakao_rest_api_key", "\"${properties['kakao_rest_api_key']}\""
+        buildConfigField "String", "deepLink", "\"${properties['DEEP_LINK']}\""
+        buildConfigField "String", "domain", "\"${properties['DOMAIN']}\""
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -35,10 +40,7 @@ android {
             dataBinding = true
         }
 
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
+
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -123,11 +125,22 @@ dependencies {
     implementation "io.insert-koin:koin-androidx-compose:$koin_version"
 
     // Fragment-ktx
-    implementation "androidx.fragment:fragment-ktx:1.5.4"
+    implementation "androidx.fragment:fragment-ktx:1.5.5"
 
     // location
     implementation 'com.google.android.gms:play-services-location:21.0.1'
 
     // indicator
     implementation 'com.tbuonomo:dotsindicator:4.2'
+
+    // in app update
+    implementation 'com.google.android.play:core:1.10.3'
+
+    // fcm
+    implementation platform('com.google.firebase:firebase-bom:31.1.1')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+
+    // dynamic link
+    implementation 'com.google.firebase:firebase-dynamic-links-ktx'
+
 }

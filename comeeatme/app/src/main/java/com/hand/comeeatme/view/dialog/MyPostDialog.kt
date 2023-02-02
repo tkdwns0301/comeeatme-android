@@ -12,6 +12,7 @@ class MyPostDialog(
     context: Context,
     val modifyPost: () -> Unit,
     val deletePost: () -> Unit,
+    val dynamicLink: () -> Unit,
 ) : Dialog(context) {
     private lateinit var binding: DialogMyPostBinding
 
@@ -40,7 +41,7 @@ class MyPostDialog(
         }
 
         llShare.setOnClickListener {
-            // TODO 공유하기
+            dynamicLink.invoke()
             dismiss()
         }
 
